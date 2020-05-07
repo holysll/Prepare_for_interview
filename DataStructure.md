@@ -11,6 +11,6 @@
       * [6 链表(Linked-List)](#6-链表(Linked-List))
       * [7 树(Tree)](#7-树(Tree))
       * [8 图(Graph)](#8-图(Graph))
-      * [9 哈希(Hash)](#9-哈希(Hash))
+      * [9 哈希表(Hash)](#9-哈希表(Hash))
 
 <!-- markdown-toc end -->
