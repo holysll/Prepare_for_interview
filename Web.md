@@ -7,5 +7,6 @@
    * [Vue](#Vue)
    * [AngularJS](#AngularJS)
    * [React](#React)
+   * [jQuery](#jQuery)
 
 <!-- markdown-toc end -->
