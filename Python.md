@@ -21,6 +21,7 @@
 
 # Python语言知识点
 
+
 ## 1 Python语言的特性
 
 ## 2 Python的函数参数传递
@@ -37,9 +38,12 @@ print a  # 1
 
 ## 3 python中的元类metaclass
 
+
 ## 4 staticmethod和classmethod
 
+
 ## 5 单例模式
+
 
 ### 1 使用`__new__`方法
 
@@ -106,5 +110,4 @@ from mysingleton import my_singleton
 my_singleton.foo()
 
 ```
-
 **[单例模式伯乐在线详细解释](http://python.jobbole.com/87294/)**
