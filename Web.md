@@ -1,4 +1,3 @@
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **前端知识**
 
    * [Web基础](#Web基础)
@@ -10,9 +9,6 @@
    * [AngularJS](#AngularJS)
    * [React](#React)
    * [jQuery](#jQuery)
-
-<!-- markdown-toc end -->
-
 
 
 # Web基础
