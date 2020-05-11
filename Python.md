@@ -12,6 +12,12 @@
          * [2 共享属性](#2-共享属性)
          * [3 装饰器版本](#3-装饰器版本)
          * [4 import方法](#4-import方法)
+      * [6 python常用库](#6-python常用库)
+         * [1 标准库](#1-标准库)
+         * [2 科学计算库](#1-科学计算库)
+         * [3 第三方库](#1-第三方库)
+      * [7 python中的类型转换](#5-python中的类型转换)
+      * [5 单例模式](#5-单例模式)
 
 <!-- markdown-toc end -->
 
@@ -115,3 +121,36 @@ my_singleton.foo()
 
 ```
 **[单例模式伯乐在线详细解释](http://python.jobbole.com/87294/)**
+
+## 6 python常用库
+### 1 标准库
+```
+os：提供了不少于操作系统相关联的函数
+sys：通常用于命令行参数
+res：正则匹配
+math：数学运算
+datetime：日期时间
+threading：线程
+queue：队列
+random：随机
+pymysql：连接数据库
+```
+
+### 2 科学计算库
+```
+numpy
+scipy
+pandas
+```
+
+### 3 第三方库
+```
+djano
+flask
+requests
+selenium
+scrapy
+celery
+haslib
+md5
+```
