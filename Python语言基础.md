@@ -1,3 +1,4 @@
+
 ---
 layout: post
 title: Python语言知识点总结归纳
@@ -13,6 +14,7 @@ categories: 编程语言-python
   本文主要对python语言基础知识进行梳理、回顾，把一些需要记住的概念原理，和容易混淆，生涩的知识点进行归纳。
 
 <!-- more -->
+
 
 <div style='display: none'>
 
