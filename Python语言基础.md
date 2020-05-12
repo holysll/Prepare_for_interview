@@ -222,7 +222,7 @@ gc：垃圾回收器接口
 > pymysqldb：是在 Python2.x 版本中用于连接 MySQL 服务器的一个库，导包：import MySQLdb。
 
 > PyMySQL：是在 Python3.x 版本中用于连接 MySQL 服务器的一个库，导包：import pymysql，当要向下兼容python2时,可以加上：
-```
+```python
 import pymysql
 pymysql.install_as_MySQLdb()
 import MySQLdb
@@ -272,11 +272,11 @@ cursor.close()
 
 ## 8 文件流操作
 ### 打开文件
-```
-f=open('文件名', '访问模式')
+```python
+f=open('file_name', 'file_type')
 if f:  # 判断文件是否打开
-
-with open('文件名', '访问模式') as f:
+file_type
+with open('file_name', 'file_type') as f:
 
 ```
 ### 访问模式
