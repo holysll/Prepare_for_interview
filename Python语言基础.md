@@ -16,7 +16,16 @@ categories: 编程语言-python
 
 <div style='display: none'>
 
-
+<!-- TOC -->
+- [1. Python语言的特性](#1-python语言的特性)
+- [2. Python的函数参数传递](#2-python的函数参数传递)
+- [3. python中的元类metaclass](#3-python中的元类metaclass)
+- [4. staticmethod和classmethod](#4-staticmethod和classmethod)
+- [5. 单例模式](#5-单例模式)
+- [6. python常用库](#6-python常用库)
+- [7. python中的类型转换](#7-python中的类型转换)
+- [8. 文件流操作](#8-文件流操作)
+<!-- /TOC -->
 
 </div>
 
