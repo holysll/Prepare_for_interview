@@ -3,10 +3,11 @@ layout: post
 title: Python语言知识点总结归纳
 date: 2020-05-12 23:05:08
 tags: 
-   - python
-   - 后端
-   - 知识回顾
+  - python
+  - 后端
+  - 知识回顾
 categories: 编程语言-python
+
 ---
 
   本文主要对python语言基础知识进行梳理、回顾，把一些需要记住的概念原理，和容易混淆，生涩的知识点进行归纳。
@@ -14,8 +15,12 @@ categories: 编程语言-python
 <!-- more -->
 
 <div style='display: none'>
-[TOC]
+
+
+
+
 </div>
+
 
 
 
@@ -78,7 +83,6 @@ class MyClass(Singleton):
 创建实例时把所有实例的`__dict__`指向同一个字典,这样它们具有相同的属性和方法.
 
 ```python
-
 class Borg(object):
     _state = {}
     def __new__(cls, *args, **kw):
@@ -124,6 +128,7 @@ from mysingleton import my_singleton
 my_singleton.foo()
 
 ```
+
 **[单例模式伯乐在线详细解释](http://python.jobbole.com/87294/)**
 
 
@@ -208,7 +213,7 @@ gc：垃圾回收器接口
 > Scikit：主要用于机器学习，该库建立在NumPy、SciPy和matplotlib基础上，包含许多有效的机器学习和统计建模工具，如分类、回归、聚类和降维。 
 
 > Statsmodels：用于统计建模，是一个Python中提供用户探索数据、估计统计模型和执行统计测试的模组。可用于不同类型数据的描述性统计，统计测试，绘
-图功能和结果统计。
+> 图功能和结果统计。
 
 > Seaborn：用于数据可视化，是一个用于在Python中制作有吸引力和翔实的统计图形库。它是基于matplotlib。Seaborn旨在使可视化成为探索和理解数据的核心组成。  
 
@@ -225,6 +230,7 @@ gc：垃圾回收器接口
 > pymysqldb：是在 Python2.x 版本中用于连接 MySQL 服务器的一个库，导包：import MySQLdb。
 
 > PyMySQL：是在 Python3.x 版本中用于连接 MySQL 服务器的一个库，导包：import pymysql，当要向下兼容python2时,可以加上：
+
 ```python
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -268,12 +274,12 @@ cursor.close()
 
 ## 7.python中的类型转换
 
-| 函数| 作用 |  | 函数 | 作用 |  | 函数 | 作用 |
-| -- | -- | -- | -- | -- | -- | -- | -- |
-| int() | 转整型 |  | list() | 转列表 |  | bin() | 整数转2进制 |
-| float() | 转浮点型 |  | dict() | 转字典 |  | oct() | 整数转6进制 |
-| str() | 转字符串 |  | set() | 转集合 |  | hex() | 整数转16进制 |
-| ord() | 字符转整数 |  | tuple() | 转元组 |  | complex() | 实数转复数 |
+| 函数    | 作用       |      | 函数    | 作用   |      | 函数      | 作用         |
+| ------- | ---------- | ---- | ------- | ------ | ---- | --------- | ------------ |
+| int()   | 转整型     |      | list()  | 转列表 |      | bin()     | 整数转2进制  |
+| float() | 转浮点型   |      | dict()  | 转字典 |      | oct()     | 整数转6进制  |
+| str()   | 转字符串   |      | set()   | 转集合 |      | hex()     | 整数转16进制 |
+| ord()   | 字符转整数 |      | tuple() | 转元组 |      | complex() | 实数转复数   |
 
 
 
