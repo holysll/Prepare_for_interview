@@ -1,13 +1,12 @@
 ---
 layout: post
-title: Python语言知识点
+title: Python语言知识点总结归纳
 date: 2020-05-12 23:05:08
 tags: 
    - python
    - 后端
    - 知识回顾
-categories: 
-	- 编程语言-python
+categories: 编程语言-python
 ---
 
   本文主要对python语言基础知识进行梳理、回顾，把一些需要记住的概念原理，和容易混淆，生涩的知识点进行归纳。
@@ -15,35 +14,20 @@ categories:
 <!-- more -->
 
 <div style='display: none'>
-
-**Python语言知识点总结归纳**
-
-  * [1 Python语言的特性](#1-Python语言的特性)
-  * [2 Python的函数参数传递](#2-python的函数参数传递)
-  * [3 Python中的元类(metaclass)](#3-python中的元类metaclass)
-  * [4 @staticmethod和@classmethod](#4-staticmethod和classmethod)
-  * [5 单例模式](#5-单例模式)
-     * [1 使用__new__方法](#1-使用__new__方法)
-     * [2 共享属性](#2-共享属性)
-     * [3 装饰器版本](#3-装饰器版本)
-     * [4 import方法](#4-import方法)
-  * [6 python常用库](#6-python常用库)
-     * [1 标准库](#1-标准库)
-     * [2 科学计算库](#1-科学计算库)
-     * [3 第三方库](#1-第三方库)
-  * [7 python中的类型转换](#7-python中的类型转换)
-  * [8 文件流操作](#8-文件流操作)
-
+[TOC]
 </div>
 
 
-## 1 Python语言的特性
+
+## 1.Python语言的特性
 
    Python是一种解释型语言，不需要再运行之前进行编译。  
    Python是一种动态语言，不需要声明变量的类型。  
    python适合面向对象编程，允许类的定义以及组合和继承。  
-   
-## 2 Python的函数参数传递
+
+
+
+## 2.Python的函数参数传递
 
 看两个例子:
 
@@ -64,17 +48,18 @@ print a  # [1]
 ```
 
 
-## 3 python中的元类metaclass
 
-<!-- more -->
-
-## 4 staticmethod和classmethod
+## 3.python中的元类metaclass
 
 
-## 5 单例模式
+
+## 4.staticmethod和classmethod
 
 
-### 1 使用`__new__`方法
+
+## 5.单例模式
+
+  * **使用`__new__`方法**
 
 ```python
 class Singleton(object):
@@ -88,7 +73,7 @@ class MyClass(Singleton):
     a = 1
 ```
 
-### 2 共享属性
+  * **共享属性**
 
 创建实例时把所有实例的`__dict__`指向同一个字典,这样它们具有相同的属性和方法.
 
@@ -105,7 +90,7 @@ class MyClass2(Borg):
     a = 1
 ```
 
-### 3 装饰器版本
+* **装饰器版本**
 
 ```python
 def singleton(cls):
@@ -121,7 +106,7 @@ class MyClass:
   ...
 ```
 
-### 4 import方法
+- **import方法**
 
 作为python的模块是天然的单例模式
 
@@ -141,10 +126,15 @@ my_singleton.foo()
 ```
 **[单例模式伯乐在线详细解释](http://python.jobbole.com/87294/)**
 
-## 6 python常用库
-### 1 标准库
-**[网友总结参考](https://www.cnblogs.com/haochengdu/p/8855028.html)**
-**[官网中文参考](https://docs.python.org/zh-cn/3.8/library/index.html)**
+
+
+## 6.python常用库
+
+- **标准库**
+
+  **[网友总结参考](https://www.cnblogs.com/haochengdu/p/8855028.html)**
+  **[官网中文参考](https://docs.python.org/zh-cn/3.8/library/index.html)**
+
 ```
 os：提供了不少于操作系统相关联的函数  
 
@@ -203,7 +193,10 @@ __future__：Future 语句定义
 gc：垃圾回收器接口
 ```
 
-### 2 科学计算与数据分析库
+
+
+- **科学计算与数据分析库**
+
 > numpy：科学计算包，支持N维数组运算、处理大型矩阵、成熟的广播函数库、矢量运算、线性代数、傅里叶变换、随机数生成，并可与C++/Fortran语言无缝结合。
 
 > scipy：建立在NumPy基础上，它是离散傅立叶变换、线性代数、优化和稀疏矩阵等多种高级科学和工程模块最有用的库之一。
@@ -226,7 +219,8 @@ gc：垃圾回收器接口
 > Sympy：用于符号计算，具有从基本算数符号到微积分、袋鼠、离散数学和量子物理学的广泛能力，另一个有用的功能是将计算结果格式化为LaTeX代码。   
 
 
-### 3 第三方库
+
+- **第三方库**
 
 > pymysqldb：是在 Python2.x 版本中用于连接 MySQL 服务器的一个库，导包：import MySQLdb。
 
@@ -271,7 +265,9 @@ cursor.close()
 > celery：是一个由python编写的简单、灵活、可靠的用于处理大量信息的分布式系统，它同时提供操作和维护分布式所需的工具，专注于实时任务，支持任务调度。是一个分布式队列管理工具，可以用celery提供接口快速实现并管理一个分布式任务队列。
 
 
-## 7 python中的类型转换
+
+## 7.python中的类型转换
+
 | 函数| 作用 |  | 函数 | 作用 |  | 函数 | 作用 |
 | -- | -- | -- | -- | -- | -- | -- | -- |
 | int() | 转整型 |  | list() | 转列表 |  | bin() | 整数转2进制 |
@@ -279,8 +275,14 @@ cursor.close()
 | str() | 转字符串 |  | set() | 转集合 |  | hex() | 整数转16进制 |
 | ord() | 字符转整数 |  | tuple() | 转元组 |  | complex() | 实数转复数 |
 
-## 8 文件流操作
-### 打开文件
+
+
+## 8.文件流操作
+
+
+
+- **打开文件**
+
 ```python
 f=open('file_name', 'file_type')
 if f:  # 判断文件是否打开
@@ -288,7 +290,9 @@ file_type
 with open('file_name', 'file_type') as f:
 
 ```
-### 访问模式
+
+
+- **访问模式**
 
 ```
 w: 只写
@@ -315,12 +319,18 @@ wb+:以二进制格式打开一个文件用于读写。如果该文件已存在�
 ab+:以二进制格式打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾；如果文件不存在，创建新文件用于读写。
 ```
 
-### 写文件
+
+
+- **写文件**
+
 ```python
 f.write(content)  # 打开文件后，将制定内容写入文件中
 ```
 
-### 读取文件
+
+
+- **读取文件**
+
 ```python
 f.read(lenth)  # 使用read可以从文件中读取制定长度的数据，并将指针移到这条数据之后。如果为空，则默认读取全部数据。
 
@@ -328,12 +338,18 @@ f.readline()  # 读取文件中一行数据的信息，指针移动到下一行�
 
 f.readlines() # 读取整个文件的数据信息，返回一个列表，列表中每个元素为一行数据信息。
 ```
-### 查看指针位置
+
+
+- **查看指针位置**
+
 ```python
 f.tell()  # 查看单签位置，就是指针对应的位置
 ```
 
-### 指针定位
+
+
+- **指针定位**
+
 ```python
 seek(offset, from)  # 将指针定位到某个位置
 
