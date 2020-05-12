@@ -1,4 +1,4 @@
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
+<div style='display: none'>
 **Python语言知识点总结归纳**
 
 
@@ -19,9 +19,7 @@
       * [7 python中的类型转换](#7-python中的类型转换)
       * [8 文件流操作](#8-文件流操作)
 
-<!-- markdown-toc end -->
-
-
+</div>
 
 
 
