@@ -1,4 +1,3 @@
-
 ---
 layout: post
 title: Python语言知识点总结归纳
@@ -15,16 +14,11 @@ categories: 编程语言-python
 
 <!-- more -->
 
-
 <div style='display: none'>
 
 
 
-
 </div>
-
-
-
 
 ## 1.Python语言的特性
 
