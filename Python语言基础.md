@@ -1,29 +1,40 @@
+---
+layout: post
+title: Python语言知识点
+date: 2020-05-12 23:05:08
+tags: 
+   - python
+   - 后端
+   - 知识回顾
+categories: 
+	- 编程语言-python
+---
+
+  本文主要对python语言基础知识进行梳理、回顾，把一些需要记住的概念原理，和容易混淆，生涩的知识点进行归纳。
+
+<!-- more -->
+
 <div style='display: none'>
+
 **Python语言知识点总结归纳**
 
-
-   * [Python语言知识点](#python语言知识点)
-      * [1 Python语言的特性](#1-Python语言的特性)
-      * [2 Python的函数参数传递](#2-python的函数参数传递)
-      * [3 Python中的元类(metaclass)](#3-python中的元类metaclass)
-      * [4 @staticmethod和@classmethod](#4-staticmethod和classmethod)
-      * [5 单例模式](#5-单例模式)
-         * [1 使用__new__方法](#1-使用__new__方法)
-         * [2 共享属性](#2-共享属性)
-         * [3 装饰器版本](#3-装饰器版本)
-         * [4 import方法](#4-import方法)
-      * [6 python常用库](#6-python常用库)
-         * [1 标准库](#1-标准库)
-         * [2 科学计算库](#1-科学计算库)
-         * [3 第三方库](#1-第三方库)
-      * [7 python中的类型转换](#7-python中的类型转换)
-      * [8 文件流操作](#8-文件流操作)
+  * [1 Python语言的特性](#1-Python语言的特性)
+  * [2 Python的函数参数传递](#2-python的函数参数传递)
+  * [3 Python中的元类(metaclass)](#3-python中的元类metaclass)
+  * [4 @staticmethod和@classmethod](#4-staticmethod和classmethod)
+  * [5 单例模式](#5-单例模式)
+     * [1 使用__new__方法](#1-使用__new__方法)
+     * [2 共享属性](#2-共享属性)
+     * [3 装饰器版本](#3-装饰器版本)
+     * [4 import方法](#4-import方法)
+  * [6 python常用库](#6-python常用库)
+     * [1 标准库](#1-标准库)
+     * [2 科学计算库](#1-科学计算库)
+     * [3 第三方库](#1-第三方库)
+  * [7 python中的类型转换](#7-python中的类型转换)
+  * [8 文件流操作](#8-文件流操作)
 
 </div>
-
-
-
-# Python语言知识点
 
 
 ## 1 Python语言的特性
