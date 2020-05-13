@@ -15,7 +15,7 @@ categories: 编程语言-python
 <!-- more -->
 
 <div style='display: none'>
-
+</div>
 <!-- TOC -->
 
 - [1.Python语言的特性](#1python语言的特性)
@@ -29,7 +29,7 @@ categories: 编程语言-python
 
 <!-- /TOC -->
 
-</div>
+
 
 ## 1. Python语言的特性
 
