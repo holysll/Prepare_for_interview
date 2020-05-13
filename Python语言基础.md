@@ -17,27 +17,18 @@ categories: 编程语言-python
 <div style='display: none'>
 
 <!-- TOC -->
-
-- [1.Python语言的特性](#1python语言的特性)
-- [2.Python的函数参数传递](#2python的函数参数传递)
-- [3.python中的元类metaclass](#3python中的元类metaclass)
-- [4.staticmethod和classmethod](#4staticmethod和classmethod)
-- [5.单例模式](#5单例模式)
-- [6.python常用库](#6python常用库)
-- [7.python中的类型转换](#7python中的类型转换)
-- [8.文件流操作](#8文件流操作)
-
 <!-- /TOC -->
 
 </div>
 
 ## 1. Python语言的特性
 
-   Python是一种解释型语言，不需要再运行之前进行编译。  
+   Python是一种解释型语言，不需要再运行之前进行编译。    
    Python是一种动态类型语言，不需要声明变量的类型。  
    python适合面向对象编程，允许类的定义以及组合和继承。  
 
 ## 2. Python的函数参数传递
+
 
 看两个例子:
 
@@ -185,6 +176,7 @@ my_singleton.foo()
 
 ## 6. python常用库
 
+
 - **标准库**
 
   **[网友总结参考](https://www.cnblogs.com/haochengdu/p/8855028.html)**
@@ -209,7 +201,6 @@ my_singleton.foo()
     json：JSON 编码和解码器
 
     base64：Base16, Base32, Base64, Base85 数据编码
-
     heapq：堆队列算法
 
     copy：复制
@@ -248,6 +239,7 @@ my_singleton.foo()
 
     gc：垃圾回收器接口
 ```
+
 
 - **科学计算与数据分析库**
 
@@ -364,11 +356,13 @@ wb+:以二进制格式打开一个文件用于读写。如果该文件已存在�
 ab+:以二进制格式打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾；如果文件不存在，创建新文件用于读写。
 ```
 
+
 - **写文件**
 
 ```python
 f.write(content)  # 打开文件后，将制定内容写入文件中
 ```
+
 
 - **读取文件**
 
