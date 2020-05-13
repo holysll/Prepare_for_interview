@@ -1,7 +1,8 @@
 ---
 layout: post
 title: Python语言知识点总结归纳
-date: 2020-05-12 23:05:08
+date: 2020-05-08 23:05:08
+updated: 2020-05-14 01:36:55
 tags: 
   - python
   - 后端
@@ -10,43 +11,49 @@ categories: 编程语言-python
 
 ---
 
-  本文主要对python语言基础知识进行梳理、回顾，把一些需要记住的概念原理，和容易混淆，晦涩的知识点进行归纳。
+> 本文主要对python语言基础知识进行梳理、回顾，把一些需要记住的概念原理，和容易混淆，晦涩的知识点进行归纳。
 
 <!-- more -->
 
 <div style='display: none'>
 
 <!-- TOC -->
+
+- [1. Python语言的特性](#1-python语言的特性)
+- [2. python语言相比其他语言的优点和缺点](#2-python语言相比其他语言的优点和缺点)
+- [3. python中的元类metaclass](#3-python中的元类metaclass)
+- [4. @staticmethod和@classmethod和实例方法](#4-staticmethod和classmethod和实例方法)
+- [5. 单例模式](#5-单例模式)
+- [6. python常用库](#6-python常用库)
+- [7. python中的类型转换](#7-python中的类型转换)
+- [8. 文件流操作](#8-文件流操作)
+- [9. __new__ 和 __init__的区别](#9-__new__-和-__init__的区别)
+
 <!-- /TOC -->
 
 </div>
 
 ## 1. Python语言的特性
 
-   Python是一种解释型语言，不需要再运行之前进行编译。    
+   Python是一种解释型语言，不需要再运行之前进行编译。
    Python是一种动态类型语言，不需要声明变量的类型。  
    python适合面向对象编程，允许类的定义以及组合和继承。  
 
-## 2. Python的函数参数传递
+## 2. python语言相比其他语言的优点和缺点
 
+**优点**
+- 
+- 简单易懂，灵活简洁
+- 强大的标准库和三方库
+- 活跃的社区，许多开源项目
+- 开发效率高，迭代便捷
+- 应用领域广泛，Web开发、网络编程、自动化运维、Linux系统管理、数据分析、科学计算、人工智能、机器学习
 
-看两个例子:
-
-```python
-a = 1
-def fun(a):
-    a = 2
-fun(a)
-print a  # 1
-```
-
-```python
-a = []
-def fun(a):
-    a.append(1)
-fun(a)
-print a  # [1]
-```
+**缺点**
+- 
+- 执行效率较差,
+- 异步生态不完善，相关的库较少(tornado)
+- GIL的存在，无法充分利用多核的特性
 
 ## 3. python中的元类metaclass
 
@@ -60,19 +67,25 @@ print a  # [1]
 
 ```python
 # type的语法
-type(类名, 父类的元组(针对集成的情况，可为空), 包函属性的字典)
+type(class_name, class_parents, class_attr_dict)
+"""
+    class_name: 类名
+    class_parents: 父类的元组(针对集成的情况，可为空)
+    class_attr_dict: 包函属性的字典
+
+"""
 
 eg:
-  class MyClass(object):
+class MyClass(object):
     pass
-  MyClass = type('MyClass', (), {'foo':True})
+    MyClass = type('MyClass', (), {'foo':True})
 ```
 
-** 元类：就是能够创建python中类这种对象的东西，如type就是Python的内建元类 **
+**元类：就是能够创建python中类这种对象的东西，如type就是Python的内建元类**
 
 ```python
-  MyClass = MetaClass()  # 元类的创建
-  my_class = MyClass()  # 类的实例
+    MyClass = MetaClass()  # 元类的创建
+    my_class = MyClass()  # 类的实例
 ```
 
 > 实际上Myclass就是通过type()来创建出的MyClass类，它是type()类的一个实例。
@@ -85,29 +98,208 @@ eg:
 ```python
 # py2
 class Foo(object):
-  __metaclass__ = something
+    __metaclass__ = something
 
 # py3
 class Foo(metaclass=something):
-  __metaclass__ = something
+    __metaclass__ = something
 ```
 
 * **自定义元类**
 
 > 元类的主要目的为了当创建类时能够自动改变类，通常，你会为API做这样的事情，你希望可以创建符合当前上下文的类。
 
-> 可以使用函数当做元类
+- 可以使用函数当做元类
 
-> 可以使用class来当做元类
+```python
+# 元类通常会将你传给type的参数作为自己的参数传入
+def upper_attr(future_class_name, future_class_parents, future_class_attr):
+    """返回一个类对象，将属性都转为大写形式"""
+    # 选择所有不以'__'开头的属性
+    attrs = ((name, value) for name, value in future_class_attr.items() if not name.startswith('__'))
+    # 将他们转化为大写形式
+    uppercase_attr = dict{(name.upper(), value) for name, value in attrs}
+    # 通过type来做类对象的创建
+    return type(future_class_name, future_class_parents, uppercase_attr)  # 返回一个对象，这个对象是个类
+
+class Foo(metaclass=upper_attr):
+    _metaclass__ = upper_attr
+    bar = 'bip'
+
+print(hasattr(Foo, 'bar'))  # False
+print(hasattr(Foo, 'BAR'))  # True
+
+f = Foo()
+print(f.BAR)  # 'bip'
+```
+
+- 可以使用class来当做元类
+
+```python
+class UpperAttrMetaClass(type):
+    def __new__(upperattr_metaclass, future_class_name, future_class_parents, future_class_attr):
+        attrs = ((name, value) for name, value in future_class_attr.items() if not name.starswith('__'))
+        uppercase_attr = dict((name.upper(), value) for name, value in attrs)
+
+    # 复用type.__new__方法，OOP编程。
+    # 由于type是元类也是类，本身也是通过__new__方法生成实例，只不过这个实例是一个类。
+    return tpye.__new__(upperattr_metaclass, future_classs_name, future_class_parents, uppercase_attr)
+```
+
+* **真实业务场景下的元类**
+
+```python
+class UpperAttrMetaClass(type):
+    def __new__(cls, name, bases, dct):
+        attrs = ((name, value) for name, value in dct.items() if not name.startswith('__'))
+        uppercase_attr = dict((name.upper(), value) for name, value in attrs)
+        return type.__new__(cls, name, bases, uppercase_attr)
+```
+
+```python
+# supper继承
+class UpperAttrMetaClass(type):
+    def __new__(cls, name, bases, dct):
+        attrs = ((name, value) for name, value in dct.items() if not name.startswith('__'))
+        uppercase_attr = dict((name.upper(), value) for name, value in attrs)
+        return supper(UpperAttrMetaClass, cls).__new__(cls, name, bases, uppercase_attr)
+```
+
+* **使用元类创建ORM实例**
+
+> 熟悉Django框架的，应该知道ORM结构，元类创建API，使得调用简洁明了。
+
+```python
+# -*- coding:utf-8 -*-
+# 1.定义Field类，用于保存数据表的字段名和字段类型
+class Field(object):
+    def __init__(self, name, column_type):
+        self.name = name
+        self.column_type = column_type
+
+    def __str__(self):
+        return '<%s:%s>' % (self.__class__.__name__, self.name)
+
+class StringField(Field):
+    def __init__(self, name):
+        super(StringField, self).__init__(name, 'varchar(100)')
+
+class IntegerField(Field):
+    def __init__(self, name):
+        super(IntegerField, self).__init__(name, 'bigint')
+
+# 定义元类，控制Model对象的创建
+class ModelMetaClass(type):
+    """定义元类"""
+    def __new__(cls, name, bases, attrs):
+        if name=='Model':
+            return super(ModelMetaClass, cls).__new__(cls, name, bases, attrs)
+        mappings = dict()
+        for k, v in attrs.iteritems():
+            # 保存类属性和列的映射关系到mappings字典
+            if isinstance(v, Field):
+              print('Found mapping: %s==>%s' % (k, v))
+             mappings[k] = v
+        for k in mapping.iterkeys():
+            # 将雷属性移除，是定义的类字段不污染User类属性，只在实例中可以访问这些key
+            attrs.pop(k)
+        # 假设表名为类名的小写，创建类时添加一个__table__类属性
+        attrs['__table__'] = name.lower()
+        # 保存属性和列的映射关系，创建类时添加一个__mappings__类属性
+        attrs['__mappings__'] = mappings
+        return super(ModelMetaClass, cls).__new__(cls, name, bases, attrs)
+
+# 编写Model基类
+class Model(dict):
+    __metaclass__ = ModelMetaClass
+
+    def __init__(self, **kw):
+        super(Model, self).__init__(**kw)
+
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            raise AttributeError(r"'Model' object has no attribute '%s'" % key)
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+    def save(self):
+        fields = []
+        params = []
+        args = []
+        for k, v in self.__mappings__.iteritems():
+            fields.append(v,name)
+            params.append('?')
+            args.append(getattr(self, k,None))
+        sql = 'insert into %s (%s) values (%s)' % (self.__table__, ','.join(fields), ','.join(params))
+        print('SQL: %s' % sql)
+        print('ARGS: %s' % str(args))
 
 
-## 4. staticmethod和classmethod
+# 创建一个model，用户表User，定义数据字段就可实现数据表和字段的操作
+class User(Model)：
+    id = IntegerField('id')  # 对应数据表的id字段
+    name = StringField('username')  # 对应数据表的username字段
+    email = StringField('email')  # 对应数据表的email字段
+    password = StringField('password')  # 对应数据表的password字段
 
+# 创建一个实例
+user = User(id=123456, name='Michael', email='test@163.com', password='123456')
+# 保存数据库
+user.save()
+```
 
+## 4. @staticmethod和@classmethod和实例方法
+
+ > **[what-is-the-difference-between-staticmethod-and-classmethod-in-python](https://stackoverflow.com/questions/136097/difference-between-staticmethod-and-classmethod)**
+
+> **[real python上详细知识](https://realpython.com/instance-class-and-static-methods-demystified/)**
+
+- **静态方法**
+
+> 静态方法：其实和普通的方法一样，不需要对谁进行绑定，必须有@staticmethod修饰，类和实例都可以访问静态方法，调用方式A。static_foo(x)和a.static_foo(x)。
+
+- **类方法**
+
+> 类方法：即在类里定义的函数方法，需要@classmethod修饰，并且有个隐藏参数cls，传递的是类而不是实例，类可以访问类方法，也可以访问实例方法，访问实例方法时必须带参数self。
+
+- **实例方法**
+
+> 实例方法的调用离不开实例，必须有个参数self，把实例自己传给函数，调用是够是a.foo(x)与foo(a, x)等价。实例可以访问实例方法，也可以访问类方法。
+
+```python
+def foo(x)：
+    print("executing foo(%s)" % (x))
+
+class A(object):
+    # 实例方法
+    def foo(self, x):
+        print("executing foo(%s, %s)" % (self, x))
+
+    # 类方法
+    @classmethod
+    def class_foo(cls, x):
+      print("executing foo(%s, %s)" % (cls, x)")
+
+    # 静态方法
+    @staticmethod
+    def static_foo(x):
+      print("executing foo(%s)" % x)
+
+a = A()
+
+```
+
+| 实例/类 | 实例方法 | 类方法 | 静态方法 |
+| :----: | :----: | :----: | :----: |
+| 实例: a = A() | a.foo(x) | a.class_foo(x) | a.static_foo(x) |
+| 类: A | 不可用 | A.class_foo(x) | A.static_foo(x) |
 
 ## 5. 单例模式
 
-  * **使用`__new__`方法**
+- **使用__new__方法**
 
 ```python
 class Singleton(object):
@@ -121,7 +313,7 @@ class MyClass(Singleton):
     a = 1
 ```
 
-* **共享属性**
+- **共享属性**
 
 > 创建实例时把所有实例的`__dict__`指向同一个字典,这样它们具有相同的属性和方法.
 
@@ -134,10 +326,10 @@ class Borg(object):
         return ob
 
 class MyClass2(Borg):
-    a = 1
+  a = 1
 ```
 
-* **装饰器版本**
+- **装饰器版本**
 
 ```python
 def singleton(cls):
@@ -150,7 +342,7 @@ def singleton(cls):
 
 @singleton
 class MyClass:
-  ...
+   ···
 ```
 
 - **import方法**
@@ -172,10 +364,57 @@ my_singleton.foo()
 
 ```
 
+- **元类实现单例**
+
+```python
+# 通过__init__方法实现元类（优雅）
+class Singleton(type):
+    def __init__(self, *args, **kwargs):
+        print("__init__")
+        self.__instance = None
+        super(Singleton, self).__init__(*args, **kwargs)
+
+    def __call__(self, *args, **kwargs):
+        print("__call__")
+        if self.__instance is None:
+            self.__instance = super(Singleton, self).__call__(*args, **kwargs)
+        return self.__instance
+
+class Foo(metaclass=Singleton):
+    __metaclass__ = Singleton
+
+foo1 = Foo()
+foo2 = Foo()
+print(Foo.__dict__)
+print(foo1 is foo2)
+```
+
+```python
+# 通过元类的__new__方法实现元类（为了实例增加属性重写__new__方法，不推荐）
+class Singleton(type):
+    def __new__(cls, name, bases, attrs):
+        print("__new__")
+        attrs["_instance"] = None
+        return super(Singleton, cls).__new__(cls, name, bases, attrs)
+
+    def __call__(self, *args, **kwargs):
+        print("__call__")
+        if self._instance is None:
+            self._instance = super(Singleton, self).__call__(*args, **kwargs)
+        return self._instance
+
+class Foo(metaclass=Singleton):
+   __metaclass__ = Singleton
+
+foo1 = Foo()
+foo2 = Foo()
+print(Foo.__dict__)
+print(foo1 is foo2)
+```
+
 **[单例模式伯乐在线详细解释](http://python.jobbole.com/87294/)**
 
 ## 6. python常用库
-
 
 - **标准库**
 
@@ -183,7 +422,7 @@ my_singleton.foo()
 
   **[官网中文参考](https://docs.python.org/zh-cn/3.8/library/index.html)**
 
-```
+```python
     os：提供了不少于操作系统相关联的函数  
 
     sys：通常用于命令行参数
@@ -240,29 +479,27 @@ my_singleton.foo()
     gc：垃圾回收器接口
 ```
 
-
 - **科学计算与数据分析库**
 
   > numpy：科学计算包，支持N维数组运算、处理大型矩阵、成熟的广播函数库、矢量运算、线性代数、傅里叶变换、随机数生成，并可与C++/Fortran语言无缝结合。
 
   > scipy：建立在NumPy基础上，它是离散傅立叶变换、线性代数、优化和稀疏矩阵等多种高级科学和工程模块最有用的库之一。
 
-  > pandas：主要用于结构化数据的运算和操作，广泛用于数据整理和预处理，其有助于提高Python在数据科学社区的使用。 
+  > pandas：主要用于结构化数据的运算和操作，广泛用于数据整理和预处理，其有助于提高Python在数据科学社区的使用。
 
   > matplotlib：主要用于绘制各种各样的图形，从直方图到线图、热力图，还可以使用Latex命令在图像中添加数学符号。
 
-  > Scikit：主要用于机器学习，该库建立在NumPy、SciPy和matplotlib基础上，包含许多有效的机器学习和统计建模工具，如分类、回归、聚类和降维。 
+  > Scikit：主要用于机器学习，该库建立在NumPy、SciPy和matplotlib基础上，包含许多有效的机器学习和统计建模工具，如分类、回归、聚类和降维。
 
-  > Statsmodels：用于统计建模，是一个Python中提供用户探索数据、估计统计模型和执行统计测试的模组。可用于不同类型数据的描述性统计，统计测试，绘
-  > 图功能和结果统计。
+  > Statsmodels：用于统计建模，是一个Python中提供用户探索数据、估计统计模型和执行统计测试的模组。可用于不同类型数据的描述性统计，统计测试，绘图功能和结果统计。
 
   > Seaborn：用于数据可视化，是一个用于在Python中制作有吸引力和翔实的统计图形库。它是基于matplotlib。Seaborn旨在使可视化成为探索和理解数据的核心组成。  
 
-  > Bokeh：用于在现代网络浏览器上创建交互式图表，仪表盘和数据应用程序。它赋予用户以D3.js的风格生成优雅简洁的图形。此外，它具有超大型或流式数据集的高性能交互能力。 
+  > Bokeh：用于在现代网络浏览器上创建交互式图表，仪表盘和数据应用程序。它赋予用户以D3.js的风格生成优雅简洁的图形。此外，它具有超大型或流式数据集的高性能交互能力。
 
   > Blaze: 将Numpy和Pandas的能力扩展到分布式和流式传输数据集。它可以用于从众多来源包括Bcolz，MongDB,SQLAlchemy,Apache Spark,PyTables等访问数据，与Bokeh一起，可以作为在矩形数据模块上创建有效可视化和仪表盘的强大的工具。
 
-  > Sympy：用于符号计算，具有从基本算数符号到微积分、袋鼠、离散数学和量子物理学的广泛能力，另一个有用的功能是将计算结果格式化为LaTeX代码。   
+  > Sympy：用于符号计算，具有从基本算数符号到微积分、袋鼠、离散数学和量子物理学的广泛能力，另一个有用的功能是将计算结果格式化为LaTeX代码。
 
 - **第三方库**
 
@@ -293,19 +530,19 @@ my_singleton.foo()
 
   > flask： 是一个web开发的微框架，严格来说，它仅仅提供web服务器支持，不提供全栈开发支持。然而，Flask非常轻量、非常简单，特别适合小微原型系统的开发，耗时少，开发效率高。  
 
-  > Tornado：是一个基于异步网络功能库的Web开发框架，能够支持几万个开放连接，Web服务比较稳定。比较适合高并发场景下的Web系统，如秒杀系统、抢票系统等，灵活性较差。   
+  > Tornado：是一个基于异步网络功能库的Web开发框架，能够支持几万个开放连接，Web服务比较稳定。比较适合高并发场景下的Web系统，如秒杀系统、抢票系统等，灵活性较差。
 
-  > Falcon：是一个支持大规模微服务API或移动App后端响应的web开发框架，它完全基于python并提供了非常高性能、可靠性和可扩展性。 
+  > Falcon：是一个支持大规模微服务API或移动App后端响应的web开发框架，它完全基于python并提供了非常高性能、可靠性和可扩展性。
 
-  > Pyramid：是一个扩展性很强且灵活的web开发框架，上手十分容易，比较适合中等规模且边开发边设计的场景。它不提供绝对严格的框架定义，根据需求可以扩展开发，对高阶程序员十分友好。   
+  > Pyramid：是一个扩展性很强且灵活的web开发框架，上手十分容易，比较适合中等规模且边开发边设计的场景。它不提供绝对严格的框架定义，根据需求可以扩展开发，对高阶程序员十分友好。
 
   > Quart：是面向ASGI(异步服务器网关接口)开发的web为框架，采用Flask兼容的API接口，提供非常轻量级的开发方式。
 
-  > requests：用于Web访问，类似于python标准库的urllib2，更容易更方便上手，适合初学者。   
+  > requests：用于Web访问，类似于python标准库的urllib2，更容易更方便上手，适合初学者。
 
-  > scrapy： 用于网络爬虫，它是获取特定模式数据的非常有用的框架，从网站首页URL开始,然后挖掘网站内的网页内容来手机信息。 
+  > scrapy： 用于网络爬虫，它是获取特定模式数据的非常有用的框架，从网站首页URL开始,然后挖掘网站内的网页内容来手机信息。
 
-  > selenium：是一个用于测试网站的自动化工具，支持Chrome、Firefox、Safari等主流界面浏览器，同时也支持PhantomJS无界面浏览器。 
+  > selenium：是一个用于测试网站的自动化工具，支持Chrome、Firefox、Safari等主流界面浏览器，同时也支持PhantomJS无界面浏览器。
 
   > celery：是一个由python编写的简单、灵活、可靠的用于处理大量信息的分布式系统，它同时提供操作和维护分布式所需的工具，专注于实时任务，支持任务调度。是一个分布式队列管理工具，可以用celery提供接口快速实现并管理一个分布式任务队列。
 
@@ -331,7 +568,7 @@ with open('file_name', 'file_type') as f:
 
 - **访问模式**
 
-```
+```python
 w: 只写
 
 r：只读
@@ -356,13 +593,11 @@ wb+:以二进制格式打开一个文件用于读写。如果该文件已存在�
 ab+:以二进制格式打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾；如果文件不存在，创建新文件用于读写。
 ```
 
-
 - **写文件**
 
 ```python
 f.write(content)  # 打开文件后，将制定内容写入文件中
 ```
-
 
 - **读取文件**
 
@@ -389,6 +624,13 @@ from: # 方向，0表示文件开头；1表示文件当前位置；2表示文件
 offset: 偏移量
 
 eg:
-  f.seek(5,0)  # 文件开头，向后偏移5个位置
-  f.seek(-3,2)  # 文件结尾，向前偏移3个位置
+    f.seek(5,0)  # 文件开头，向后偏移5个位置
+    f.seek(-3,2)  # 文件结尾，向前偏移3个位置
 ```
+
+## 9. __new__ 和 __init__的区别
+
+- __new__是一个静态方法，而__init__是一个实例方法
+- __new__方法会返回一个创建的实例，而__init__什么都不返回
+- 只有在__new__返回一个cls的实例时，后面的__init__才能被调用
+- 创建一个新实例时调用__new__方法，初始化一个实例时调用__init__方法
