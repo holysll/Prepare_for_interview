@@ -38,7 +38,7 @@ categories: 编程语言-python
 - [17. python语法糖有哪些](#17-python语法糖有哪些)
 - [18. 迭代器和生成器](#18-迭代器和生成器)
 - [19. 闭包](#19-闭包)
-- [10. 装饰器](#10-装饰器)
+- [20. 装饰器](#20-装饰器)
 - [21. 浅拷贝与深拷贝](#21-浅拷贝与深拷贝)
 - [22. 设计模式](#22-设计模式)
 - [23. GIL全局解释器锁](#23-gil全局解释器锁)
@@ -84,6 +84,8 @@ categories: 编程语言-python
 - [63. requests](#63-requests)
 - [64. Beautiful Soup](#64-beautiful-soup)
 - [65. select,poll和epoll](#65-selectpoll和epoll)
+- [66. python中实现IO多路复用](#66-python中实现io多路复用)
+- [67. python常用的并发网络库](#67-python常用的并发网络库)
 
 <!-- /TOC -->
 
@@ -693,45 +695,290 @@ eg:
 
 ## 10. python内存管理与垃圾回收机制
 
+**[Python垃圾回收机制详解](https://blog.csdn.net/xiongchengluo1129/article/details/80462651)**
+
 > Python GC主要使用引用计数(reference counting)来跟踪和回收垃圾。在引用计数的基础上，通过标记清除机制(mark and sweep)解决容器对象可能产生的循环引用问题，通过分代回收(generation collection)策略，以以空间换时间的方法来提高垃圾回收的效率。
 
 - 引用计数
 
-- 标记清除机制
+> 引用计数法的原理是每个对象维护一个ob_ref，用来记录当前对象被引用的次数，也就是来追踪到底有多少引用指向了这个对象，当发生（对象被创建、对象被引用、对象被作为参数传到函数中、对象作为一个元素，存储在容器中）四种情况的时候，该对象的引用计数+1；当发生（该对象的别名被显示销毁时、该对象的引别名被赋予新的对象、一个对象离开它的作用域、该元素从容器中删除时或容器被销毁时），该对象的引用计数器-1。
 
-> 基本思路是先按需分配，等到没有空闲内存的时候从寄存器和程序栈上的引用出发，遍历以对象为节点、以引用为边构成的图，把所有可以访问到的对象打上标记，然后清扫一遍内存空间，把所有没有标记的对象释放。为了保证效率，Python只会在垃圾达到一定阈值时，垃圾回收才会启动。
+**简而言之，PyObject是每个对象必有的内容，其中ob_refcnt就是做为引用计数。当有一个对象有心的引用时，它的ob_refcnt就会增加，当引用它的对象被删除，它的ob_refcnt就会减少。当引用计数为0时，该对象生命就结束了。**
+
+**优点：**  
+① 高效  
+② 运行期没有停顿  
+③ 对象有确定的生命周期  
+④ 易于实现
+
+**缺点：**  
+① 维护引用计数消耗资源，维护引用计数的次数和应用赋值成正比，而不像mark and sweep等基本与回收的内存数量有关。  
+② 无法解决循环引用的问题。
+
+- 标记清除机制(mark and sweep)
+
+> 基本思路是先按需分配，等到没有空闲内存的时候从寄存器和程序栈上的引用出发，遍历以对象为节点、以引用为边构成的图，把所有可以访问到的对象打上标记，然后清扫一遍内存空间，把所有没有标记的对象释放。为了保证效率，Python只会在垃圾达到一定阈值时，垃圾回收才会启动。主要处理对象是一些容器对象，如list、dict、tuple、set、instance等，因为对于字符串、数值对象是不可能造成循环引用问题。
+
+**缺点：**  
+①清除非活动对象前必须顺序扫描整个堆内存，哪怕只剩下小部分活动对象也要扫描所有对象。
 
 - 分带回收策略
 
-> 分代回收的整体思想是：将系统中所有的内存块根据其存活时间划分为不同的集合，每个集合就成为一个“代”，垃圾回收集频率随着“代”的存活时间的增大而减小，存活时间通常利用经过几次垃圾回收来度量。
+> 分代回收的整体思想是：将系统中所有的内存块根据其存活时间划分为不同的集合，每个集合就成为一个“代”，python将内存等为3“代”，分别是年轻代(第0代)、中年代(第1代)、老年代(第2代)，它们对应的是三个链表，它们的垃圾回收集频率随着“代”的存活时间的增大而减小，新创建的对象都会分配在年轻代，年轻代链表总数达到上限时，python垃圾回收机制就回被触发，把那些可以被回收的对象回收，而那些不被回收的对象就会移到中年代去，以此类推，老年代中的对象是存活时间最久的对象，甚至是存活于整个系统的生命周期，存活时间通常利用经过几次垃圾回收来度量。同时，分代回收是建立在标记清除技术基础之上。
 
 > Python默认定义三代对象集合，索引越大，对象存活时间越长。
 
-
-
 ## 11. python2.x 与python3.x的主要区别
+
+**[比较详细](https://www.pythonheidong.com/blog/article/22/)**
+
+- 输入， py2中：raw_input(); py3中：input()
+
+- 输出， py2中：print语句; py3中：print()函数
+
+- 除法，py2中整数间进行'/'和'//'运算返回的是整数，而py3的'/'运算返回的是浮点数
+
+- 遍历范围，py2中：range()或xrange(); py3中：不等于，py2中：range
+
+- 不等于，py2中：<>或!= ; py3中：!=
+
+- 编码问题，py3默认使用unicode，字节是bytes；而py2中字节是str, 默认支持ascii编码，unicode需要在前面加u
+
+- 异常，py2中：except exec, var ; py3中：except exec as var
+
+- 八进制字面量，py2中：0o777或0777 ; py3中：0o777
+
+- 去掉了repr表达式``，py2中：反引号相当于repr()的作用; py3中：去除反引号写法
+
+- 多个模块变化
+
+| 旧的名字 | 新的名字 |
+| ---- | ---- |
+| _winreg | winreg |
+| ConfigParser | configparser |
+| copy_reg | copyreg |
+| Queue | queue |
+| SocketServer | socketserver |
+| repr | reprlib |
+
+- 数据类型，py3中去除long类型，只有int
+
+- rasie，py2中：raise IOError, "file error"; py3中：raise IOError("file error")
+
+- 去除.next()，py2中：next(generator)和generator.next(); py3中：next(generator)
+
+- py3中for循环变量不会导致命名空间泄漏
+
+- py3中不能比较不可排序类型，需同类型比较
+
+- py3中range、zip、map、reduce、filter等返回的是可迭代对象，而不是列表
+
+- py3中新增asynico内置库，async/await原生协程支持异步编程
+
+- py3中移除cmp函数
+
+- py3中去除元组参数解包
+
+- 增加了@abstractmethod和 @abstractproperty两个 decorator，编写抽象方法（属性）更加方便
+
+- 移除了cPickle模块，可以使用pickle模块代替
+
+- 移除了new模块
+
+- 移除了 audiodev, Bastion, bsddb185, exceptions, linuxaudiodev, md5, MimeWriter, mimify, popen2,
+rexec, sets, sha, stringold, strop, sunaudiodev, timing和xmllib模块
+
+- 移除了imageop模块
+
+- 迭代器的next()方法改名为__next__()，并增加内置函数next()，用以调用迭代器的__next__()方法
 
 ## 12. 如何将python2的代码迁移到python3
 
+**[官方文档](https://docs.python.org/zh-cn/3.9/howto/pyporting.html)**
+
+> 第一步：使用自带的2to3.py文件，可以实现大部分代码从py2到py3的自动转换。命令：2to3 -w example.py
+
+> 第二步：使用Pylint或者Pyflakes工具，检测代码错误。
+
+> 第三步：检查模块和依赖库的变化。
+
+> 第四步：人工修复被破坏的py2代码。
+
+**利用好__future__模块**
+
+```python
+from __future__ import division  # 在Python 2 中表现 Python 3.x 中的整除
+from __future__ import unicode_literals  # 适应Python 3.x的新的字符串的表示方法
+from __future__ import print_function  # 使用打印功能
+from __future__ import nested_scopes  # 静态嵌套范围
+from __future__ import generators  # 简单生成器
+from __future__ import absolute_import  # 绝对/相对导入
+from __future__ import with_statement  # with声明
+```
+
 ## 13. python新式类和旧式类的区别
+
+> 新式类是在创建的时候继承内置的object对象或者是内置类型如list、dict，而旧式类(经典类)是直接声明的，可以用dir()方法查看新式类中内置了很多性的属性和方法。
+
+> 新式类遍历方法是广度优先，经典类是深度优先。
 
 ## 14. 鸭子类型
 
+> 编程语言中动态类型语言的一种设计风格，一个对象的特征不是由父类决定，而是通过对象的方法决定。类与类之间不用共同继承一个父类，只需要将它们做的像一件事物即可。
+
+> 注重对象的行为，而非对象的类型，一个对象能都昨晚函数、表达是的参数，取决于其行为而非类型归属。
+
 ## 15. python自省
+
+> 在一些语言中也叫做反射，简单来说就是对象检查。面向对象的语言所写的程序在运行时，所能知道对象的类型。是什么(isinstance)，是什么类型(type)，有那些属性(hasattr)，有哪些变量方法(dir)，有哪些行为(hasattr)，getattr、setattr、delattr、callable。
 
 ## 16. 猴子补丁技术
 
+> 是一种让程序行为在运行时扩展或者变更的方法。
+
+> python充分利用动态语言的特性，在程序运行时动态改变类、模块、属性或方法，为的是将第三方代码打补丁在不按预期运行的bug或者feature上，gevent在这方面运用的比较多。
+
 ## 17. python语法糖有哪些
+
+> 在计算及科学中，语法糖是某种特殊的语法，对语言的功能没有影响，但对程序员来说，有更好的易用性，简洁性、可读性、方便性。比如索引切片、列表推导式、字典推导式、生成器推导式等等。
+
+- 切片操作
+
+```python
+s = '123456'
+s[:3]  # 结果为'123'，取索引索引小于3的值，或叫“取前3位”
+s[3:]  # 结果为'456', 取索引大于等于3的值，或叫“从第4位取到最后”
+s[2:4]  # 结果为'34', 取索引大于等2，小于4的值，或叫“取第3位到第4位”
+s[:]  # 结果为'123456', 取索引全部
+s[:-1]  # 结果为'654321' 取倒序
+s[::2]  # 结果为'135' 步长为2取值
+```
+
+- with打开文件
+
+> 实现的是一个上下文管理器，它主要的特点就是帮助我们自动管理上下文的衔接。即在需要的时候传给我们，不需要的时候自动关闭上下文对象。
+
+```python
+with open('test.txt', 'r', encoding='utf-8') as f:
+    for line in f:
+        print(line,end='')
+
+```
+
+- else语法糖
+
+> for-else、while-else 需要和break语句配合使用。
+
+> try-else-finally
+
+- 动态参数: (*args, **kwargs)
+
+- 匿名函数: lambda x: x * 2
+
+- 推导表达式
+
+> 列表推导表达式：[i for i in s if i%2 != 0]
+> 生成器推导表达式： (i for i in s if i%2 != 0)
+> 集合推导表达式：{i for i in s if i%2 != 0}
+> 字典推导表达式：{i:i*2 for i in s if i%2 != 0}
+
+- yield表达式
+
+> yield是Python中实现**协程(coroutine)**的一个重要基础
+
+```python
+def my_generator(s):
+    '''生成器'''
+    for i in s:
+        yield i*2
+```
+
+- 装饰器
+
+> 一种设计模式，本质上也是一种python函数，是一种闭包。装饰器需要返回一个对象，该对象可以是经过处理的原参数对象，一个包装且类似原参数的对象。
+
+```python
+def my_decorator(func):
+    '''装饰器'''
+    def inner():
+        func()
+
+    return inner
+```
+
+- map
+
+> map(function, iterable, ...) 会根据提供的函数对指定序列做映射。function函数，iterable一个或多个序列，其中py2返回的列表，py3返回的是迭代器。
+
+```python
+def square(x):
+    return x ** 2
+map(square, [1,2,3,4,5])
+
+map(lambda x: x ** 2, [1,2,3,4,5])
+
+map(lambda x, y: x + y, [1,3,5,7,9], [2,4,6,8,10])
+```
+
+- reduce
+
+> reduce(function, iterable[, initializer]) 函数会对参数序列中元素进行累积。function 有两个参数, iterable可迭代对象，initializer可选，初始参数。用传给 reduce 中的函数 function（有两个参数）先对集合中的第 1、2 个元素进行操作，得到的结果再与第三个数据用 function 函数运算，最后得到一个结果。
+
+```python
+def add(x, y):
+    return x + y
+reduce(add, [1,2,3,4,5])
+
+reduce(lambda x, y: x+y, [1,2,3,4,5])
+```
+
+- filter
+
+> filter(function, iterable) 函数用于过滤序列，过滤掉不符合条件的元素，返回由符合条件元素组成的新列表。function判断函数，iterable可迭代对象，该接收两个参数，第一个为函数，第二个为序列，序列的每个元素作为参数传递给函数进行判断，然后返回 True 或 False，最后将返回 True 的元素放到新列表中。
+
+```python
+def odd(n):
+    return n % 2 == 1
+newlist = filter(odd, [1,2,3,4,5,6,7,8,9,10])
+print(list(newlist))
+```
 
 ## 18. 迭代器和生成器
 
+> 迭代器是一个更抽象的概念，任何对象，如果它的类有next方法和iter方法返回自己本身。对于string、list、dict、tuple等这类容器对象，使用for循环遍历是很方便的。在后台for语句对容器对象调用iter()函数，iter()是python的内置函数。iter()会返回一个定义了next()方法的迭代器对象，它在容器中逐个访问容器内元素，next()也是python的内置函数。在没有后续元素时，next()会抛出一个StopIteration异常。
+
+> 生成器(Generator)是创建迭代器的简单而强大的工具。它们写起来就像是正规的函数，只是在需要返回数据的时候使用yield语句，生成器使用yield语句返回一个值，yield语句挂起该生成器函数的状态，保留足够的信息，以便之后从它离开的地方继续执行。每次next()被调用时，生成器会返回它脱离的位置（它记忆语句最后一次执行的位置和所有的数据值）。生成器需要注意：只能遍历一次。
+
+> 区别：生成器能做到迭代器能做的所有事，而且因为自动创建了__iter__()和next()方法，生成器显得特别简洁，而且生成器也是高效的，使用生成器表达式取代列表解析可以同时节省内存。除了创建和保存程序状态的自动方法，当发生器终结时，还会自动抛出StopIteration异常。
+
 ## 19. 闭包
 
-## 10. 装饰器
+> 闭包(closure)是函数式编程的重要的语法结构，也是一种组织代码的结构，提高了代码的复用性。简单说，外函数的内部定义了一个内函数，内部函数使用了外部函数的临时变量，并外函数的返回值是内函数的引用。产生闭包需满足的条件：
+
+- 必须有一个内嵌函数
+- 内嵌函数必须引用外部函数的变量
+- 外部函数的返回值必须是内嵌函数
+
+> 简单说，闭包就是根据不同的配置信息得到不同的结果，装饰器就是一种闭包，闭包有效的减少了函数所需定义的参数数目。
+
+```python
+def line_conf(a, b):
+    def line(x):
+        return a*x +b
+    return line
+
+line1 = line_conf(1, 1)
+line2 = line_conf(4, 5)
+print(line1(5), line2(5))  # (6, 25)
+```
+
+## 20. 装饰器
+
+**[python装饰器](https://blog.csdn.net/tryhardsilently/article/details/90767627)**
+
+> 装饰器本质上是一个函数，可以让其他函数在不需要做任何代码处理的前提下增加额外的功能，装饰器的返回值也是一个函数对象。它经常用于有切面需求的场景，比如：插入日志、性能测试、事务处理、缓存、权限校验等场景，装饰器是解决这类问题的绝佳设计。有了装饰器，我们就可以抽离出大量与函数功能本身无关的雷同代码到装饰器中并继续重用。概括的讲，装饰器的作用就是为已经存在的对象添加额外的功能。
 
 ## 21. 浅拷贝与深拷贝
-
-> 
 
 ## 22. 设计模式
 
@@ -890,4 +1137,10 @@ urllib.quote(line.decode("gbk").encode("utf-16"))
 
 ## 65. select,poll和epoll
 
-## 66. 
+## 66. python中实现IO多路复用
+
+## 67. python常用的并发网络库
+
+- tornado
+- gevent
+- asyncio
