@@ -975,14 +975,85 @@ print(line1(5), line2(5))  # (6, 25)
 ## 20. 装饰器
 
 **[python装饰器](https://blog.csdn.net/tryhardsilently/article/details/90767627)**
+**[Python装饰器各种类型详解](https://blog.csdn.net/yhy1271927580/article/details/72758577)**
+**[Python各种类型装饰器详解说明](https://blog.csdn.net/five3/article/details/83447467)**
+**[python装饰器的4种类型](https://blog.csdn.net/xiemanr/article/details/72510885)**
+https://blog.csdn.net/five3/article/details/83447467
+https://blog.csdn.net/xiemanr/article/details/72510885
+https://blog.csdn.net/yhy1271927580/article/details/72758577
 
-> 装饰器本质上是一个函数，可以让其他函数在不需要做任何代码处理的前提下增加额外的功能，装饰器的返回值也是一个函数对象。它经常用于有切面需求的场景，比如：插入日志、性能测试、事务处理、缓存、权限校验等场景，装饰器是解决这类问题的绝佳设计。有了装饰器，我们就可以抽离出大量与函数功能本身无关的雷同代码到装饰器中并继续重用。概括的讲，装饰器的作用就是为已经存在的对象添加额外的功能。
+https://blog.csdn.net/weixin_42134789/article/details/84635252?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase
 
-- 无参装饰器
-- 有参装饰器
-- 类装饰器
+https://blog.csdn.net/u010358168/article/details/77773199?utm_medium=distribute.pc_relevant_right.none-task-blog-BlogCommendFromMachineLearnPai2-29.nonecase&depth_1-utm_source=distribute.pc_relevant_right.none-task-blog-BlogCommendFromMachineLearnPai2-29.nonecase
+
+> 装饰器本质上是一个函数，可以让其他函数在不需要做任何代码处理的前提下增加额外的功能，装饰器的返回值也是一个函数对象。它经常用于有切面需求的场景，比如：**插入日志、性能测试、事务处理、缓存、权限校验等场景**，装饰器是解决这类问题的绝佳设计。有了装饰器，我们就可以抽离出大量与函数功能本身无关的雷同代码到装饰器中并继续重用。概括的讲，装饰器的作用就是为已经存在的对象添加额外的功能。
+- 装饰器自身为函数  
+(1). 被装饰的对象为函数，且不带参数  
+
+```python
+import time
+
+# 装饰器为函数
+def time_decorator(func):
+    def inner():
+        print("Hello inner")
+        start = time.time()
+        func()
+        end = time.time()
+        print('方法{}用时:{}秒'.format(func.__name__, end - start))
+
+    return inner
+
+# 被装饰的对象为函数，且不带参数
+@time_decorator
+def foo():
+    time.sleep(3)
+    print("foo is running.")
+
+# 调用装饰后的foo函数
+print(foo.__name__)
+foo()
+
+# 结果
+'''
+inner
+Hello inner
+func1 is running.
+方法foo用时:3.01444411277771秒
+'''
+```
+
+> 在以上代码中，@time_decorator装饰器对foo函数进行了装饰，这是一个不带参数的装饰器，当python解释器执行到@time_decorator时，回去调用time_decorator函数，同时将被装饰的对象的函数名foo作为参数传入，这时time_decorator函数接受到一个参数(即方法名foo)，然后进入内嵌函数inner，计算开始时间，调用传进来的foo方法，再计算结束时间，打印函数foo的耗时，最后将结果用内部函数inner返回，其实就是一个闭包函数。
+
+> 首先打印的是foo.__name__，这里是inner而不是foo，本质上是调用inner函数  
+> 其次打印的是inner的内容"Hello inner"，然后开始调用foo函数，打印"func1 is running."  
+> 最后打印"方法foo用时:3.01444411277771秒"
+
+(2). 被装饰的对象为函数，且带参数  
+(3). 被装饰的对象为类，且不带参数  
+(4). 被装饰的对象为类，且带参数
+
+- 装饰器自身为类  
+(1). 被装饰的对象为函数，且不带参数  
+(2). 被装饰的对象为函数，且带参数  
+(3). 被装饰的对象为类，且不带参数  
+(4). 被装饰的对象为类，且带参数
+
 - 特殊的装饰器
+
 - 装饰器顺序
+
+- 通用万能装饰
+
+```python
+def decorator_all(func):
+    def wrapper(*args, **kwargs):
+        print("万能装饰器")
+        return func(*args, **kwargs)
+    
+    return wrapper
+
+```
 
 ## 21. 浅拷贝与深拷贝
 
