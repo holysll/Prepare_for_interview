@@ -988,13 +988,15 @@ https://blog.csdn.net/u010358168/article/details/77773199?utm_medium=distribute.
 
 > 装饰器本质上是一个函数，可以让其他函数在不需要做任何代码处理的前提下增加额外的功能，装饰器的返回值也是一个函数对象。它经常用于有切面需求的场景，比如：**插入日志、性能测试、事务处理、缓存、权限校验等场景**，装饰器是解决这类问题的绝佳设计。有了装饰器，我们就可以抽离出大量与函数功能本身无关的雷同代码到装饰器中并继续重用。概括的讲，装饰器的作用就是为已经存在的对象添加额外的功能。
 - 装饰器自身为函数  
-(1). 被装饰的对象为函数，且不带参数  
+(1). 被装饰的对象为函数，且装饰器不带参数  
 
 ```python
 import time
+from functools import wraps
 
-# 装饰器为函数
+# 装饰器为函数，且不带参数
 def time_decorator(func):
+    @wraps(func)  # 保证装饰过的函数__name__属性不变
     def inner():
         print("Hello inner")
         start = time.time()
@@ -1004,7 +1006,7 @@ def time_decorator(func):
 
     return inner
 
-# 被装饰的对象为函数，且不带参数
+# 被装饰的对象为函数
 @time_decorator
 def foo():
     time.sleep(3)
@@ -1029,11 +1031,41 @@ func1 is running.
 > 其次打印的是inner的内容"Hello inner"，然后开始调用foo函数，打印"func1 is running."  
 > 最后打印"方法foo用时:3.01444411277771秒"
 
-(2). 被装饰的对象为函数，且带参数  
+(2). 被装饰的对象为函数，且装饰器带参数  
 
 ```python
+import time
+from functools import wraps
 
+# 装饰器为函数，且带参数
+def time_decorator(cpu_time):
+    def wrapper(func): 
+        @wraps(func)  # 保证装饰过的函数__name__属性不变
+        def inner(*args, **kwargs):
+            print('{} is running'.format(func.__name__))
+            print()
+            return func(*args, **kwargs)
+        return wrapper
+
+# 调用装饰后的foo函数
+@time_decorator(False)
+def foo():
+    print("foo is running.")
+
+# 调用装饰后的foo函数
+print(foo.__name__)
+foo()
+
+# 结果
+'''
+inner
+Hello inner
+func1 is running.
+方法foo用时:3.01444411277771秒
+'''
 ```
+
+
 
 (3). 被装饰的对象为类，且不带参数  
 (4). 被装饰的对象为类，且带参数
