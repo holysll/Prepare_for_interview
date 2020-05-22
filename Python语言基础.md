@@ -1039,18 +1039,21 @@ from functools import wraps
 
 # 装饰器为函数，且带参数
 def time_decorator(cpu_time):
+    time_func = time.clock if cpu_time else time.time
     def wrapper(func): 
         @wraps(func)  # 保证装饰过的函数__name__属性不变
         def inner(*args, **kwargs):
+            start_time = time_func()
+            func(*args, **kwargs)
             print('{} is running'.format(func.__name__))
-            print()
-            return func(*args, **kwargs)
-        return wrapper
+            print("运行时间{}".format((time_func()-start_time)))
+        return inner
+    return wrapper
 
 # 调用装饰后的foo函数
 @time_decorator(False)
 def foo():
-    print("foo is running.")
+    print("hello.")
 
 # 调用装饰后的foo函数
 print(foo.__name__)
@@ -1058,10 +1061,10 @@ foo()
 
 # 结果
 '''
-inner
-Hello inner
-func1 is running.
-方法foo用时:3.01444411277771秒
+foo
+hello.
+foo is running
+运行时间0.0
 '''
 ```
 
