@@ -974,21 +974,25 @@ print(line1(5), line2(5))  # (6, 25)
 
 ## 20. 装饰器
 
+> **以下是一些前人的总结参考：**
+
 **[python装饰器](https://blog.csdn.net/tryhardsilently/article/details/90767627)**
+
 **[Python装饰器各种类型详解](https://blog.csdn.net/yhy1271927580/article/details/72758577)**
+
 **[Python各种类型装饰器详解说明](https://blog.csdn.net/five3/article/details/83447467)**
+
 **[python装饰器的4种类型](https://blog.csdn.net/xiemanr/article/details/72510885)**
-https://blog.csdn.net/five3/article/details/83447467
-https://blog.csdn.net/xiemanr/article/details/72510885
-https://blog.csdn.net/yhy1271927580/article/details/72758577
 
-https://blog.csdn.net/weixin_42134789/article/details/84635252?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase
+**[一文看懂Python系列之装饰器](https://blog.csdn.net/weixin_42134789/article/details/84635252?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase)**
 
-https://blog.csdn.net/u010358168/article/details/77773199?utm_medium=distribute.pc_relevant_right.none-task-blog-BlogCommendFromMachineLearnPai2-29.nonecase&depth_1-utm_source=distribute.pc_relevant_right.none-task-blog-BlogCommendFromMachineLearnPai2-29.nonecase
+**[python装饰器简介](https://blog.csdn.net/u010358168/article/details/77773199?utm_medium=distribute.pc_relevant_right.none-task-blog-BlogCommendFromMachineLearnPai2-29.nonecase&depth_1-utm_source=distribute.pc_relevant_right.none-task-blog-BlogCommendFromMachineLearnPai2-29.nonecase)**
 
-> 装饰器本质上是一个函数，可以让其他函数在不需要做任何代码处理的前提下增加额外的功能，装饰器的返回值也是一个函数对象。它经常用于有切面需求的场景，比如：**插入日志、性能测试、事务处理、缓存、权限校验等场景**，装饰器是解决这类问题的绝佳设计。有了装饰器，我们就可以抽离出大量与函数功能本身无关的雷同代码到装饰器中并继续重用。概括的讲，装饰器的作用就是为已经存在的对象添加额外的功能。
-- 装饰器自身为函数  
-(1). 被装饰的对象为函数，且装饰器不带参数  
+> 装饰器本质上是一个函数，可以让其他函数在不需要做任何代码处理的前提下增加额外的功能，装饰器的返回值也是一个函数对象(函数的引用)。它经常用于有切面需求的场景，比如：**插入日志、性能测试、事务处理、缓存、权限校验等场景**，装饰器是解决这类问题的绝佳设计。有了装饰器，我们就可以抽离出大量与函数功能本身无关的雷同代码到装饰器中并继续重用。概括的讲，装饰器的作用就是为已经存在的对象添加额外的功能。
+
+- **装饰器自身为函数**
+
+(1). 被装饰的对象为函数，且不带参数  
 
 ```python
 import time
@@ -1006,7 +1010,7 @@ def time_decorator(func):
 
     return inner
 
-# 被装饰的对象为函数
+# 被装饰的对象为函数，且不带参数
 @time_decorator
 def foo():
     time.sleep(3)
@@ -1020,7 +1024,7 @@ foo()
 '''
 inner
 Hello inner
-func1 is running.
+foo is running.
 方法foo用时:3.01444411277771秒
 '''
 ```
@@ -1031,66 +1035,913 @@ func1 is running.
 > 其次打印的是inner的内容"Hello inner"，然后开始调用foo函数，打印"func1 is running."  
 > 最后打印"方法foo用时:3.01444411277771秒"
 
-(2). 被装饰的对象为函数，且装饰器带参数  
+(2). 被装饰的对象为函数，且带参数  
 
 ```python
 import time
 from functools import wraps
 
-# 装饰器为函数，且带参数
-def time_decorator(cpu_time):
-    time_func = time.clock if cpu_time else time.time
-    def wrapper(func): 
-        @wraps(func)  # 保证装饰过的函数__name__属性不变
-        def inner(*args, **kwargs):
-            start_time = time_func()
-            func(*args, **kwargs)
-            print('{} is running'.format(func.__name__))
-            print("运行时间{}".format((time_func()-start_time)))
-        return inner
-    return wrapper
+# 装饰器为函数，且不带参数
+def time_decorator(func):
+    """
+    如果原函数有参数，那闭包函数必须保持参数个数一直，并且将参数传递给原方法
+    """
+    @wraps(func)  # 保证装饰过的函数__name__属性不变
+    def inner(name):  # 如果被装饰的函数有形参，那么闭包函数必须有参数，且一致
+        print("Hello inner")
+        start = time.time()
+        func(name)
+        end = time.time()
+        print('方法{}用时:{}秒'.format(func.__name__, end - start))
 
-# 调用装饰后的foo函数
-@time_decorator(False)
-def foo():
-    print("hello.")
+    return inner
+
+# 调用装饰后的foo函数，且带参数
+@time_decorator
+def foo(name):
+    time.sleep(3)
+    print("hello " + name)
 
 # 调用装饰后的foo函数
 print(foo.__name__)
-foo()
+foo('lucy')
 
 # 结果
 '''
 foo
-hello.
-foo is running
-运行时间0.0
+Hello inner
+hello lucy
+方法foo用时:3.000863790512085秒
 '''
 ```
 
+> 当被装饰的函数，带参数时，需要在装饰器的闭包函数inner函数中添加一致的参数name，调用func对象时也需要加上一致的参数name，并且返回了以reurn inner形式返回闭包函数，具体调用过程看结果应该不难理解。
+
+> 当然，如果被装饰函数存在多个参数时，这里使用了python中动态参数的概念，利用`(*args, **kwargs)`来接收可变参数和关键字参数，这样装饰器就可以支持任意的组合参数的函数了。装饰器修改如下：
+
+```python
+import time
+from functools import wraps
+
+# 装饰器为函数，且不带参数
+def time_decorator(func):
+    @wraps(func)  # 保证装饰过的函数__name__属性不变
+    def inner(*args, **kwargs):  # 接收可变参数和关键字参数
+        print("Hello inner")
+        start = time.time()
+        func(*args, **kwargs)
+        end = time.time()
+        print('方法{}用时:{}秒'.format(func.__name__, end - start))
+
+    return inner
+
+# 调用装饰后的foo函数，且带参数
+@time_decorator
+def foo(name):
+    time.sleep(3)
+    print("hello " + name)
+
+# 调用装饰后的foo函数
+print(foo.__name__)
+foo('lucy')
+
+# 结果
+'''
+foo
+Hello inner
+hello lucy
+方法foo用时:3.000807762145996秒
+'''
+```
+
+(3). 被装饰的对象为函数，且带返回值
+
+```python
+import time
+from functools import wraps
+
+# 装饰器为函数，且不带参数
+def time_decorator(func):
+    @wraps(func)  # 保证装饰过的函数__name__属性不变
+    def inner():
+        print("Hello inner")
+        start = time.time()
+        res = func()
+        end = time.time()
+        print('方法{}用时:{}秒'.format(func.__name__, end - start))
+        return res
+
+    return inner
+
+# 被装饰的对象为函数，且带返回值
+@time_decorator
+def foo():
+    time.sleep(3)
+    print("foo is running.")
+    return "this is foo's return value"
 
 
-(3). 被装饰的对象为类，且不带参数  
-(4). 被装饰的对象为类，且带参数
+# 调用装饰后的foo函数
+print(foo.__name__)
+res = foo()
+print('返回值：%s' % res)
 
-- 装饰器自身为类  
-(1). 被装饰的对象为函数，且不带参数  
-(2). 被装饰的对象为函数，且带参数  
-(3). 被装饰的对象为类，且不带参数  
-(4). 被装饰的对象为类，且带参数
+# 结果
+'''
+foo
+Hello inner
+foo is running.
+方法foo用时:3.000837802886963秒
+返回值：this is foo's return value
+'''
+```
 
-- 特殊的装饰器
+> 若被装饰的函数是带返回值的，闭包函数inner中，调用func()时必须相应的带返回值，不然装饰函数时，也不进行返回，默认为None。
+
+(4). 被装饰的对象为函数，且装饰器带参数也有返回值
+
+```python
+import time
+from functools import wraps
+
+# 装饰器为函数，且带参数带返回值
+def time_decorator(arg=None):  # 如果在调用装饰器时为给传参数，则默认值为None
+    def wrapper(func):
+        @wraps(func)  # 保证装饰过的函数__name__属性不变
+        def inner(*args,**kwargs):
+            print("Hello inner")
+            print("装饰器的参数为：{}".format(arg))
+            start = time.time()
+            res = func(*args,**kwargs)
+            end = time.time()
+            print('方法{}用时:{}秒'.format(func.__name__, end - start))
+            return res
+
+        return inner
+    return wrapper
+
+# 被装饰的对象为函数，且不定参数
+@time_decorator('hello')
+def foo():
+    time.sleep(3)
+    print("foo is running.")
+    return "this is foo's return value"
+
+# 调用装饰后的foo函数
+print(foo.__name__)
+res = foo()
+print('返回值：%s' % res)
+
+# 结果
+'''
+foo
+Hello inner
+装饰器的参数为：hello
+foo is running.
+方法foo用时:3.000739336013794秒
+返回值：this is foo's return value
+'''
+```
+
+> 带有参数的装饰器，需要写三层嵌套函数，最外一层用来传递装饰器的参数。上面的装饰器即带参数也带返回值，先执行time_decorator('hello')，返回wrapper函数的应用，然后使用wrapper对函数foo进行装饰，内层inner使用的是`*args,**kwargs`接收可变参数和关键字参数，具体运行顺序看结果应该不难理解。
+
+(5). 被装饰的对象为类，且不带参数
+
+```python
+from functools import wraps
+
+# 装饰器为函数，且不带参数
+def singleton(cls):
+    # 在装饰器中声明一个变量，用于保存类的实例，那么这个实例对象将始终是通过一个实例对象
+    instances = {}
+    @wraps(cls)
+    def inner():
+        print('Hello inner')
+        print('class name: {}'.format(cls.__name__))
+        if cls not in instances:
+            instances[cls] = cls()
+        return instances[cls]
+    return inner
+
+# 被装饰的对象是类，且不带参数
+@singleton
+class Foo():
+    def __init__(self):
+        self.name = 'lucy'
+
+    def say(self):
+        print("her name is {}".format(self.name))
+
+# 实例化装饰后的类
+print(Foo.__name__)
+foo = Foo()
+foo.say()
+
+# 结果
+'''
+Foo
+Hello inner
+class name: Foo
+her name is lucy
+'''
+```
+
+> 上面的例子是基于装饰器的单例模式，通过装饰器装饰这个类，是的类在初始化时候始终将初始化实例赋值给instances，而instances是装饰器的一个实例对象，通过实例赋值，instances始终占有同一个内存空间，也就实现了单例模式设计。
+
+> 当然，如果用这个装饰器对类里面方法say进行装饰的话，此时装饰器single接收到的参数cls=say，所以打印"class name"是say，因为cls__name__就是say，这里等同于函数装饰器给函数进行装饰，于是装饰器的内层函数inner需要接受say带来的参数name，不加参数则会报错，其他与前面一样。
+
+```python
+from functools import wraps
+
+# 装饰器为函数，且不带参数
+def singleton(cls):
+    # 在装饰器中声明一个变量，用于保存类的实例，那么这个实例对象将始终是通过一个实例对象
+    instances = {}
+    @wraps(cls)
+    def inner(name):  # 必须和所修饰类里面的函数参数个数一致，否则会报错
+        print('Hello inner')
+        print('class name: {}'.format(cls.__name__))
+        if cls not in instances:
+            instances[cls] = cls(name)
+        return instances[cls]
+    return inner
+
+# 被装饰的对象是类中的函数，调用类中的初始化参数
+class Foo():
+    def __init__(self):
+        self.name = 'lucy'
+
+    @singleton
+    def say(self):
+        print("her name is {}".format(self.name))
+
+# 实例化装饰后的类
+print(Foo.__name__)
+foo = Foo()
+foo.say()
+
+# 结果
+'''
+Foo
+Hello inner
+class name: say
+her name is lucy
+'''
+```
+
+(6). 被装饰的对象为类，且带参数
+
+```python
+from functools import wraps
+
+# 装饰器为函数，且不带参数
+def singleton(cls):
+    # 在装饰器中声明一个变量，用于保存类的实例，那么这个实例对象将始终是通过一个实例对象
+    instances = {}
+
+    @wraps(cls)
+    def inner(*args, **kwargs):
+        print('Hello inner')
+        print('class name: {}'.format(cls.__name__))
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+
+    return inner
+
+# 被装饰的对象是类，且带参数
+@singleton
+class Foo():
+    def __init__(self, *args, **kwargs):
+        self.id = args[0]
+        self.name = kwargs.get('name_dict').get(self.id)
+
+    def say(self):
+        print("her name is {}".format(self.name))
+
+# 实例化装饰后的类
+print(Foo.__name__)
+foo = Foo('1', '2', '3', name_dict={'1': 'Lucy', '2': 'Linda', '3': 'Mary'})
+foo.say()
+
+# 结果
+'''
+Foo
+Hello inner
+class name: Foo
+her name is Lucy
+```
+
+(7). 被装饰的对象为类，且装饰器带参数也有返回值
+
+```python
+from functools import wraps
+
+# 装饰器为函数，且带参数带返回值
+def singleton(arg=None): # 如果在调用装饰器时为给传参数，则默认值为None
+    def wrapper(cls):
+        # 在装饰器中声明一个变量，用于保存类的实例，那么这个实例对象将始终是通过一个实例对象
+        instances = {}
+
+        @wraps(cls)
+        def inner(*args, **kwargs):
+            print('Hello inner')
+            print("装饰器的参数为：{}".format(arg))
+            print('class name: {}'.format(cls.__name__))
+            if cls not in instances:
+                instances[cls] = cls(*args, **kwargs)
+            return instances[cls]
+
+        return inner
+    return wrapper
+
+# 被装饰的对象是类，且带参数
+@singleton('hello')
+class Foo():
+    def __init__(self, *args, **kwargs):
+        self.id = args[0]
+        self.name = kwargs.get('name_dict').get(self.id)
+
+    def say(self):
+        print("her name is {}".format(self.name))
+
+# 实例化装饰后的类
+print(Foo.__name__)
+foo = Foo('1', '2', '3', name_dict={'1': 'Lucy', '2': 'Linda', '3': 'Mary'})
+foo.say()
+
+# 结果
+'''
+Foo
+Hello inner
+装饰器的参数为：hello
+class name: Foo
+her name is Lucy
+'''
+```
+
+> 这里与（4）类似，都是带有参数的装饰器，且装饰器为函数，需要写三层嵌套函数，最外一层用来传递装饰器的参数。上面的装饰器即带参数也带返回值，先执行time_decorator('hello')，返回wrapper函数的应用，然后使用wrapper对函数foo进行装饰，内层inner使用的是`*args,**kwargs`接收可变参数和关键字参数，具体运行顺序看结果应该不难理解。
+
+- **装饰器自身为类**
+
+> 类装饰器本质上和函数装饰器原理、作用相同，都是为其它函数增加额外的功能。但是相比于函数装饰器，类装饰器具有灵活度大、高内聚、封装性等优点。使用类装饰器可以直接依靠类内部的__call__方法来实现，当使用 @ 形式将类装饰器附加到函数上时，就会调用类装饰器的__call__方法。而不需要向函数装饰器那样，在装饰器函数中定义嵌套函数，来实现装饰功能。
+
+(1). 被装饰的对象为函数，且不带参数
+
+```python
+import time
+from functools import wraps
+
+# 装饰器是类，且不带参数
+class Decorator(object):
+    def __init__(self,func):
+        # 初始化函数只会调用一次，当第二次装饰的时候，这一步就滤过了
+        print('decorator init')
+        print('func name is {}'.format(func.__name__))
+        self.func = func
+
+    def __call__(self):
+        print('装饰器中的功能：{} 睡眠3秒'.format(self.func.__name__))
+        start = time.time()
+        res = self.func()
+        end = time.time()
+        print('方法{}用时:{}秒'.format(self.func.__name__, end - start))
+        return res
+
+# 被装饰的对象为函数，且不带参数
+@Decorator
+def foo():
+    time.sleep(3)
+    print("foo is running.")
+
+# 调用装饰后的foo函数
+print(foo.func.__name__)
+foo()
+
+# 结果
+'''
+decorator init
+func name is foo
+foo
+装饰器中的功能：foo 睡眠3秒
+foo is running.
+方法foo用时:3.000671863555908秒
+'''
+```
+
+> 装饰器为类时，调用__init__方法创建实例、传递参数，并调用__call__方法实现对被装饰函数功能的添加。
+
+(2). 被装饰的对象为函数，且带参数
+
+```python
+import time
+from functools import wraps
+
+# 装饰器是类，且不带参数
+class Decorator(object):
+    def __init__(self,func):
+        # 初始化函数只会调用一次，当第二次装饰的时候，这一步就滤过了
+        print('decorator init')
+        print('func name is {}'.format(func.__name__))
+        self.func = func
+
+    def __call__(self, name):
+        print('装饰器中的功能：{} 睡眠3秒'.format(self.func.__name__))
+        start = time.time()
+        res = self.func(name)
+        end = time.time()
+        print('方法{}用时:{}秒'.format(self.func.__name__, end - start))
+        return res
+
+# 被装饰的对象为函数，且带参数
+@Decorator
+def foo(name):
+    time.sleep(3)
+    print("hello " + name)
+
+# 调用装饰后的foo函数
+print(foo.func.__name__)
+foo('lucy')
+
+# 结果
+'''
+decorator init
+func name is foo
+foo
+装饰器中的功能：foo 睡眠3秒
+hello lucy
+方法foo用时:3.0009634494781494秒
+'''
+```
+
+> 当被装饰的函数，且带参数时，需要在装饰器类的__call__中添加一致的参数name，调用func对象时也需要加上一致的参数name，并且返回了以reurn inner形式返回闭包函数，具体调用过程看结果应该不难理解。
+
+> 当然，如果被装饰函数存在多个参数时，这里使用了python中动态参数的概念，利用`(*args, **kwargs)`来接收可变参数和关键字参数，这样装饰器就可以支持任意的组合参数的函数了。装饰器修改如下：
+
+```python
+import time
+from functools import wraps
+
+# 装饰器是类，且不带参数
+class Decorator(object):
+    def __init__(self,func):
+        # 初始化函数只会调用一次，当第二次装饰的时候，这一步就滤过了
+        print('decorator init')
+        print('func name is {}'.format(func.__name__))
+        self.func = func
+
+    def __call__(self, *args, **kwargs):
+        print('装饰器中的功能：{} 睡眠3秒'.format(self.func.__name__))
+        start = time.time()
+        res = self.func(*args, **kwargs)
+        end = time.time()
+        print('方法{}用时:{}秒'.format(self.func.__name__, end - start))
+        return res
+
+# 被装饰的对象为函数，且带参数
+@Decorator
+def foo(name):
+    time.sleep(3)
+    print("hello " + name)
+
+# 调用装饰后的foo函数
+print(foo.func.__name__)
+foo('lucy')
+
+# 结果
+'''
+decorator init
+func name is foo
+foo
+装饰器中的功能：foo 睡眠3秒
+hello lucy
+方法foo用时:3.000622510910034秒
+'''
+```
+
+(3). 被装饰的对象为函数，且带返回值  
+
+```python
+import time
+from functools import wraps
+
+# 装饰器是类，且不带参数
+class Decorator(object):
+    def __init__(self,func):
+        # 初始化函数只会调用一次，当第二次装饰的时候，这一步就滤过了
+        print('decorator init')
+        print('func name is {}'.format(func.__name__))
+        self.func = func
+
+    def __call__(self):
+        print('装饰器中的功能：{} 睡眠3秒'.format(self.func.__name__))
+        start = time.time()
+        res = self.func()
+        end = time.time()
+        print('方法{}用时:{}秒'.format(self.func.__name__, end - start))
+        return res
+
+# 被装饰的对象为函数，且带返回值
+@Decorator
+def foo():
+    time.sleep(3)
+    print("foo is running.")
+    return "this is foo's return value"
+
+# 调用装饰后的foo函数
+print(foo.func.__name__)
+res = foo()
+print('返回值：%s' % res)
+
+# 结果
+'''
+decorator init
+func name is foo
+foo
+装饰器中的功能：foo 睡眠3秒
+foo is running.
+方法foo用时:3.0008039474487305秒
+返回值：this is foo's return value
+'''
+```
+
+> 和之前装饰器是函数一样，若被装饰的函数是带返回值的，闭包函数inner中，调用func()时必须相应的带返回值，不然装饰函数时，也不进行返回，默认为None。
+
+(4). 被装饰的对象为函数，且装饰器带参数也有返回值
+
+```python
+import time
+from functools import wraps
+
+# 装饰器是类，且带参数带返回值
+class Decorator(object):
+    def __init__(self, arg=None):  # 如果在调用装饰器时为给传参数，则默认值为None
+        print('decorator init')
+        self.arg = arg
+
+    def __call__(self, func):
+        @wraps(func)  # 保证装饰过的函数__name__属性不变
+        def inner(*args, **kwargs):
+            print("Hello inner")
+            print('装饰器的参数为：{}'.format(self.arg))
+            print('装饰器中的功能：{} 睡眠3秒'.format(func.__name__))
+            start = time.time()
+            res = func(*args, **kwargs)
+            end = time.time()
+            print('方法{}用时:{}秒'.format(func.__name__, end - start))
+            return res
+        return inner
+
+# 被装饰的对象为函数，且不带参数
+@Decorator('hello')
+def foo():
+    time.sleep(3)
+    print("foo is running.")
+    return "this is foo's return value"
+
+# 调用装饰后的foo函数
+print(foo.__name__)
+res = foo()
+print('返回值：%s' % res)
+
+# 结果
+'''
+decorator init
+foo
+Hello inner
+装饰器的参数为：hello
+装饰器中的功能：foo 睡眠3秒
+foo is running.
+类foo用时:3.000250816345215秒
+返回值：this is foo's return value
+'''
+```
+
+> 和之前装饰器是函数一样，带有参数的装饰器类，会把被装饰函数所带的参数传递给装饰器__init__进行初始化，而__call__作为外层函数接收被装饰函数的函数名，作为参数传递给内层函数inner，这里需要注意的是func传入，不需要在前面加self了，其他的跟函数装饰函数很相似，可以通过结果去理解整个装饰器的运行过程。
+
+(5). 被装饰的对象为类，且不带参数
+
+```python
+import time
+from functools import wraps
+
+# 装饰器是类，且不带参数
+class Decorator(object):
+    def __init__(self,func):
+        # 初始化函数只会调用一次，当第二次装饰的时候，这一步就滤过了
+        print('decorator init')
+        print('class name is {}'.format(func.__name__))
+        self.func = func
+
+    def __call__(self, *args, **kwargs):
+        print('装饰器中的功能：{} 睡眠3秒'.format(self.func.__name__))
+        start = time.time()
+        res = self.func(*args, **kwargs)
+        end = time.time()
+        print('类{}用时:{}秒'.format(self.func.__name__, end - start))
+        return res
+
+# 被装饰的对象为函数，且不带参数
+@Decorator
+class Foo():
+    def __init__(self):
+        self.name = 'lucy'
+
+    def say(self):
+        time.sleep(3)
+        print("her name is {}".format(self.name))
+
+# 实例化装饰后的类
+print("类名：{}".format(Foo.func.__name__))
+foo = Foo()
+foo.say()
+
+# 结果
+'''
+decorator init
+func name is Foo
+类名：Foo
+装饰器中的功能：Foo 睡眠3秒
+类Foo用时:0.0秒
+her name is lucy
+'''
+```
+
+> 跟函数装饰器装饰类一样，这里把类Foo通过@Decorator类装饰器传递给参数func，但这个类装饰器没有__get__方法，无法返回装饰后的类，而是进行初始化。第二次调用，这时类Foo()就相当于调用了装饰器的__call__方法，在里面调用self.func()方法
+
+(6). 被装饰的对象为类，且带参数
+
+```python
+import time
+from functools import wraps
+
+# 装饰器是类，且不带参数
+class Decorator(object):
+    def __init__(self,func):
+        # 初始化函数只会调用一次，当第二次装饰的时候，这一步就滤过了
+        print('decorator init')
+        print('class name is {}'.format(func.__name__))
+        self.func = func
+
+    def __call__(self, *args, **kwargs):
+        print('装饰器中的功能：{} 睡眠3秒'.format(self.func.__name__))
+        start = time.time()
+        res = self.func(*args, **kwargs)
+        end = time.time()
+        print('类{}用时:{}秒'.format(self.func.__name__, end - start))
+        return res
+
+# 被装饰的对象为类，且带参数
+@Decorator
+class Foo():
+    def __init__(self, *args, **kwargs):
+        self.id = args[0]
+        self.name = kwargs.get('name_dict').get(self.id)
+
+    def say(self):
+        print("her name is {}".format(self.name))
+
+# 实例化装饰后的类
+print("类名：{}".format(Foo.func.__name__))
+foo = Foo('1', '2', '3', name_dict={'1': 'Lucy', '2': 'Linda', '3': 'Mary'})
+foo.say()
+
+# 结果
+'''
+decorator init
+class name is Foo
+类名：Foo
+装饰器中的功能：Foo 睡眠3秒
+方法Foo用时:0.0秒
+her name is Lucy
+'''
+```
+
+(7). 被装饰的对象为类，且装饰器带参数也有返回值
+
+```python
+import time
+from functools import wraps
+
+# 装饰器是类，且带参数带返回值
+class Decorator(object):
+    def __init__(self, arg=None):  # 如果在调用装饰器时为给传参数，则默认值为None
+        print('decorator init')
+        self.arg = arg
+
+    def __call__(self, func):
+        @wraps(func)  # 保证装饰过的函数__name__属性不变
+        def inner(*args, **kwargs):
+            print("Hello inner")
+            print('装饰器的参数为：{}'.format(self.arg))
+            print('装饰器中的功能：{} 睡眠3秒'.format(func.__name__))
+            start = time.time()
+            res = func(*args, **kwargs)
+            end = time.time()
+            print('类{}用时:{}秒'.format(func.__name__, end - start))
+            return res
+        return inner
+
+# 被装饰的对象为类，且带参数
+@Decorator('hello')
+class Foo():
+    def __init__(self, *args, **kwargs):
+        self.id = args[0]
+        self.name = kwargs.get('name_dict').get(self.id)
+
+    def say(self):
+        print("her name is {}".format(self.name))
+
+# 实例化装饰后的类
+print("类名：{}".format(Foo.func.__name__))
+foo = Foo('1', '2', '3', name_dict={'1': 'Lucy', '2': 'Linda', '3': 'Mary'})
+foo.say()
+
+# 结果
+'''
+decorator init
+类名：Foo
+Hello inner
+装饰器的参数为：hello
+装饰器中的功能：Foo 睡眠3秒
+类Foo用时:0.0秒
+her name is Lucy
+'''
+```
+
+- **特殊的装饰器(类静态属性装饰器)**
+
+```python
+# 类静态属性装饰器
+class Foo(object):
+    def __init__(self, height, weigth):
+        self.height = height
+        self.weigth = weigth
+
+    @property
+    def ratio(self):
+        return self.height / self.weigth
+
+foo = Foo(176, 120)
+print(foo.ratio)
+
+# 结果为：1.4666666666666666
+```
+
+> 其中，@property是一个特殊的装饰器，把ratio方法变成一个属性，所以调用的时候是foo.ratio而不是foo.ratio()。这类特殊装饰器需要python的特定的属性和机制的支持才可以实现，不同特性的装饰器所需机制不同。
+
+```python
+# 实现@property装饰器效果
+
+class Prop(object):
+    def __init__(self, arg):
+        self.arg = arg
+
+    def __get__(self, instance, owner):
+        return self.arg(instance)
+
+# 使用效果与原生的@property装饰器的一样
+class Foo(object):
+    def __init__(self, height, weigth):
+        self.height = height
+        self.weigth = weigth
+
+    @Prop
+    def ratio(self):
+        return self.height / self.weigth
+
+foo = Foo(176, 120)
+print(foo.ratio)
+
+# 结果为：1.4666666666666666
+```
+
+> 经典的装饰器装饰类，通过setattr魔术方法，对Person类进行修改，name作为类属性，`name = TypeCheck(name,required_type)`，这样修改了Person类，使得Person类有了两个类变量，一个是`name = TypeCheck('name', required_type)`，另一个是`age = TypeCheck('age', required_type)`。
+
+> 因此实例化时`Person('lucy', 18)`，self.name中name不是实例变量而是类变量，会调用描述器TypeCheck，赋值的时候，就会调用__set__方法，取值的时候会调用__get__方法。
+
+```python
+# 经典的装饰器装饰类
+from functools import wraps
+
+class TypeCheck:
+    def __init__(self, srcType, dstType):
+        self.srcType = srcType
+        self.dstType = dstType
+
+    # instance == a, cls == A
+    def __get__(self, instance, cls):
+        if instance is None:
+            return self
+        return instance.__dict__[self.srcType]
+
+    def __set__(self, instance, value):
+        if isinstance(value, self, dstType):
+            instance.__dict__[self.srcType] = value
+        else:
+            raise TypeError('{} should be {}'.format(value, self.dstType))
+
+# 装饰器自身是一个函数
+def type_assert(**kwargs):
+    def dec(cls):
+        def wraps(*args):
+            for name, required_type in kwargs.items():
+                setattr(cls, name, TypeCheck(name, required_type))
+            return cls(*args)  # 这里是实例化新的Person类后返回实例对象，也就是p
+        return wraps
+    return dec
+
+# 装饰对象是一个类，且带参数
+@type_assert(name=str, age=int)
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+# 实例化新的Person类，这里相对于调用的是wraps函数
+p = Person('lucy', 18)
+print(p.name)
+print(p.age)
+
+# 装饰器修改后的Person类为下面这个新的Person类，因此实例化Person的时候，调用的是下面这个新的Person
+class Person:
+    name = TypeCheck('name', str)
+    age = TypeCheck('age', int)
+
+    def __init__(self, name:str, age:int):
+        self.name = name
+        self.age = age
+```
 
 - 装饰器顺序
+
+> 当有两个或两个以上装饰器装饰一个函数时，那么语法糖语句执行流程的顺序是从下往上（就近原则，靠近函数定义的先执行）。
+
+```python
+# 第一个装饰器wrapper1
+def wrapper1(func):
+    print("wapper1")
+
+    def inner():
+        print("inner1")
+        return '<b>' + func() + '</b>'
+
+    return inner
+
+# 第二个装饰器wrapper2
+def wrapper2(func):
+    print("wapper2")
+
+    def inner():
+        print("inner2")
+        return '<i>' + func() + '</i>'
+
+    return inner
+
+# 两个装饰器
+@wrapper1
+@wrapper2
+def foo():
+    print("foo")
+    print("end")
+    return "hello"
+
+# 调用装饰后的foo函数
+res = foo()
+print(res)
+
+# 结果
+'''
+wapper2
+wapper1
+inner1
+inner2
+foo
+end
+<b><i>hello</i></b>
+'''
+```
+
+> 根据结果，函数foo先用wapper2装饰器进行装饰，接着是用wrapper1再进行装饰，但是在调用过程中又是先执行第一个装饰器wrapper1，然后在执行第二个装饰器wrapper2。
+
+> 具体分析其过程，就近原则先用第二个装饰器wrapper2进行装饰，@wrapper2等价于`foo = wrapper2(foo)`，此时括号内的foo即是函数名，而外部的foo实际指向的是wrapper2的inner。
+@wrapper1等价于`foo = wrapper1(foo)`，此时括号内的foo指向的是`wrapper2.inner`，而外部的foo指向wrapper1的inner。
+
+>当执行到@wrapper1时要对下面的函数进行装饰，此时解释器继续往下走，发现并不是一个函数名，而又是一个装饰器，这时@wrapper1装饰器暂停执行，而接着执行接下来的装饰器@wrapper2，接着把foo函数名传入到装饰器wrapper2函数func，从而打印"wrapper2"，在wrapper2装饰完后，此时的foo指向wrapper2的inner函数地址，这是又返回来执行@wrapper1，接着把新的foo（即wrapper2.inner）传入wrapper装饰器函数中，因此打印"wrapper1"，在wrapper1装饰完后，此时的foo指向wrapper1的inner函数地址。
+
+> 在调用foo函数的时候，根据上述分析，此时foo指向wrapper1的inner函数地址，故打印"inner1"，接下来调用func()的时候，实际上调用的是wrapper2.inner()函数，所以会打印"inner2"，而wrapper2.inner()函数中，调用的func()才是最初传入的foo函数，所以打印"foo"和"end"，最后一层层调用完后打印的"`<b><i>hello</i></b>`"。
 
 - 通用万能装饰
 
 ```python
+from functools import wraps
+
 def decorator_all(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
         print("万能装饰器")
         return func(*args, **kwargs)
-    
+
     return wrapper
 
 ```
