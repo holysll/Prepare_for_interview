@@ -2035,11 +2035,79 @@ b = [1, 2, 3, ['a', 'b']]
 
 > 如果线程运行过程中遇到耗时操作，超时时间超过一个固定值，则单线线程将会解开全局解释器锁，使其他线程运行。所以在多线程中是有先后顺序的，并不是同时运行的。多进程因每个进程都能被系统分配资源，相当于每个进程有了一个python解释器，所以多进程可以实现多个进程同时运行，缺点就是系统资源开销大。
 
-## 24. python新式类和旧式类的区别
+## 24. 函数是一等公民？
+
+> 在python中一切皆对象，num、list、dict、tuple、function、class和模块等都是对象，如公民一样地位平等，可以在运行时创建，并能被赋值给变量，作为集合对象的元素，还能够作为函数的参数和返回值。
+
+> Python 中函数是一等公民，意思是 Python 中的函数和整数、字符串等常见概念的地位是平等的，一个整数和一个字符串等对象可以干的事，一个函数也可以办到。
+
+```python
+import re
+
+def factorial(n):
+    """
+    returns n!
+    """
+    return 1 if n < 2 else n * factorial(n - 1)
+
+class Domo:
+    pass
+
+items = [1, 1.0, 'hello', [1], {'a': 1}, {1}, factorial, Domo(), re, None, object]
+
+for item in items:
+    print(f'对象 {item} 的类型是 {type(item).__name__},', f'对象 {type(item).__name__}类 的类型是 {type(type(item)).__name__}.')
+
+# 结果
+'''
+对象 1 的类型是 int, 对象 int类 的类型是 type.
+对象 1.0 的类型是 float, 对象 float类 的类型是 type.
+对象 hello 的类型是 str, 对象 str类 的类型是 type.
+对象 [1] 的类型是 list, 对象 list类 的类型是 type.
+对象 {'a': 1} 的类型是 dict, 对象 dict类 的类型是 type.
+对象 {1} 的类型是 set, 对象 set类 的类型是 type.
+对象 <function factorial at ...> 的类型是 function, 对象 function类 的类型是 type.
+对象 <__main__.Dumb object at ...> 的类型是 Dumb, 对象 Dumb类 的类型是 type.
+对象 <module 're' from 'C:\\...\\re.py'> 的类型是 module, 对象 module类 的类型是 type.
+对象 None 的类型是 NoneType, 对象 NoneType类 的类型是 type.
+对象 <class 'object'> 的类型是 type, 对象 type类 的类型是 type
+'''
+
+for item in items:
+    print(f'类对象 {item.__class__.__name__} 的基类是: {item.__class__.__bases__}')
+
+print(f'类对象 {object.__name__} 的基类是: {object.__bases__}')
+
+# 结果
+'''
+类对象 int 的基类是: (<class 'object'>,)
+类对象 float 的基类是: (<class 'object'>,)
+类对象 str 的基类是: (<class 'object'>,)
+类对象 list 的基类是: (<class 'object'>,)
+类对象 dict 的基类是: (<class 'object'>,)
+类对象 set 的基类是: (<class 'object'>,)
+类对象 function 的基类是: (<class 'object'>,)
+类对象 Dumb 的基类是: (<class 'object'>,)
+类对象 module 的基类是: (<class 'object'>,)
+类对象 NoneType 的基类是: (<class 'object'>,)
+类对象 type 的基类是: (<class 'object'>,)
+类对象 object 的基类是: ()
+'''
+```
 
 ## 25. 函数与方法的区别
 
+> 函数的本质是FunctionObject，其中包括内置函数、匿名函数、递归函数、自定义函数。
+函数的作用域是从函数调用开始至函数执行完成，返回给调用者后，在执行过程中开辟的空间会自动释放，即函数执行完成后，函数体内部通过赋值等方式修改变量的值不会保留，会随着返回给调用者后，开辟的空间自动释放。
+函数通过"函数名()"形式调用。
+
+> 方法的本质是PyMethodObject，其中包括普通方法（直接用self调用的方法）、私有方法（__函数名,只能在类中被调用的方法）、属性方法（@property，将方法伪装成属性）、特殊方法（`__init__, __call__,__getattr__`等）、类方法、静态方法。
+方法的作用域是通过实例化的对象进行方法的调用，调用后开辟的空间不会释放，即调用方法中对变量的修改值会一直保留。
+方法是通过"对象.方法名"的方式进行调用。
+
 ## 26. range与Xrange的区别
+
+> 
 
 ## 27. search与match的区别
 
@@ -2070,7 +2138,7 @@ b = [1, 2, 3, ['a', 'b']]
 
 ## 34. 元编程
 
-> 元编程是一种可以将程序当作数据来操作的技术，元编程能够读取，生成，分析或转换其他的程序代码，甚至可以在运行时修改自身 。
+> 元编程是一种可以将程序当作数据来操作的技术，元编程能够读取，生成，分析或转换其他的程序代码，甚至可以在运行时修改自身。
 
 ## 35. 捕获异常
 
@@ -2110,7 +2178,7 @@ b = [1, 2, 3, ['a', 'b']]
 
 > random.random()用于生成一个0到1的随机符点数: 0 <= n < 1.0 。
 
-> random.uniform(a, b)，用于生成一个指定范围内的随机符点数，两个参数其中一个是上限，一个是下限。如果a > b，则生成的随机数n: a <= n <= b。如果 a <b， 则 b <= n <= a 。
+> random.uniform(a, b)，用于生成一个指定范围内的随机符点数，两个参数其中一个是上限，一个是下限。如果a > b，则生成的随机数n: a <= n <= b。如果 a < b， 则 b <= n <= a 。
 
 > random.randint(a, b)，用于生成一个指定范围内的整数。其中参数a是下限，参数b是上限，生成的随机数n: a <= n <= b。
 
@@ -2193,3 +2261,86 @@ urllib.quote(line.decode("gbk").encode("utf-16"))
 - tornado
 - gevent
 - asyncio
+
+## 68. python decimal精确计算
+
+**[python decimal精确计算](https://blog.csdn.net/weixin_37989267/article/details/79473706)**
+
+- (1). Decimal接收int和string类型参数
+
+```python
+from decimal import *
+
+# 不能传入浮点数据，因为浮点数据就不准确
+a = Decimal(3.33)*100
+b = Decimal('3.33')*100
+c = Decimal(3)
+print(a)
+print(b)
+print(c)
+
+# 结果
+'''
+Decimal('333.0000000000000071054273576')
+Decimal('333.00')
+Decimal('3')
+'''
+```
+
+- (2). 浮点数据转换为Decimal类型
+
+```python
+from decimal import *
+
+Decimal.from_float(2.222)
+
+# 结果
+'''
+Decimal('2.221999999999999975131004248396493494510650634765625')
+'''
+```
+
+- (3). 设定有效数字
+
+> 特别注意，如果prec的长度比数字的长度小的话，扩充*100时就会出错
+
+```python
+from decimal import *
+
+# 保留6个有效数字
+getcontext().prec = 6
+Decimal(1)/Decimal(7)
+
+# 结果
+'''
+Decimal('0.142857')
+'''
+```
+
+- (4). 四舍五入，保留几位小数
+
+```python
+from decimal import *
+
+# 保留两位小数
+Decimal('0.2335662').quantize(Decimal('0.00'))
+
+# 结果
+'''
+Decimal('0.23')
+'''
+```
+
+- (5). Decimal转化为字符串类型
+
+```python
+from decimal import *
+
+# 保留两位小数
+str(Decimal('0.2335662').quantize(Decimal('0.00')))
+
+# 结果
+'''
+'0.23'
+'''
+```
