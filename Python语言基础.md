@@ -48,8 +48,9 @@ categories: 编程语言-python
 - [27. search与match的区别](#27-search与match的区别)
 - [28. 面向对象编程OOP](#28-面向对象编程oop)
 - [29. 面向切面编程AOP](#29-面向切面编程aop)
-- [31. 多态与多态性](#31-多态与多态性)
-- [32. 继承](#32-继承)
+- [31. 封装](#31-封装)
+- [31. 继承](#31-继承)
+- [32. 多态与多态性](#32-多态与多态性)
 - [33. 重载](#33-重载)
 - [31. 函数式编程](#31-函数式编程)
 - [34. 元编程](#34-元编程)
@@ -2248,7 +2249,7 @@ student = Student("张三", "18", get_name())
 # 属性封装的装饰器(https://blog.csdn.net/MrNoboday/article/details/89371430)
 
 class User(object):
-    
+
     def __init__(self, name):
         self.name = name
         self.__age = 0
@@ -2258,9 +2259,63 @@ class User(object):
     def age(self):
         if self.__age == 0:
             print("you haven't set age!")
+            return None
+        return self.__age
 
+    @property
+    def gender(self):
+        if self.__gender is None:
+            print("you haven't set gender!")
+            return None
+        return self.__gender
+
+    @age.setter  # 只写
+    def age(self, age):
+        if 0 < age < 120:
+            self.__age = age
+        else:
+            print("age set failure!")
+
+    @gender.setter  # 只写
+    def gender(self, gender):
+        if gender.lower() in ['man', 'wowan']:
+            self.__gender = gender.lower()
+        else:
+            print('gender set failure!')
+
+
+if __name__ == '__main__':
+    user = User('zhangsan')
+    print('name:', user.name, 'gender:', user.gender, 'age:',user.age)
+    user.age = 18
+    user.gender = 'man'
+    print('name:', user.name, 'gender:', user.gender, 'age:',user.age)
+    user.age = 1000
+    user.gender = 'double'
+    print('name:', user.name, 'gender:', user.gender, 'age:',user.age)
+    user.age = 99  # 这里用了@property装饰器把方法变成属性调用的，所以直接赋值
+    print("间接修改的年龄: %s" % user.age)
+    print(user._User__age = 88)
+    print("直接修改的年龄: %s" % user.age)
+
+# 结果
+'''
+you haven't set gender!
+you haven't set age!
+name: zhangsan gender: None age: None
+name: zhangsan gender: man age: 18
+age set failure!
+gender set failure!
+name: zhangsan gender: man age: 18
+间接修改的年龄: 99
+直接修改的年龄: 88
+'''
 ```
 
+> 可以通过属性封装的装饰器去更改私有变量的值。当然还有两种常用的方法：
+
+- 间接：为这个私有变量提供一个操作方法，如`def age(self, age)`
+- 直接：实例名._类名__私有变量名 = 值，如`user_User__age = 100`
 
 ## 31. 继承
 
