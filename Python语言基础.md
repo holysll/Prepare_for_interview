@@ -42,16 +42,16 @@ categories: 编程语言-python
 - [21. 浅拷贝与深拷贝](#21-浅拷贝与深拷贝)
 - [22. 设计模式](#22-设计模式)
 - [23. GIL全局解释器锁](#23-gil全局解释器锁)
-- [24. python新式类和旧式类的区别](#24-python新式类和旧式类的区别)
+- [24. 函数是一等公民？](#24-函数是一等公民)
 - [25. 函数与方法的区别](#25-函数与方法的区别)
 - [26. range与Xrange的区别](#26-range与xrange的区别)
 - [27. search与match的区别](#27-search与match的区别)
-- [28. 继承](#28-继承)
-- [29. 多态与多态性](#29-多态与多态性)
-- [30. Numpy与Scipy的区别](#30-numpy与scipy的区别)
+- [28. 面向对象编程OOP](#28-面向对象编程oop)
+- [29. 面向切面编程AOP](#29-面向切面编程aop)
+- [31. 多态与多态性](#31-多态与多态性)
+- [32. 继承](#32-继承)
+- [33. 重载](#33-重载)
 - [31. 函数式编程](#31-函数式编程)
-- [32. 面向对象编程OOP](#32-面向对象编程oop)
-- [33. 面向切面编程AOP](#33-面向切面编程aop)
 - [34. 元编程](#34-元编程)
 - [35. 捕获异常](#35-捕获异常)
 - [36. python中如何进行异常处理，如何自定义一个异常类](#36-python中如何进行异常处理如何自定义一个异常类)
@@ -64,7 +64,7 @@ categories: 编程语言-python
 - [43. python中可变对象和不可变对象](#43-python中可变对象和不可变对象)
 - [44. lambda函数](#44-lambda函数)
 - [45. python中正则使用方式](#45-python中正则使用方式)
-- [46. python中重载](#46-python中重载)
+- [46. Numpy与Scipy的区别](#46-numpy与scipy的区别)
 - [47. python中反射机制](#47-python中反射机制)
 - [48. python中如何管理依赖](#48-python中如何管理依赖)
 - [49. 如何分析python代码性能](#49-如何分析python代码性能)
@@ -86,6 +86,7 @@ categories: 编程语言-python
 - [65. select,poll和epoll](#65-selectpoll和epoll)
 - [66. python中实现IO多路复用](#66-python中实现io多路复用)
 - [67. python常用的并发网络库](#67-python常用的并发网络库)
+- [68. python decimal精确计算](#68-python-decimal精确计算)
 
 <!-- /TOC -->
 
@@ -2008,6 +2009,8 @@ b = [1, 2, 3, ['a', 'b']]
 
 ## 22. 设计模式
 
+**[Python 实现23种设计模式](https://github.com/weilanhanf/python-design-patterns)**
+
 - 工厂模式
 - 构造模式
 - 原型模式
@@ -2107,21 +2110,98 @@ print(f'类对象 {object.__name__} 的基类是: {object.__bases__}')
 
 ## 26. range与Xrange的区别
 
-> 
+> range()是Python的内置函数，用于创建整数的列表，可以生成递减或者递增的数列。
+用法：`range(start, stop, step)`，生成一个序列。
+
+```python
+# python3下的range，其实已经把xrange合并过来了
+x = range(0，5)
+print(type(x))
+print(x)
+
+# python3结果
+'''
+<class 'range'>
+range(0, 5)
+'''
+
+# python2结果
+'''
+<type 'list'>
+[0, 1, 2, 3, 4]
+'''
+```
+
+> xrange()在python3中已经移除，xrange用法与range完全相同，但是得到的是一个生成器对象，惰性求值，xrange()函数比range()函数更快。
+
+```python
+# xrange
+x = xrange(0, 5)
+print(type(xrange(0, 5)))
+print(x)
+
+# 结果
+'''
+<class 'range'>
+range(0, 5)
+'''
+```
 
 ## 27. search与match的区别
 
-## 28. 继承
+> search()函数会在整个字符串内查找模式匹配，直到找到第一个匹配，然后返回一个包含匹配信息的对象，该对象可以通过group()方法得到匹配的字符串，如果没有字符串没有匹配到，则返回None。
 
-## 29. 多态与多态性
+```python
+import re
 
-## 30. Numpy与Scipy的区别
+print(re.search("time", "datetime"))
+print(re.search("time", "datetime").span())
+print(re.search("time1", "datetime"))
+print(re.search("hello", "hihelloworld").span())
+print(re.search("hello", "hihelloworld").group())
 
-## 31. 函数式编程
+# 结果
+'''
+<re.Match object; span=(4, 8), match='time'>
+(4, 8)
+None
+(2, 7)
+hello
+'''
+```
 
-## 32. 面向对象编程OOP
+> match()函数只检测字符串开头位置是否匹配，匹配成功才会返回结果，否则返回None。
 
-## 33. 面向切面编程AOP
+- group() 返回被 RE 匹配的字符串
+- start() 返回匹配开始的位置
+- end() 返回匹配结束的位置
+- span()返回一个元组包含匹配 (开始,结束) 的位置
+
+```python
+import re
+
+print(re.match("time", "datetime"))
+print(re.match("time", "timedate"))
+print(re.match("time", "timedate").span())
+print(re.match("time", "timedate").group())
+
+# 结果
+'''
+None
+<re.Match object; span=(0, 4), match='time'>
+(0, 4)
+time
+'''
+```
+## 28. 面向对象编程OOP
+
+> 面向对象编程OOP（Object Oriented Programming）是一种程序设计思想，把对象作为程序的基本单元，一个对象包含了数据和操作数据的函数。面向对象的程序设计过程吧计算机程序视为一组对象的集合，而每个对象都可以接受其他对象发过来的消息，并处理这些消息，计算机程序的执行就是一系列消息在对象之间传递。
+
+> 在Python中，一切皆对象，当然也可以自定义对象。自定义对象的数据类型就是面向对象中的类的概念，面向对象的设计思想是抽象出类(Class)，根据类(Class)创建实例(instance)。面向对象的抽象程度又比函数要高，因为一个类(Class)既包含数据又包含操作数据的方法。
+
+> 面向对象的三大特性：封装、继承、多态。
+
+## 29. 面向切面编程AOP
 
 > AOP(Aspect Oriented Programming)是一种编程方式，就是在运行时，动态地将代码切入到类的指定方法、指定位置上的编程思想就是面向切面的编程。
 
@@ -2135,6 +2215,60 @@ print(f'类对象 {object.__name__} 的基类是: {object.__bases__}')
 - 增加代码可维护性
 
 > 装饰器是一个很著名的设计模式，经常被用于有切面需求的场景，装饰器的作用就是为已经存在的对象添加额外的功能，所以python中使用装饰器实现AOP。
+
+## 31. 封装
+
+**[python 类的封装](https://blog.csdn.net/max_like/article/details/81346484)**
+
+> 面向对象编程的一个重要特点就是数据封装。类的封装包含数据封装、方法封装、属性封装。
+
+```python
+# 数据封装，将程序中需要的数据按照统一的格式封装在类型的内部，通过该类型的对象包装使用数据
+class Student:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+# 方法封装，函数和方法混合开发，  处理和某个数据关联的功能-> 功能代码封装成函数，将函数封装在类型中处理具体功能的方法，就和对应的数据强制关联，方便统一管理维护
+    def get_name(self):
+        return self.name
+
+student = Student("张三", "18", get_name())
+```
+
+- **属性封装**(重点重点重点)
+
+> 属性是属于对象的特征，对象的特征是属于对象的数据，对象的数据一般不让外界直接访问。但是默认`self.name`不做任何添加的是公共的public，允许内部和外部的访问。
+
+> 受保护的protected：在对象成员前面加一个下划线`self._name`，允许类中或子类中都可以进行访问，但外部不可以访问。
+
+> 私有的private：在成员前面添加两个下划线`self.__name`，私有成员是高级别的封装，只有当前类对象自己能访问，连子类对象也不能访问到这个数据。
+
+```python
+# 属性封装的装饰器(https://blog.csdn.net/MrNoboday/article/details/89371430)
+
+class User(object):
+    
+    def __init__(self, name):
+        self.name = name
+        self.__age = 0
+        self.__gender = None
+
+    @property  # 只读
+    def age(self):
+        if self.__age == 0:
+            print("you haven't set age!")
+
+```
+
+
+## 31. 继承
+
+## 32. 多态与多态性
+
+## 33. 重载
+
+## 31. 函数式编程
 
 ## 34. 元编程
 
@@ -2164,7 +2298,7 @@ print(f'类对象 {object.__name__} 的基类是: {object.__bases__}')
 
 > 手写正则邮箱地址
 
-## 46. python中重载
+## 46. Numpy与Scipy的区别
 
 ## 47. python中反射机制
 
