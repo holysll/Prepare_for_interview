@@ -828,6 +828,40 @@ from __future__ import with_statement  # with声明
 
 > 注重对象的行为，而非对象的类型，一个对象能都昨晚函数、表达是的参数，取决于其行为而非类型归属。
 
+```python
+class Duck:
+    def __init__(self, name):
+        self.name = name
+
+    def quack(self):
+        print("gua gua")
+
+
+class Man:
+    def __init__(self, name):
+        self.name = name
+
+    def quack(self):
+        print("女王大人")
+
+
+def do_quack(ducker):
+    ducker.quack()
+
+
+if __name__ == '__main__':
+    d = Duck('duck')
+    m = Man('man')
+    do_quack(d)
+    do_quack(m)
+
+# 结果
+'''
+gua gua
+女王大人
+'''
+```
+
 ## 15. python自省
 
 > 在一些语言中也叫做反射，简单来说就是对象检查。面向对象的语言所写的程序在运行时，所能知道对象的类型。是什么(isinstance)，是什么类型(type)，有那些属性(hasattr)，有哪些变量方法(dir)，有哪些行为(hasattr)，getattr、setattr、delattr、callable。
@@ -2319,7 +2353,209 @@ name: zhangsan gender: man age: 18
 
 ## 31. 继承
 
+> 继承是一种创建新类的方式，新创建的类加子类，继承的叫父类、超类、基类。继承是类与类之间的关系，继承的作用是减少代码冗余、提高重用性。
+
+> 继承的特征：所有的类都继承自object类，即所有的类都是object类的子类；
+            子类一旦继承父类，则可以使用父类中除了私有成员外的所有内容；
+            子类继承父类后，并没有捡父类成员完全复制到子类中，而是通过引用关系访问调用；
+            子类可以定义独有的成员属性和方法；
+            子类中定义的成员和父类成员如果同名，则优先使用子类成员；
+            子类如果想扩充父类的方法，可以再定义新方法的同时访问父类的成员进行代码重用；
+
+- 单继承
+
+> 每个类只能继承一个类，优点是传承有序、逻辑清晰、语法简单、隐患少；缺点是功能不能无限扩展，只能在当前唯一的继承链中扩展。
+
+- 多继承
+
+> 每个类允许继承多个类，优点是类功能扩展方便；缺点是继承关系混乱。
+
+```python
+class Fish():
+
+    def __init__(self, name):
+        self.name = name
+    
+    def swim(self):
+        print("I am swimming...")
+
+class Bird():
+
+    def __init__(self, name):
+        self.name = name
+    
+    def fly(self):
+        print("I am flying...")
+
+class Person():
+
+    def __init__(self, name):
+        self.name = name
+    
+    def work(self):
+        print("I am working...")
+
+# 单继承
+class Student(Person):
+
+    def __init__(self, name):
+        self.name = name
+
+class Alien(Fish, Bird, Person):
+
+    def __init__(self, name):
+        self.name = name
+
+print("=" * 10 + " 单继承 " + "=" * 10)
+student = Student("zhangsan")
+student.work()
+print("=" * 10 + " 多继承 " + "=" * 10)
+alien = Alien("&%$#^@")
+alien.swim()
+alien.fly()
+alien.work()
+
+# 结果
+'''
+========== 单继承 ==========
+I am working...
+========== 多继承 ==========
+I am swimming...
+I am flying...
+I am working...
+'''
+```
+
+> 继承变量函数的查找顺序：
+    优先查找自己的变量，没有则继续往上（父类）查找；构造函数如果本类中没定义，则自动查找调用父类构造函数，如果本类中有定义，则不用继续向上查找。
+
+> 构造函数：是一类特使的函数，在类进行实例化之前调用，如果定义了构造函数，则实例化的时候使用此构造函数，而不查找父类构造函数；如果没有定义构造函数，则自动向上查找父类构造函数；如果子类没有定义构造函数，而父类的构造函数带参数，则实例化子类时，应该按父类构造函数参数进行传参。
+
+```python
+class Animal():
+    pass
+
+class Pet(Animal):
+
+    def __init__(self, name):
+        print("我是一只宠物 %s" % name)
+
+class Dog(Pet):
+    # __init__就是构造函数，记住一定要有这个参数
+    # 每次进行实例化的时候，第一个被自动调用
+
+    def __init__(self):
+        print("我初始化为一只小狗")
+
+# 实例化的时候，括号内的参数要与构造函数的参数匹配
+dog = Dog()
+
+class Cat(Pet):
+    pass
+
+# 在Cat类中，没有找到构造函数，自动从继承的父类Pet中查找
+cat = Cat("嘟嘟")
+
+# 结果
+'''
+我初始化为一只小狗
+我是一只宠物 嘟嘟
+'''
+```
+
+> super
+    不是一个关键数字，而是一个类。super的作用是获取MRO（Method Resolution Order）方法解析顺序列表中的第一个类，而这个类往往就是它的父类，和父类没有任何实质性关系，可以用super()调用父类的初始化构造函数。
+
+```python
+print(type(super))
+help(super)
+
+# 结果
+'''
+<class 'type'>
+Help on class super in module builtins:
+
+class super(object)
+ |  super() -> same as super(__class__, <first argument>)
+ |  super(type) -> unbound super object
+ |  super(type, obj) -> bound super object; requires isinstance(obj, type)
+ |  super(type, type2) -> bound super object; requires issubclass(type2, type)
+ |  Typical use to call a cooperative superclass method:
+ |  class C(B):
+ |      def meth(self, arg):
+ |          super().meth(arg)
+ |  This works for class methods too:
+ |  class C(B):
+ |      @classmethod
+ |      def cmeth(cls, arg):
+ |          super().cmeth(arg)
+ |  
+ |  Methods defined here:
+ |  
+ |  __get__(self, instance, owner, /)
+ |      Return an attribute of instance, which is of type owner.
+ |  
+ |  __getattribute__(self, name, /)
+ |      Return getattr(self, name).
+ |  
+ |  __init__(self, /, *args, **kwargs)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |  
+ |  __repr__(self, /)
+ |      Return repr(self).
+ |  
+ |  ----------------------------------------------------------------------
+ |  Static methods defined here:
+ |  
+ |  __new__(*args, **kwargs) from builtins.type
+ |      Create and return a new object.  See help(type) for accurate signature.
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data descriptors defined here:
+ |  
+ |  __self__
+ |      the instance invoking super(); may be None
+ |  
+ |  __self_class__
+ |      the type of the instance invoking super(); may be None
+ |  
+ |  __thisclass__
+ |      the class invoking super()
+'''
+```
+
+> 菱形继承/钻石继承问题：
+    （1）多个子类继承自同一个父类，这些子类又被同一个类继承，于是继承关系图形成了一个菱形图谱。
+    （2）多继承的MRO用于保存继承顺序的一个列表，MRO列表的计算原则：子类永远在父类前面；如果多个父类，则根据继承语法中括号内的书写顺序存放；如果多个类继承了同一个父类，孙子类中只会选取继承语法括号中的第一个父类的父类。
+
+```python
+class A():
+    pass
+
+class B(A):
+    pass
+
+class C(A):
+    pass
+
+class D(B, C):
+    pass
+
+print(D.__mro__)
+
+
+# 结果
+'''
+(<class '__main__.D'>, <class '__main__.B'>, <class '__main__.C'>, <class '__main__.A'>, <class 'object'>)
+'''
+```
+
+> 派生类：派生就是子类在继承父类的基础上衍生出新的属性，子类中独有的，父类中没有的；或子类定义与父类重名的东西，子类有不同于父类的属性，这个子类叫做派生类。通常情况下，子类和派生类是同一个概念，因为子类都是有不同于父类的属性，如果子类和父类属性相同，就没必要创建子类了。
+
 ## 32. 多态与多态性
+
+> 多态：指的是以类事物有多种形态，如一个抽象类有多个子类，多态的概念依赖于继承；
+
 
 ## 33. 重载
 
