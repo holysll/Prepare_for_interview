@@ -2554,11 +2554,194 @@ print(D.__mro__)
 
 ## 32. 多态与多态性
 
-> 多态：指的是以类事物有多种形态，如一个抽象类有多个子类，多态的概念依赖于继承；
+> 多态：指的是以类事物有多种形态，如一个抽象类有多个子类，多态的概念依赖于继承；如在java中，一个函数由于函数签名不同，可以有同名的不同函数存在，调用的时候根据函数签名不同自动找到相应的函数执行。简单来说，就是同一事物的多种形态。Python中的多态不是语法，而是一种设计思想，多态的设计就是要完成对不同类型对象使用相同方法调用能得到各自期望的结果。
 
+```python
+# 多态：同一种事物的多种形态，动物分为人、猪、狗等等
+class Animal:
+    def run(self):
+        raise AttributeError('子类必须实现这个方法')
+
+class People(Animal):
+    def run(self):
+        print('人正在走')
+
+class Pig(Animal):
+    def run(self):
+        print('猪正在散步')
+
+class Dog(Animal):
+    def run(self):
+        print('狗正在走')
+
+people = People()
+pig = Pig()
+dog = Dog()
+
+people.run()
+pig.run()
+dog.run()
+
+# 结果
+'''
+人正在走
+猪正在散步
+狗正在走
+'''
+```
+
+```python
+import abc
+
+# 同一类事物：文件
+class File(metaclass=abc.ABCMeta): 
+    @abc.abstractmethod
+    def click(self):
+        pass
+
+# 文件的形态之一：文本文件 
+class Text(File):
+    def click(self):
+        print('open file')
+
+#文件的形态之二：可执行文件
+class ExeFile(File):
+    def click(self):
+        print('execute file')
+
+text = Text()
+exefile = ExeFile()
+
+text.click()
+exefile.click()
+# 结果
+'''
+open file
+execute file
+'''
+```
+
+> 多态性：指具有不同功能的函数可以使用相同的函数名，这样可以用一个函数名调用不同内容的函数（如向不同的对象发送同一条消息，不同的对象接受时会执行不同的行为）。简单来说，就是一种调用方式，产生不同的执行效果。
+
+```python
+# 多态性：一种调用方式，不同的执行效果（多态性）
+class Animal:
+    def run(self):
+        raise AttributeError('子类必须实现这个方法')
+
+class People(Animal):
+    def run(self):
+        print('人正在走')
+
+class Pig(Animal):
+    def run(self):
+        print('猪正在散步')
+
+class Dog(Animal):
+    def run(self):
+        print('狗正在走')
+
+people = People()
+pig = Pig()
+dog = Dog()
+
+# 多态性：定义统一的接口
+def func(obj):  # obj这个参数没有类型限制，可以传入不同类型的值
+    obj.run()  # 调用的逻辑都一样，执行的结果却不一样
+
+func(people)
+func(pig)
+func(dog)
+
+# 结果
+'''
+人正在走
+猪正在散步
+狗正在走
+'''
+```
+
+```python
+# 多态性
+import abc
+
+# 同一类事物：文件
+class File(metaclass=abc.ABCMeta): 
+    @abc.abstractmethod
+    def click(self):
+        pass
+
+# 文件的形态之一：文本文件 
+class Text(File):
+    def click(self):
+        print('open file')
+
+#文件的形态之二：可执行文件
+class ExeFile(File):
+    def click(self):
+        print('execute file')
+
+text = Text()
+exefile = ExeFile()
+
+def func(f):
+    f.click()
+
+func(text)
+func(exefile)
+
+# 结果
+'''
+open file
+execute file
+'''
+```
+
+> 多态性的好处：
+    - 增加了程序的灵活性
+    - 增加程序的可扩展性
 
 ## 33. 重载
 
+**[python 中的重载](https://blog.csdn.net/qq_37049781/article/details/83959365)**
+
+> 在Python中，具有重载的思想却没有重载的概念。实际上，Python编程中具有重载的目的却无重载的行为，或者说python并不需要重载。python是一门动态语言，不需要声明变量类型，函数中可以接受任何类型的参数也就无法根据参数类型来支持重载，python没有必要去考虑参数的类型问题，这些都可以在函数内部判断处理，并无必要去在写一个函数。python 有多种传参方式，默认参数、可变参数、可变关键字参数，可以处理函数参数中参数可变的问题。
+
+```python
+# python3.4 中提供的一个转发机制来实现重载
+from functools import singledispatch
+
+@singledispatch
+def function(obj):
+    print('%r' % (obj))
+
+@function.register(int)
+def function_int(obj):
+    print('Integer: %d' % (obj))
+
+
+@function.register(str)
+def function_str(obj):
+    print('String: %s' % (obj))
+
+@function.register(list)
+def function_list(obj):
+    print('List: %r' % (obj))
+
+if __name__ == '__main__':
+    function(1)
+    function('hello') 
+    function(range(3)) 
+    function(object)
+
+# 结果
+'''
+Integer: 1
+String: hello
+range(0, 3)
+<class 'object'>
+'''
+```
 ## 31. 函数式编程
 
 ## 34. 元编程
