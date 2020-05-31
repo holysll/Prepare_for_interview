@@ -48,46 +48,46 @@ categories: 编程语言-python
 - [27. search与match的区别](#27-search与match的区别)
 - [28. 面向对象编程OOP](#28-面向对象编程oop)
 - [29. 面向切面编程AOP](#29-面向切面编程aop)
-- [31. 封装](#31-封装)
+- [30. 封装](#30-封装)
 - [31. 继承](#31-继承)
 - [32. 多态与多态性](#32-多态与多态性)
 - [33. 重载](#33-重载)
-- [31. 函数式编程](#31-函数式编程)
-- [34. 元编程](#34-元编程)
-- [35. 捕获异常](#35-捕获异常)
-- [36. python中如何进行异常处理，如何自定义一个异常类](#36-python中如何进行异常处理如何自定义一个异常类)
-- [37. python内置数据结构](#37-python内置数据结构)
-- [38. python中函数和方法有什么区别](#38-python中函数和方法有什么区别)
-- [39. python中参数类型有哪些](#39-python中参数类型有哪些)
-- [40. python中函数传参过程](#40-python中函数传参过程)
-- [41. *args和**kwargs](#41-args和kwargs)
-- [42. 实参和形参的区别](#42-实参和形参的区别)
-- [43. python中可变对象和不可变对象](#43-python中可变对象和不可变对象)
-- [44. lambda函数](#44-lambda函数)
-- [45. python中正则使用方式](#45-python中正则使用方式)
-- [46. Numpy与Scipy的区别](#46-numpy与scipy的区别)
-- [47. python中反射机制](#47-python中反射机制)
-- [48. python中如何管理依赖](#48-python中如何管理依赖)
-- [49. 如何分析python代码性能](#49-如何分析python代码性能)
-- [50. 列表的线性访问和随机访问](#50-列表的线性访问和随机访问)
-- [51. python中的高阶函数](#51-python中的高阶函数)
-- [52. Python中单下划线和双下划线](#52-python中单下划线和双下划线)
-- [53. Python的作用域以及Python搜索变量的顺序](#53-python的作用域以及python搜索变量的顺序)
-- [54. 编码与解码](#54-编码与解码)
-- [55. 字符串格式化](#55-字符串格式化)
-- [56. 增量赋值](#56-增量赋值)
-- [57. 字典推导式](#57-字典推导式)
-- [58. exec对字符串执行和eval对字符串求值](#58-exec对字符串执行和eval对字符串求值)
-- [59. raise语句的作用](#59-raise语句的作用)
-- [60. yeild语句的作用](#60-yeild语句的作用)
-- [61. socket编程](#61-socket编程)
-- [62. urllib和urllib2](#62-urllib和urllib2)
-- [63. requests](#63-requests)
-- [64. Beautiful Soup](#64-beautiful-soup)
-- [65. select,poll和epoll](#65-selectpoll和epoll)
-- [66. python中实现IO多路复用](#66-python中实现io多路复用)
-- [67. python常用的并发网络库](#67-python常用的并发网络库)
-- [68. python decimal精确计算](#68-python-decimal精确计算)
+- [34. 函数式编程](#34-函数式编程)
+- [35. 元编程](#35-元编程)
+- [36. 捕获异常](#36-捕获异常)
+- [37. python中如何进行异常处理，如何自定义一个异常类](#37-python中如何进行异常处理如何自定义一个异常类)
+- [38. python内置数据结构](#38-python内置数据结构)
+- [39. python中函数和方法有什么区别](#39-python中函数和方法有什么区别)
+- [40. python中参数类型有哪些](#40-python中参数类型有哪些)
+- [41. python中函数传参过程](#41-python中函数传参过程)
+- [42. *args和**kwargs](#42-args和kwargs)
+- [43. 实参和形参的区别](#43-实参和形参的区别)
+- [44. python中可变对象和不可变对象](#44-python中可变对象和不可变对象)
+- [45. lambda函数](#45-lambda函数)
+- [46. python中正则使用方式](#46-python中正则使用方式)
+- [47. Numpy与Scipy的区别](#47-numpy与scipy的区别)
+- [48. python中反射机制](#48-python中反射机制)
+- [49. python中如何管理依赖](#49-python中如何管理依赖)
+- [50. 如何分析python代码性能](#50-如何分析python代码性能)
+- [51. 列表的线性访问和随机访问](#51-列表的线性访问和随机访问)
+- [52. python中的高阶函数](#52-python中的高阶函数)
+- [53. Python中单下划线和双下划线](#53-python中单下划线和双下划线)
+- [54. Python的作用域以及Python搜索变量的顺序](#54-python的作用域以及python搜索变量的顺序)
+- [55. 编码与解码](#55-编码与解码)
+- [56. 字符串格式化](#56-字符串格式化)
+- [57. 增量赋值](#57-增量赋值)
+- [58. 字典推导式](#58-字典推导式)
+- [59. exec对字符串执行和eval对字符串求值](#59-exec对字符串执行和eval对字符串求值)
+- [60. raise语句的作用](#60-raise语句的作用)
+- [61. yeild语句的作用](#61-yeild语句的作用)
+- [62. socket编程](#62-socket编程)
+- [63. urllib和urllib2](#63-urllib和urllib2)
+- [64. requests](#64-requests)
+- [65. Beautiful Soup](#65-beautiful-soup)
+- [66. select,poll和epoll](#66-selectpoll和epoll)
+- [67. python中实现IO多路复用](#67-python中实现io多路复用)
+- [68. python常用的并发网络库](#68-python常用的并发网络库)
+- [69. python decimal精确计算](#69-python-decimal精确计算)
 
 <!-- /TOC -->
 
@@ -101,14 +101,16 @@ categories: 编程语言-python
 
 ## 2. python语言相比其他语言的优点和缺点
 
-**优点**  
+**优点**
+
 - 简单易懂，灵活简洁
 - 强大的标准库和三方库
 - 活跃的社区，许多开源项目
 - 开发效率高，迭代便捷
 - 应用领域广泛，Web开发、网络编程、自动化运维、Linux系统管理、数据分析、科学计算、人工智能、机器学习
 
-**缺点**  
+**缺点**
+
 - 执行效率较差,
 - 异步生态不完善，相关的库较少(tornado)
 - GIL的存在，无法充分利用多核的特性
@@ -2251,7 +2253,7 @@ time
 
 > 装饰器是一个很著名的设计模式，经常被用于有切面需求的场景，装饰器的作用就是为已经存在的对象添加额外的功能，所以python中使用装饰器实现AOP。
 
-## 31. 封装
+## 30. 封装
 
 **[python 类的封装](https://blog.csdn.net/max_like/article/details/81346484)**
 
@@ -2711,8 +2713,8 @@ execute file
 # python3.4 中提供的一个转发机制来实现重载
 from functools import singledispatch
 
-@singledispatch
-def function(obj):
+@singledispatch  # 只支持根据第一个参数的类型来重载，不支持多参数重载
+def function(obj):  # 被重载的函数
     print('%r' % (obj))
 
 @function.register(int)
@@ -2742,47 +2744,316 @@ range(0, 3)
 <class 'object'>
 '''
 ```
-## 31. 函数式编程
 
-## 34. 元编程
+> 重载是对继承的父类方法进行重新定义，重载可以重新定义方法还可以重新定义运算符。因为通过继承的类不一定能满足当前类的需求，在当前类中只需要修改部分内容而达到自己的需求。
+
+> 重载的特点：
+    - 减少代码量和灵活指定型类
+    - 子类具有父类的方法和属性
+    - 子类不能继承父类的私有方法或属性
+    - 子类可以添加新的方法
+    - 子类可以修改父类的方法
+
+```python
+# 方法重载
+
+class Human(object):
+    __name = ''  # 定义属性
+    __sex = 0
+    __age = 0
+    __height = 0
+    __weight = 0
+
+    def __init__(self, sex, age, height, weight):
+        self.__sex = sex
+        self.__age = age
+        self.__height = height
+        self.__weight = weight
+
+    def set_name(self, name):
+        self.__name = name
+
+    def show(self):
+        print(self.__name, self.__sex, self.__age, self.__height, self.__weight)
+
+class Student(Human):
+    __classes = 0
+    __grade = 0
+    __num = 0
+
+    def __init__(self, classes, grade, num, sex, age, height, weight):  # 重载 __init__方法
+        self.__classes = classes
+        self.__grade = grade
+        self.__num = num
+        Human.__init__(self, sex, age, height, weight)
+
+    def show(self):  # 重载 show 方法
+        Human.show(self)
+        print(self.__classes, self.__grade, self.__num)
+
+if __name__ == '__main__':
+    s = Student(3, 2, 19990520, '男', 20, '172', 55)
+    s.set_name('小明')
+    s.show()
+
+# 结果
+'''
+小明 男 20 172 55
+3 2 19990520
+'''
+```
+
+> 运算符重载是在类方法中拦截内置的操作——当类的实例出现在内置操作中，Python自动调用重新定义的方法，并将重新定义方法的返回值变成了相应操作的结果。
+
+> python对运算符重载的一些限制：
+    - 不能重载内置类型的运算符
+    - 不能新建运算符，只能重载现有的
+    - 某些运算符不是重载：is、and、or、not
+
+**[Python中运算符重载](https://www.cnblogs.com/laolibk/p/8011472.html)**
+**[《流畅的python》](https://www.cnblogs.com/lht-record/p/10306591.html)**
+
+```python
+# 运算符重载
+
+class List(object):
+    __list = []
+
+    def __init__(self, *args):  # 重载 __init__ 方法
+        self.__list = []
+        for arg in args:
+            self.__list.append(arg)
+
+    def __add__(self, n):  # 重载加法"+"运算符
+        for i in range(0, len(self.__list)):
+            self.__list[i] +=n
+
+    def __sub__(self, n):  # 重载减法"-"运算符
+        for i in range(0, len(self.__list)):
+            self.__list[i] -= n
+
+    def __mul__(self, n):  # 重载乘法"*"运算符
+        for i in range(0, len(self.__list)):
+            self.__list[i] *= n
+
+    def __turediv__(self, n):  # 重载除法"/"运算符
+        for i in range(0, len(self.__list)):
+            self.__list[i] /= n
+
+    def __floordiv__(self, n):  # 重载整除"//"运算符
+        for i in range(0, len(self.__list)):
+            self.__list[i] //= n
+
+    def __mod__(self, n):  # 重载求余"%"运算符
+        for i in range(0, len(self.__list)):
+            self.__list[i] %= n
+
+    def __pow__(self, n):  # 重载次幂"**"运算符
+        for i in range(0, len(self.__list)):
+            self.__list[i] **= n
+
+    def show(self):
+        print(self.__list)
+
+if __name__ == '__main__':
+    data_list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    data_list.show()
+
+    data_list + 2
+    data_list.show()
+
+    data_list - 2
+    data_list.show()
+
+    data_list * 2
+    data_list.show()
+
+    # data_list / 2
+    # data_list.show()
+
+    data_list // 2
+    data_list.show()
+
+    data_list % 2
+    data_list.show()
+
+    data_list ** 2
+    data_list.show()
+
+# 结果
+'''
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+[3, 4, 5, 6, 7, 8, 9, 10, 11]
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+[2, 4, 6, 8, 10, 12, 14, 16, 18]
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+[1, 0, 1, 0, 1, 0, 1, 0, 1]
+[1, 0, 1, 0, 1, 0, 1, 0, 1]
+'''
+```
+
+> 一元运算符重载:
+
+| 名称 | 运算符 | 方法 |
+| :----: | :---- | :---- |
+| 取正 | + | `__pos__` |
+| 取负 | - | `__neg__` |
+| 按位取反 | ~ | `__invert__` |
+| 取绝对值 | `| |` | `__abs__` |
+
+> 常见的算术运算符重载：
+
+| 名称 | 运算符 | 正向方法 | 反向方法 | 就地方法 |
+| :----: | :---- | :---- | :----: | :----: |
+| 加法 | + | `__add__` | `__radd__` | `__iadd__` |
+| 减法 | - | `__sub__` | `__rsub__` | `__isub__` |
+| 乘法 | * | `__mul__` | `__rmul__` | `__imul__` |
+| 除法 | / | `__truediv__` | `__rtruediv__` | `__itruediv__` |
+| 整除 | // | `__floordiv__` | `__rfloordiv__` | `__ifloordiv__` |
+| 求余 | % | `__mod__` | `__rmod__` | `__imod__` |
+| 次幂 | ** | `__pow__` | `__rpow__` | `__ipow__` |
+
+> 位操作运算符重载：
+
+| 名称 | 运算符 | 正向方法 | 反向方法 | 就地方法 |
+| :----: | :---- | :---- | :----: | :----: |
+| 位与 | & | `__and__` | `__rand__` | `__iand__` |
+| 位或 | `|` | `__or__` | `__ror__` | `__ior__` |
+| 位异或 | ^ | `__xor__` | `__rxor__` | `__ixor__` |
+| 左移 | << | `__lshift__` | `__rlshift__` | `__ilshift__` |
+| 右移 | >> | `__rshift__` | `__rrshift__` | `__irshift__` |
+
+> 比较运算符重载：
+
+| 名称 | 运算符 | 正向方法 | 反向方法 | 后备机制 |
+| :----: | :---- | :---- | :----: | :----: |
+| 相等 | a == b | `a.__eq__(b)` | `b.__eq__(a)` | 返回id(a) == id(b) |
+| 不相等 | a ！= b | `a.__ne__(b)` | `b.__ne__(a)` | 返回not (a == b) |
+| 大于 | a > b | `a.__gt__(b)` | `b.__gt__(a)` | 抛出TypeError |
+| 大于等于 | a >= b | `a.__ge__(b)` | `b.__ge__(a)` | 抛出TypeError |
+| 小于 | a < b | `a.__lt__(b)` | `b.__lt__(a)` | 抛出TypeError |
+| 小于等于 | a <= b | `a.__le__(b)` | `b.__le__(a)` | 抛出TypeError |
+
+> 内建函数重载：
+
+```python
+def __len__(self):
+    return len(obj)
+
+def __reversed__(self):
+    return reversed(obj)
+
+def __round__(self):
+    return round(obj)
+```
+
+> 数值转换函数重载：
+
+```python
+def __int__(self):
+    return int(obj)
+
+def __float__(self):
+    return float(obj)
+
+def __complex__(self):
+    return complex(obj)
+
+def __bool__(self):
+    return bool(obj)
+```
+
+> 成员资格函数in、not in运算符重载
+
+`def __contains__(self, e)`
+
+> 索引和切片运算符重载
+
+`__getitrm__(self, i)`方法
+`__setitrm__(self, i, v)`方法
+`__delitrm__(self, i)`方法
+
+```python
+class Indexer(object):
+    def __getitem__(self, index):
+        return index ** 2
+
+x = Indexer()
+print(x[2])
+
+# 结果
+'''
+4
+'''
+```
+
+> 迭代对象重载：
+
+`__next__(self)` 迭代器
+`__iter__(self)`可迭代对象
+
+> with环境管理器类内重载:
+
+`__enter__` 方法将在进入 with 语句时被调用返回由 as 变量管理的对象。
+`__exit__` 方法将在离开with语句时被调用，且可以用参数来判断离开with语句时是否有异常发生并作出相应的处理。
+
+> 属性相关方法重载
+
+`__getattr__`属性获取
+`__setattr__`属性赋值
+`__delattr__`属性删除
+
+> 其他
+| 方法 | 重载 | 说明 |
+| :----: | :---- | :---- |
+| `__init__` | 构造函数 | 对象创建: `X = Class(args)` |
+| `__new__` | 创建 | 在__init__之前创建对象 |
+| `__call__` | 函数调用 | `X(*args, **kwargs)` |
+| `__repr__, __str__` | 打印，转换 | `print(X)，repr(X)，str(X)` |
+| `__del__` | 析构函数 | 对X对象收回 |
+
+
+## 34. 函数式编程
+
+## 35. 元编程
 
 > 元编程是一种可以将程序当作数据来操作的技术，元编程能够读取，生成，分析或转换其他的程序代码，甚至可以在运行时修改自身。
 
-## 35. 捕获异常
+## 36. 捕获异常
 
-## 36. python中如何进行异常处理，如何自定义一个异常类
+## 37. python中如何进行异常处理，如何自定义一个异常类
 
-## 37. python内置数据结构
+## 38. python内置数据结构
 
-## 38. python中函数和方法有什么区别
+## 39. python中函数和方法有什么区别
 
-## 39. python中参数类型有哪些
+## 40. python中参数类型有哪些
 
-## 40. python中函数传参过程
+## 41. python中函数传参过程
 
-## 41. *args和**kwargs
+## 42. *args和**kwargs
 
-## 42. 实参和形参的区别
+## 43. 实参和形参的区别
 
-## 43. python中可变对象和不可变对象
+## 44. python中可变对象和不可变对象
 
-## 44. lambda函数
+## 45. lambda函数
 
-## 45. python中正则使用方式
+## 46. python中正则使用方式
 
 > 手写正则邮箱地址
 
-## 46. Numpy与Scipy的区别
+## 47. Numpy与Scipy的区别
 
-## 47. python中反射机制
+## 48. python中反射机制
 
-## 48. python中如何管理依赖
+## 49. python中如何管理依赖
 
 > 每个项目创建独立的虚拟环境
 
-## 49. 如何分析python代码性能
+## 50. 如何分析python代码性能
 
-## 50. 列表的线性访问和随机访问
+## 51. 列表的线性访问和随机访问
 
 > random.random()用于生成一个0到1的随机符点数: 0 <= n < 1.0 。
 
@@ -2798,7 +3069,7 @@ range(0, 3)
 
 > random.sample(sequence, k)，从指定序列中随机获取指定长度的片断。sample函数不会修改原有序列。
 
-## 51. python中的高阶函数
+## 52. python中的高阶函数
 
 > 高阶函数：一个函数可以作为参数传给另外一个函数，或者一个函数的返回值为另外一个函数（若返回值为该函数本身，则为递归），满足其一则为高阶函数。
 
@@ -2814,15 +3085,15 @@ range(0, 3)
 
 - abs 
 
-## 52. Python中单下划线和双下划线
+## 53. Python中单下划线和双下划线
 
-## 53. Python的作用域以及Python搜索变量的顺序
+## 54. Python的作用域以及Python搜索变量的顺序
 
 > Python作用域简单说就是一个变量的命名空间。代码中变量被赋值的位置，就决定了哪些范围的对象可以访问这个变量，这个范围就是变量的作用域。
 在Python中，只有模块（module），类（class）以及函数（def、lambda）才会引入新的作用域。
 Python的变量名解析机制也称为 LEGB 法则：本地作用域（Local）→当前作用域被嵌入的本地作用域（Enclosing locals）→全局/模块作用域（Global）→内置作用域（Built-in）
 
-## 54. 编码与解码
+## 55. 编码与解码
 
 > 编码：gbk => unicode => utf16 => url解码
 
@@ -2834,9 +3105,9 @@ eg:
 urllib.quote(line.decode("gbk").encode("utf-16"))
 ```
 
-## 55. 字符串格式化
+## 56. 字符串格式化
 
-## 56. 增量赋值
+## 57. 增量赋值
 
 - x += 1
 
@@ -2844,33 +3115,33 @@ urllib.quote(line.decode("gbk").encode("utf-16"))
 
 - x = x + 1
 
-## 57. 字典推导式
+## 58. 字典推导式
 
-## 58. exec对字符串执行和eval对字符串求值
+## 59. exec对字符串执行和eval对字符串求值
 
-## 59. raise语句的作用
+## 60. raise语句的作用
 
-## 60. yeild语句的作用
+## 61. yeild语句的作用
 
-## 61. socket编程
+## 62. socket编程
 
-## 62. urllib和urllib2
+## 63. urllib和urllib2
 
-## 63. requests
+## 64. requests
 
-## 64. Beautiful Soup
+## 65. Beautiful Soup
 
-## 65. select,poll和epoll
+## 66. select,poll和epoll
 
-## 66. python中实现IO多路复用
+## 67. python中实现IO多路复用
 
-## 67. python常用的并发网络库
+## 68. python常用的并发网络库
 
 - tornado
 - gevent
 - asyncio
 
-## 68. python decimal精确计算
+## 69. python decimal精确计算
 
 **[python decimal精确计算](https://blog.csdn.net/weixin_37989267/article/details/79473706)**
 
