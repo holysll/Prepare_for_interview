@@ -53,41 +53,43 @@ categories: 编程语言-python
 - [32. 多态与多态性](#32-多态与多态性)
 - [33. 重载](#33-重载)
 - [34. 函数式编程](#34-函数式编程)
-- [35. 元编程](#35-元编程)
-- [36. 捕获异常](#36-捕获异常)
-- [37. python中如何进行异常处理，如何自定义一个异常类](#37-python中如何进行异常处理如何自定义一个异常类)
-- [38. python内置数据结构](#38-python内置数据结构)
-- [39. python中函数和方法有什么区别](#39-python中函数和方法有什么区别)
-- [40. python中参数类型有哪些](#40-python中参数类型有哪些)
-- [41. python中函数传参过程](#41-python中函数传参过程)
-- [42. *args和**kwargs](#42-args和kwargs)
-- [43. 实参和形参的区别](#43-实参和形参的区别)
-- [44. python中可变对象和不可变对象](#44-python中可变对象和不可变对象)
-- [45. lambda函数](#45-lambda函数)
-- [46. python中正则使用方式](#46-python中正则使用方式)
-- [47. Numpy与Scipy的区别](#47-numpy与scipy的区别)
-- [48. python中反射机制](#48-python中反射机制)
-- [49. python中如何管理依赖](#49-python中如何管理依赖)
-- [50. 如何分析python代码性能](#50-如何分析python代码性能)
-- [51. 列表的线性访问和随机访问](#51-列表的线性访问和随机访问)
-- [52. python中的高阶函数](#52-python中的高阶函数)
-- [53. Python中单下划线和双下划线](#53-python中单下划线和双下划线)
-- [54. Python的作用域以及Python搜索变量的顺序](#54-python的作用域以及python搜索变量的顺序)
-- [55. 编码与解码](#55-编码与解码)
-- [56. 字符串格式化](#56-字符串格式化)
-- [57. 增量赋值](#57-增量赋值)
-- [58. 字典推导式](#58-字典推导式)
-- [59. exec对字符串执行和eval对字符串求值](#59-exec对字符串执行和eval对字符串求值)
-- [60. raise语句的作用](#60-raise语句的作用)
-- [61. yeild语句的作用](#61-yeild语句的作用)
-- [62. socket编程](#62-socket编程)
-- [63. urllib和urllib2](#63-urllib和urllib2)
-- [64. requests](#64-requests)
-- [65. Beautiful Soup](#65-beautiful-soup)
-- [66. select,poll和epoll](#66-selectpoll和epoll)
-- [67. python中实现IO多路复用](#67-python中实现io多路复用)
+- [35. python中的高阶函数](#35-python中的高阶函数)
+- [36. 返回函数](#36-返回函数)
+- [37. 匿名函数](#37-匿名函数)
+- [38. 偏函数](#38-偏函数)
+- [39. 元编程](#39-元编程)
+- [40. 捕获异常](#40-捕获异常)
+- [41. python中如何进行异常处理，如何自定义一个异常类](#41-python中如何进行异常处理如何自定义一个异常类)
+- [42. python内置数据结构](#42-python内置数据结构)
+- [43. python中函数和方法有什么区别](#43-python中函数和方法有什么区别)
+- [44. python中参数类型有哪些](#44-python中参数类型有哪些)
+- [45. python中函数传参过程](#45-python中函数传参过程)
+- [46. *args和**kwargs](#46-args和kwargs)
+- [47. 实参和形参的区别](#47-实参和形参的区别)
+- [48. python中可变对象和不可变对象](#48-python中可变对象和不可变对象)
+- [49. python中正则使用方式](#49-python中正则使用方式)
+- [50. Numpy与Scipy的区别](#50-numpy与scipy的区别)
+- [51. python中反射机制](#51-python中反射机制)
+- [52. python中如何管理依赖](#52-python中如何管理依赖)
+- [53. 如何分析python代码性能](#53-如何分析python代码性能)
+- [54. 列表的线性访问和随机访问](#54-列表的线性访问和随机访问)
+- [55. Python中单下划线和双下划线](#55-python中单下划线和双下划线)
+- [56. Python的作用域以及Python搜索变量的顺序](#56-python的作用域以及python搜索变量的顺序)
+- [57. 编码与解码](#57-编码与解码)
+- [58. 字符串格式化](#58-字符串格式化)
+- [59. 增量赋值](#59-增量赋值)
+- [60. 字典推导式](#60-字典推导式)
+- [61. exec对字符串执行和eval对字符串求值](#61-exec对字符串执行和eval对字符串求值)
+- [62. raise语句的作用](#62-raise语句的作用)
+- [63. yeild语句的作用](#63-yeild语句的作用)
+- [64. socket编程](#64-socket编程)
+- [65. urllib和urllib2](#65-urllib和urllib2)
+- [66. requests](#66-requests)
+- [67. Beautiful Soup](#67-beautiful-soup)
+- [68. select,poll和epoll](#68-selectpoll和epoll)
+- [69. python中实现IO多路复用](#69-python中实现io多路复用)
 - [68. python常用的并发网络库](#68-python常用的并发网络库)
-- [69. python decimal精确计算](#69-python-decimal精确计算)
+- [70. python decimal精确计算](#70-python-decimal精确计算)
 
 <!-- /TOC -->
 
@@ -999,6 +1001,12 @@ print(list(newlist))
 
 > 简单说，闭包就是根据不同的配置信息得到不同的结果，装饰器就是一种闭包，闭包有效的减少了函数所需定义的参数数目。
 
+> 闭包的好处：
+    - 取代硬编码中的常量
+    - 避免使用全局值，并提供某种形式的数据隐藏
+    - 提供一致的函数签名
+    - 实现面向对象
+
 ```python
 def line_conf(a, b):
     def line(x):
@@ -1008,6 +1016,32 @@ def line_conf(a, b):
 line1 = line_conf(1, 1)
 line2 = line_conf(4, 5)
 print(line1(5), line2(5))  # (6, 25)
+```
+
+> **返回闭包时：返回函数不要引用任何循环变量，或者后续会发生变化的变量**。解决方法是在创建一个函数，用函数的参数绑定循环变量当前的值，无论该循环变量后续如何更改，已绑定到函数参数的值不变。
+
+```python
+def count():
+    def f(j):
+        def g():
+            return j*j
+        return g
+    fs = []
+    for i in range(1, 4):
+        fs.append(f(i))
+    return fs
+
+f1, f2, f3 = count()
+print(f1())
+print(f2())
+print(f3())
+
+# 结果
+'''
+1
+4
+9
+'''
 ```
 
 ## 20. 装饰器
@@ -2806,9 +2840,10 @@ if __name__ == '__main__':
 > 运算符重载是在类方法中拦截内置的操作——当类的实例出现在内置操作中，Python自动调用重新定义的方法，并将重新定义方法的返回值变成了相应操作的结果。
 
 > python对运算符重载的一些限制：
-    - 不能重载内置类型的运算符
-    - 不能新建运算符，只能重载现有的
-    - 某些运算符不是重载：is、and、or、not
+
+- 不能重载内置类型的运算符
+- 不能新建运算符，只能重载现有的
+- 某些运算符不是重载：is、and、or、not
 
 **[Python中运算符重载](https://www.cnblogs.com/laolibk/p/8011472.html)**
 **[《流畅的python》](https://www.cnblogs.com/lht-record/p/10306591.html)**
@@ -3013,48 +3048,304 @@ print(x[2])
 | `__repr__, __str__` | 打印，转换 | `print(X)，repr(X)，str(X)` |
 | `__del__` | 析构函数 | 对X对象收回 |
 
-
 ## 34. 函数式编程
 
-## 35. 元编程
+> 函数是Python内建支持的一种封装，通过把打断代码拆层函数，通过一层层的函数调用，就可以把复杂任务分解成简单的任务，这种分解可以称之为面向过程的程序设计。函数就是面向过程的程序设计的基本单元。
+
+> 函数式编程（Hunctingal Programming）虽然可以归结到面向过程的程序设计，但其思想更接近数学计算。函数式编程就是一种抽象程度很高的编程范式，纯粹的函数式编程语言编写的函数没有变量，因此，任意一个函数，只要输入是确定的，输出就是确定的，这种纯函数我们称之为没有副作用。而允许使用变量的程序设计语言，由于函数内部的变量状态不确定，同样的输入，可能得到不同的输出，这种函数是有副作用的。
+
+> 函数式编程的一个特点就是，允许把函数本身作为参数传入另一个函数，还允许返回一个函数。Python对函数是编程仅提供部分支持，由于Python允许提供变量，因此python不是纯函数式编程语言。
+
+## 35. python中的高阶函数
+
+> 高阶函数：一个函数可以作为参数传给另外一个函数，或者一个函数的返回值为另外一个函数（若返回值为该函数本身，则为递归），满足其一则为高阶函数。
+
+- abs
+
+```python
+# Python内置的绝对值函数
+a = abs(-10)  # 直接调用abs()函数
+f = abs  # 函数本身赋值给变量，即变量指向函数
+b = f(-10)
+
+print(a)
+print(b)
+
+# 结果
+'''
+10
+10
+'''
+```
+
+- map
+
+> map()函数会根据的函数对指定的序列做映射。
+map()函数语法：`map(function, iterable, ...)`，其中第一个参数function表示对序列每个元素进行同样的处理的表达式；iterable表示一个或者多个序列。
+
+> 特别注意，py2返回的是列表，py3返回是一个迭代器。
+
+```python
+# 计算平方
+def square(x):
+    return x ** 2
+data_list = [1, 2, 3, 4, 5]
+res = map(square, data_list)
+
+# 使用匿名函数
+ans = map(lambda x: x ** 2, data_list)
+
+print(res)
+print(list(res))
+print(ans)
+print(list(ans))
+
+# 结果
+'''
+<map object at 0x0000014F2F0F2A58>
+[1, 4, 9, 16, 25]
+<map object at 0x0000014F2F32B860>
+[1, 4, 9, 16, 25]
+'''
+```
+
+- reduce
+
+> reduce()函数会对参数序列中元素进行积累。函数将一个数据集合（链表、元组等）中的所有数据进行下列操作：用穿个reduce中的函数function(有两个参数)相对集合中的第1、2个元素进行操作，得到的结果在于第三个数据继续用function函数进行运算，如此循环迭代，最后得到结果。
+
+>reduce()函数语法：`reduce(function, iterable[, initializer])`，其中第一个参数是function函数，里面有两个参数；第二个参数iterable是可迭代对象；第三个是可选参数，初始参数。
+
+```python
+from functools import reduce
+
+# 两数相加
+def add(x, y):
+    return x + y
+data_list = [1, 2, 3, 4, 5]
+res = reduce(add, data_list)  # 1+2+3+4+5
+
+# 使用匿名函数
+ans = reduce(lambda x, y: x + y, data_list)  # 1+2+3+4+5
+
+print(res)
+print(ans)
+
+# 结果
+'''
+15
+15
+'''
+```
+
+- filter
+
+> filter()函数用于过滤序列，过滤掉不符合条件的元素，返回符合条件的元素组成的新列表。
+
+> filter()函数语法：`filter(function, iterable)`，reduce()接收连个参数，第一个参数function是判断函数，第二个参数iterable是可迭代对象，序列的每个元素作为参数传递给函数进行判断，然后返回True/False，最后将返回True的元素放到新列表中。
+
+```python
+# 过滤出列表中所有奇数
+def is_odd(n):
+    return n % 2 == 1
+
+data_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+res = filter(is_odd, data_list)
+
+# 使用匿名函数
+ans = filter(lambda x: x % 2 == 1, range(1, 11))
+
+print(res)
+print(list(res))
+print(ans)
+print(list(ans))
+
+# 结果
+'''
+<filter object at 0x000001F3A98EB198>
+[1, 3, 5, 7, 9]
+<filter object at 0x000001F3A990EB38>
+[1, 3, 5, 7, 9]
+'''
+```
+
+- sorted
+
+> sort与sorted的区别：
+
+- sort是应用在list上的方法，sorted可以对所有可迭代的对象进行排序操作。
+- list的sort方法返回的是对已经存在的列表进行操作，而内建函数sorted方法返回的是一个新的list，而不是在原来的list上进行的操作。
+
+> sorted()函数语法：`sorted(iterable, key=None, reverse=False)`，其中iterable是可迭代对象；key主要是用来进行比较元素，只有一个参数，具体的函数的参数是取自于可迭代对象中，指定可迭代对象中的一个元素来排序；reverse是排序规则，默认的是False升序，True为降序。
+
+```python
+a = [2, 3, 1, 4, 2, 0, -1]
+b = a
+c = ['a', 'C', 'A', 'b',  'c', 'B']
+d = {1: 'D', 3: 'B', 5: 'A', 4: 'E', 2: 'C'}
+e = [('Bob', 75), ('Adam', 92), ('Bart', 66), ('Lisa', 88)]
+a.sort()
+
+print(a)
+print(sorted(b))
+print(sorted(b, key=lambda x: x*-1))  # 利用key进行倒序排序
+print(sorted(b, reverse=True))  # 利用reverse=True进行倒序排序
+print(sorted(b, key=abs))  # 按绝对值大小升序排序
+print(sorted(c))  # 字符串排序，按照ASCII大小比较
+print(sorted(c, key=str.lower))  # 忽略字符串大小写排序
+print(sorted(d))  # 对字典排序默认是对键keys进行排序
+print(sorted(d.keys()))  # 对字典按keys值排序
+print(sorted(d.items(), key=lambda x: x[0]))  # 还是对字典按keys值排序
+print(sorted(d.items(), key=lambda x: x[1]))  # 对字典按键值value排序升序
+print(sorted(e,key=lambda x: x[0]))  # 根据姓名升序排序
+print(sorted(e,key=lambda x: x[1], reverse=True)) # 根据得分降序
+
+# 结果
+'''
+[-1, 0, 1, 2, 2, 3, 4]
+[-1, 0, 1, 2, 2, 3, 4]
+[4, 3, 2, 2, 1, 0, -1]
+[4, 3, 2, 2, 1, 0, -1]
+[0, -1, 1, 2, 2, 3, 4]
+['A', 'B', 'C', 'a', 'b', 'c']
+['a', 'A', 'b', 'B', 'C', 'c']
+[1, 2, 3, 4, 5]
+[1, 2, 3, 4, 5]
+[(1, 'D'), (2, 'C'), (3, 'B'), (4, 'E'), (5, 'A')]
+[(5, 'A'), (3, 'B'), (2, 'C'), (1, 'D'), (4, 'E')]
+[('Adam', 92), ('Bart', 66), ('Bob', 75), ('Lisa', 88)]
+[('Adam', 92), ('Lisa', 88), ('Bob', 75), ('Bart', 66)]
+'''
+```
+
+## 36. 返回函数
+
+> 高阶函数出了可以接受函数作为参数外，还可以把函数作为结果值返回。
+
+```python
+# 嵌套函数，内层函数返回值是函数对象
+def lazy_sum(*args):
+    def sum():
+        x = 0
+        for i in args:
+            x += i
+        return x
+    return sum
+
+res = lazy_sum(1, 3, 5, 7, 9)  # 这里调用的是求和函数，而非求和结果
+print(res)
+print(res())
+
+#  结果
+'''<function lazy_sum.<locals>.sum at 0x000001A4B6E55488>
+25
+'''
+```
+
+> 实际上是一种闭包，详细参见[19. 闭包](#19-闭包)。**返回闭包时要牢记：返回函数不要引用任何循环变量，或者后续会发生变化的量。**
+
+## 37. 匿名函数
+
+先观摩下大佬博文**[Python 之 lambda 函数完整详解 & 巧妙运用](https://blog.csdn.net/PY0312/article/details/88956795)**
+
+> 匿名函数在python编程语言中使用频率非常高，使用起来非常灵活、巧妙。
+
+- python中使用关键字lambda来创建匿名函数，没有函数名字；
+- lambda只是一个表达式，函数体比def简单很多；
+- lambda的主体是一个表达式，而不是一个代码块，所以在表达式中只能封装有限的简单的逻辑表达式，复杂的需要函数来实现；
+- lambda函数拥有自己的命名空间，且不能范围自有列表之外或者全局命名空间里的参数；
+
+> **注意：**虽然lambda函数看起来只能写一行，却不等同于C或C++的内联函数，内联函数的目的是调用小函数时不占用栈内存从而增加运行效率。
+
+> lambda函数语法：`lambda [arg1 [,arg2,...,argn]]: expression`
+
+- lambda是python关键字，[arg...]和expression由用户自定义
+- [arg...]是参数列表，形参可以为多个，逗号隔开
+- expression是个参数表达式，且表达式只能是单行的，只能有一个表达式,且逻辑结束后直接返回数据
+- 返回值在冒号之后设置，返回值和正常的函数一样,可以是任意数据类型。(但是想要返回多个元素要以容器的形式返回)
+
+```python
+# 将lambda函数赋值给一个变量，通过这个变量间接调用该lambda函数
+add = lambda x, y: x + y
+res = add(1, 2)
+print(res)
+
+# 结果
+'''
+3
+'''
+
+# 将lambda函数赋值给其他函数，从而将其他函数用该lambda函数替换
+import time
+time.sleep = lambda x: None
+t = time.sleep(3)
+print(t)
+
+# 结果
+'''
+None
+'''
+
+# 列表推导式
+s = [lambda : i for i in range(5)]
+print(s)
+
+# 结果
+'''
+[0, 1, 2, 3, 4]
+'''
+
+# 嵌套的lambda表达式
+f = (lambda x: (lambda y: x + y))
+res = f(10)
+print(res(5))
+
+# 结果
+'''
+15
+'''
+```
+
+## 38. 偏函数
+
+> 
+
+## 39. 元编程
 
 > 元编程是一种可以将程序当作数据来操作的技术，元编程能够读取，生成，分析或转换其他的程序代码，甚至可以在运行时修改自身。
 
-## 36. 捕获异常
+## 40. 捕获异常
 
-## 37. python中如何进行异常处理，如何自定义一个异常类
+## 41. python中如何进行异常处理，如何自定义一个异常类
 
-## 38. python内置数据结构
+## 42. python内置数据结构
 
-## 39. python中函数和方法有什么区别
+## 43. python中函数和方法有什么区别
 
-## 40. python中参数类型有哪些
+## 44. python中参数类型有哪些
 
-## 41. python中函数传参过程
+## 45. python中函数传参过程
 
-## 42. *args和**kwargs
+## 46. *args和**kwargs
 
-## 43. 实参和形参的区别
+## 47. 实参和形参的区别
 
-## 44. python中可变对象和不可变对象
+## 48. python中可变对象和不可变对象
 
-## 45. lambda函数
-
-## 46. python中正则使用方式
+## 49. python中正则使用方式
 
 > 手写正则邮箱地址
 
-## 47. Numpy与Scipy的区别
+## 50. Numpy与Scipy的区别
 
-## 48. python中反射机制
+## 51. python中反射机制
 
-## 49. python中如何管理依赖
+## 52. python中如何管理依赖
 
 > 每个项目创建独立的虚拟环境
 
-## 50. 如何分析python代码性能
+## 53. 如何分析python代码性能
 
-## 51. 列表的线性访问和随机访问
+## 54. 列表的线性访问和随机访问
 
 > random.random()用于生成一个0到1的随机符点数: 0 <= n < 1.0 。
 
@@ -3070,31 +3361,15 @@ print(x[2])
 
 > random.sample(sequence, k)，从指定序列中随机获取指定长度的片断。sample函数不会修改原有序列。
 
-## 52. python中的高阶函数
+## 55. Python中单下划线和双下划线
 
-> 高阶函数：一个函数可以作为参数传给另外一个函数，或者一个函数的返回值为另外一个函数（若返回值为该函数本身，则为递归），满足其一则为高阶函数。
-
-- map
-
-- filter
-
-- reduce
-
-- sorted
-
-> sort 是应用在 list 上的方法，sorted 可以对所有可迭代的对象进行排序操作。
-
-- abs 
-
-## 53. Python中单下划线和双下划线
-
-## 54. Python的作用域以及Python搜索变量的顺序
+## 56. Python的作用域以及Python搜索变量的顺序
 
 > Python作用域简单说就是一个变量的命名空间。代码中变量被赋值的位置，就决定了哪些范围的对象可以访问这个变量，这个范围就是变量的作用域。
 在Python中，只有模块（module），类（class）以及函数（def、lambda）才会引入新的作用域。
 Python的变量名解析机制也称为 LEGB 法则：本地作用域（Local）→当前作用域被嵌入的本地作用域（Enclosing locals）→全局/模块作用域（Global）→内置作用域（Built-in）
 
-## 55. 编码与解码
+## 57. 编码与解码
 
 > 编码：gbk => unicode => utf16 => url解码
 
@@ -3106,9 +3381,9 @@ eg:
 urllib.quote(line.decode("gbk").encode("utf-16"))
 ```
 
-## 56. 字符串格式化
+## 58. 字符串格式化
 
-## 57. 增量赋值
+## 59. 增量赋值
 
 - x += 1
 
@@ -3116,25 +3391,25 @@ urllib.quote(line.decode("gbk").encode("utf-16"))
 
 - x = x + 1
 
-## 58. 字典推导式
+## 60. 字典推导式
 
-## 59. exec对字符串执行和eval对字符串求值
+## 61. exec对字符串执行和eval对字符串求值
 
-## 60. raise语句的作用
+## 62. raise语句的作用
 
-## 61. yeild语句的作用
+## 63. yeild语句的作用
 
-## 62. socket编程
+## 64. socket编程
 
-## 63. urllib和urllib2
+## 65. urllib和urllib2
 
-## 64. requests
+## 66. requests
 
-## 65. Beautiful Soup
+## 67. Beautiful Soup
 
-## 66. select,poll和epoll
+## 68. select,poll和epoll
 
-## 67. python中实现IO多路复用
+## 69. python中实现IO多路复用
 
 ## 68. python常用的并发网络库
 
@@ -3142,7 +3417,7 @@ urllib.quote(line.decode("gbk").encode("utf-16"))
 - gevent
 - asyncio
 
-## 69. python decimal精确计算
+## 70. python decimal精确计算
 
 **[python decimal精确计算](https://blog.csdn.net/weixin_37989267/article/details/79473706)**
 
