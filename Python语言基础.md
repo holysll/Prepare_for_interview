@@ -59,7 +59,7 @@ categories: 编程语言-python
 - [38. 偏函数](#38-偏函数)
 - [39. 元编程](#39-元编程)
 - [40. 捕获异常](#40-捕获异常)
-- [41. python中如何进行异常处理，如何自定义一个异常类](#41-python中如何进行异常处理如何自定义一个异常类)
+- [41. 暂无](#41-暂无)
 - [42. python内置数据结构](#42-python内置数据结构)
 - [43. python中函数和方法有什么区别](#43-python中函数和方法有什么区别)
 - [44. python中参数类型有哪些](#44-python中参数类型有哪些)
@@ -3502,8 +3502,346 @@ print(eval(s3))
 
 ## 40. 捕获异常
 
+**[python捕获异常及方法总结](https://www.cnblogs.com/beile/p/10789333.html)**
 
-## 41. python中如何进行异常处理，如何自定义一个异常类
+> 在编写程序或者调试程序时，或多或少存在BUG或者异常，这时候就需要进行异常的捕获，根据异常Traceback定位出错点，进行处理。
+
+- 异常类型
+
+  (1) Python内置异常
+  > 在Python中，异常也是对象，python的异常处理能力很强大，有很多内置异常，可以为用户准确反馈出错信息。BaseException是所有内置异常的基类，但用户自定义的类并不几层BaseException，所有的异常类都是从Exception继承，且都在exceptions模块中定义。python自动降所有的异常名称放在内建命名空间中，所以程序不必导入exceptions模块即可使用异常，一旦引发而且没有捕捉SystemExit异常，程序执行就会终止，如果交互式回话遇到一个为捕捉的SystemExit异常，会话就会终止。
+
+```python
+"""python内置异常类的层次结构"""
+BaseException  # 所有异常的基类
+ +-- SystemExit  # 解释器请求退出
+ +-- KeyboardInterrupt  # 用户中断执行(通常是"ctrl+C")
+ +-- GeneratorExit  # 生成器(generator)发生异常来通知退出
+ +-- Exception  # 常规异常的基类
+      +-- StopIteration  # 迭代器没有更多的值
+      +-- StopAsyncIteration  # 必须通过异步迭代器对象的__anext__()方法引发以停止迭代
+      +-- ArithmeticError  # 各种算术错误引发的内置异常的基类
+      |    +-- FloatingPointError  # 浮点计算错误
+      |    +-- OverflowError  # 数值运算结果太大无法表示
+      |    +-- ZeroDivisionError  # 除(或取模)零 (所有数据类型)
+      +-- AssertionError  # 当assert语句失败时引发
+      +-- AttributeError  # 属性引用或赋值失败
+      +-- BufferError  # 无法执行与缓冲区相关的操作时引发
+      +-- EOFError  # 当input()函数在没有读取任何数据的情况下达到文件结束条件(EOF)时引发
+      +-- ImportError  # 导入模块/对象失败
+      |    +-- ModuleNotFoundError  # 无法找到模块或在在sys.modules中找到None
+      +-- LookupError  # 映射或序列上使用的键或索引无效时引发的异常的基类
+      |    +-- IndexError  # 序列中没有此索引(index)
+      |    +-- KeyError  # 映射中没有这个键
+      +-- MemoryError  # 内存溢出错误(对于Python 解释器不是致命的)
+      +-- NameError  # 未声明/初始化对象 (没有属性)
+      |    +-- UnboundLocalError  # 访问未初始化的本地变量
+      +-- OSError  # 操作系统错误(EnvironmentError、IOError、WindowsError、socket.error、select.error、mmap.error已合并到OSError中，构造函数可能返回子类)
+      |    +-- BlockingIOError  # 操作将阻塞对象设置为非阻塞操作
+      |    +-- ChildProcessError  # 在子进程上的操作失败
+      |    +-- ConnectionError  # 与连接相关的异常的基类
+      |    |    +-- BrokenPipeError  # 另一端关闭时尝试写入管道或试图在已关闭写入的套接字上写入
+      |    |    +-- ConnectionAbortedError  # 连接尝试被对等方中止
+      |    |    +-- ConnectionRefusedError  # 连接尝试被对等方拒绝
+      |    |    +-- ConnectionResetError  # 连接由对等方重置
+      |    +-- FileExistsError  # 创建已存在的文件或目录
+      |    +-- FileNotFoundError  # 请求不存在的文件或目录
+      |    +-- InterruptedError  # 系统调用被输入信号中断
+      |    +-- IsADirectoryError  # 在目录上请求文件操作(例如 os.remove())
+      |    +-- NotADirectoryError  # 在不是目录的事物上请求目录操作(例如 os.listdir())
+      |    +-- PermissionError  # 尝试在没有足够访问权限的情况下运行操作
+      |    +-- ProcessLookupError  # 给定进程不存在
+      |    +-- TimeoutError  # 系统函数在系统级别超时
+      +-- ReferenceError  # weakref.proxy()函数创建的弱引用试图访问已经垃圾回收了的对象
+      +-- RuntimeError  # 在检测到不属于任何其他类别的错误时触发
+      |    +-- NotImplementedError  # 在用户定义的基类中，抽象方法要求派生类重写该方法或者正在开发的类指示仍然需要添加实际实现
+      |    +-- RecursionError  # 解释器检测到超出最大递归深度
+      +-- SyntaxError  # Python语法错误
+      |    +-- IndentationError  # 缩进错误
+      |    |    +-- TabError  # Tab和空格混用
+      +-- SystemError  # 解释器发现内部错误
+      +-- TypeError  # 操作或函数应用于不适当类型的对象
+      +-- ValueError  # 操作或函数接收到具有正确类型但值不合适的参数
+      |    +-- UnicodeError  # 发生与Unicode相关的编码或解码错误
+      |    |    +-- UnicodeDecodeError  # Unicode解码错误
+      |    |    +-- UnicodeEncodeError  # Unicode编码错误
+      |    |    +-- UnicodeTranslateError  # Unicode转码错误
+      +-- Warning  # 警告的基类
+      |    +-- DeprecationWarning  # 有关已弃用功能的警告的基类
+      |    +-- PendingDeprecationWarning  # 有关不推荐用功能的警告的基类
+      |    +-- RuntimeWarning  # 有关可疑的运行时行为的警告的基类
+      |    +-- SyntaxWarning  # 关于可疑语法警告的基类
+      |    +-- UserWarning  # 用户代码生成警告的基类
+      |    +-- FutureWarning  # 有关已弃用功能的警告基类
+      |    +-- ImportWarning  # 关于模块导入时可能出错的警告的基类
+      |    +-- UnicodeWarning  # 与Unicode相关的警告的基类
+      |    +-- BytesWarning  # 与bytes和bytearray相关的警告的基类
+      |    +-- ResourceWarning  # 与资源使用相关的警告的基类，被默认警告过滤器忽略。
+```
+
+  (2) requests模块的相关异常
+  
+  > python在开发爬虫时，经常用到requests库，要调用requests模块的内置异常，需要`from requests.exceptions import xxx`，例如: `from requests.exceptions import ConnectionError, ReadTimeout` 或者 `from requests import ConnectionError, ReadTimeout`。
+
+```python
+# requests模块内置异常类的层次结构
+IOError
+ +-- RequestException  # 处理不确定的异常请求
+      +-- HTTPError  # HTTP错误
+      +-- ConnectionError  # 连接错误
+      |    +-- ProxyError  # 代理错误
+      |    +-- SSLError  # SSL错误
+      |    +-- ConnectTimeout(+-- Timeout)  # (双重继承，下同)尝试连接到远程服务器时请求超时，产生此错误的请求可以安全的重试
+      +-- Timeout  # 请求超时
+      |    +-- ReadTimeout  # 服务器未在指定的时间发送任何数据
+      +-- URLRequired  # 发出请求需要有效的URL
+      +-- TooManyRequired  # 重定向太多
+      +-- MissingSchema(+-- ValueError)  # 缺少URL架构(例如http或https)
+      +-- InvalidSchema(+-- ValueError)  # 无效的架构，有效架构清常见defaults.py
+      +-- InvalidURL(+-- ValueError)  # 无效的RUL
+      |    +-- InvalidProxyURL(+-- ValueError)  # 无效的代理RUL
+      +-- InvalidHeader(+-- ValueError)  # 无效的Header
+      +-- ChunkedEncodingError  # 服务器声明了chunked编码但发送了一个无效的chunk
+      +-- ContentDecodingError(+-- BaseHTTPError)  # 无法解码响应内容
+      +-- StreamCosumedError(+-- TypeError)  # 此响应的内容已被使用
+      +-- RetryError  # 自定义重试逻辑失败
+      +-- UnrewindableBodyError  # 尝试倒回正文时，请求遇到错误
+      +-- FileModeWarning(+-- DeprecationWarning)  # 文件以文本模式打开，但Requests确定其二进制长度
+      +-- RequestsDependencyWarning  # 导入的依赖项与预期的版本范围不匹配
+
+Warning
+ +-- RequestsWarning # 请求的基本警告
+```
+
+```python
+# 简单的requests请求，测试异常
+import requests
+from requests import ReadTimeout
+
+def get_page(url):
+    try:
+        response = requests.get(url, timeout=1)
+        if response.status_code == 200:
+            return response.text
+        else:
+            print('Get Page Failed', response.status_code)
+            return None
+    except (ConnectionError, ReadTimeout):
+        print('Crawling Failed', url)
+        return None
+
+def main():
+    url = 'https://www.baidu.com'
+    print(get_page(url))
+
+
+if __name__ == '__main__':
+    main()
+
+# 结果
+'''
+<!DOCTYPE html>
+<!--STATUS OK--><html> <head><meta http-equiv=content-type content=text/html;charset=utf-8><meta http-equiv=X-UA-Compatible content=IE=Edge>
+...
+...
+...
+</body> </html>
+'''
+```
+
+  (3) 用户自定义异常
+
+  > 用户可以通过创建一个异常类，直接或间接继承Exception类。
+
+```python
+# 自定义一个异常类
+class MyError(Exception):
+
+    def __init__(self, msg):
+        self.msg = msg
+
+    def __str__(self):
+        return self.msg
+
+try:
+    raise MyError('类型错误')
+except MyError as e:
+    print('My exception occured', e.msg)
+
+# 结果
+'''
+My exception occured 类型错误
+'''
+```
+
+- 异常捕获
+
+> 当发生异常时，需要对异常进行捕获，然后进行处理。python的异常捕获常用try...except...结构，把可能发生错误的语句放在try模块里，用except来处理异常，每个try都必须至少对应一个except。
+
+| 关键字 | 说明 |
+| :--: | :-- |
+| try/except | 捕获异常并处理 |
+| pass | 忽略异常 |
+| as | 定义异常实例 |
+| else | 如果try中的语句没有引发异常，这执行else中的语句 |
+| finally | 无论是否出现异常，都执行的代码 |
+| raise | 抛出/引发异常 |
+
+  (1) 捕获所有异常
+
+  ```python
+  # 捕获所有的异常，包含键盘中断和程序退出请求
+  try:
+    do somethings
+  except:
+    print('捕获所有异常')
+  ```
+
+  (2) 捕获指定异常
+
+  ```python
+  # 捕获指定异常
+  try:
+    do somethings
+  except:
+    print('捕获指定异常')
+  
+  # 万能异常
+  try:
+    do somethings
+  except Exception:
+    print('万能异常')
+
+  # 捕获指定的IOError
+  try:
+    f = open("test.txt", 'r')
+  except IOError as e:
+    print("open exception: %s: %s" % (e.errno, e.strerror))
+  
+  # 结果
+  '''
+  open exception: 2: No such file or directory
+  '''
+  ```
+
+  (3) 捕获多个异常
+
+  ```python
+  # except同时处理多个异常，不区分优先级
+  try:
+    do somethings
+  except (<Error1>, <Error2>, ...):
+    print('异常说明')
+  
+  # 区分优先级进行处理异常
+  """
+  执行try下的语句，如果引发异常，则执行过程会跳到第一个except语句。
+  如果第一个except中定义的异常与引发的异常匹配，则执行该except中的语句。
+  如果引发的异常不匹配第一个except，则会搜索第二个except，允许编写的except数量没有限制。
+  如果所有的except都不匹配，则异常会传递到下一个调用本代码的最高层try代码中。
+  """
+  try:
+    do somethings
+  except <Error1>:
+    print('异常说明1')
+  except <Error2>:
+    print('异常说明2')
+        .
+        .
+        .
+  except <Errorn>:
+    print('异常说明n')
+  ```
+
+  (4) 异常中的else
+
+  ```python
+  # 如果判断完没有某些异常之后还想做其他事情，就可以用else语句
+  try:
+    do somethings
+  except <Error1>:
+    print('异常说明1')
+  except <Error2>:
+    print('异常说明2')
+  else:
+    do other things  # try语句没有异常才会跳到这
+  ```
+
+  (5) 异常中的finally
+
+  ```python
+  # 无论是否发生异常都要执行的操作代码
+  str1 = 'hello world'
+  try:
+    int(str1)
+  except IndexError as e:
+    print(e)
+  except KeyError as e:
+    print(e)
+  except ValueError as e:
+    print(e)
+  else:
+    print('未发生异常')  # try语句没有异常才会跳到这
+  finally:
+    print('不管前面怎么样，就是要做')  # 不管前面是否异常，都做的事情
+  
+  # 结果
+  '''
+  invalid literal for int() with base 10: 'hello world'
+  不管前面怎么样，就是要做
+  '''
+  ```
+
+  (6) raise主动触发异常
+  
+  > raise语句用于抛出、触发异常
+  raise语法格式：`raise [Exception [, arg [, traceback]]]`，其中，Exception是异常类型，如ValueError，arg是一个可选的异常参数，当不提供时，默认为None，traceback是跟踪异常对象，可选。
+
+  ```python
+  # 判断数是否为0，是的话抛出异常:"参数错误"
+  def not_zero(num):
+    try:
+        if num == 0:
+            raise ValueError('参数错误')
+        return num
+    except Exception as e:
+        print(e)
+  
+  not_zero(0)
+
+  # 结果
+  '''
+  参数错误
+  '''
+  ```
+
+  (7) 采用Traceback模块查看异常
+
+  > 发生异常时，python利用traceback记住引发异常的以及程序的当前状态，维护着traceback对象，从而获取含有异常发生时函数调用堆栈有关的信息。`traceback.print_exc(file=open('error_log.txt','w+'))`
+
+  ```python
+  import traceback
+
+  try:
+    1/0
+  except Exception as e:
+    traceback.print_exc()
+  
+  # 结果
+  '''
+  Traceback (most recent call last):
+  File "C:/Users/holysll/PycharmProjects/untitled/test/super_parent_class.py", line 12, in <module>
+    1/0
+  ZeroDivisionError: division by zero
+  '''
+  ```
+
+  > traceback.print_exc()与traceback.format_exc()的区别：
+
+- format_exc()返回字符串，而print_exc()则直接给打印出来；
+- print_exc()还可以接受file参数直接写入到一个文件，如:`traceback.print_exc(file=open('error_log.txt','w+'))`
+
+## 41. 暂无
 
 ## 42. python内置数据结构
 
