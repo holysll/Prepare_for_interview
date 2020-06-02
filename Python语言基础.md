@@ -244,36 +244,39 @@ class Field(object):
 
 class StringField(Field):
     def __init__(self, name):
-        super(StringField, self).__init__(name, 'varchar(100)')
+        super().__init__(name, 'varchar(100)')
 
 class IntegerField(Field):
     def __init__(self, name):
-        super(IntegerField, self).__init__(name, 'bigint')
+        super().__init__(name, 'bigint')
 
 # 定义元类，控制Model对象的创建
 class ModelMetaClass(type):
     """定义元类"""
     def __new__(cls, name, bases, attrs):
-        if name=='Model':
-            return super(ModelMetaClass, cls).__new__(cls, name, bases, attrs)
+        if name == 'Model':
+            return type.__new__(cls, name, bases, attrs)
+        print('Found model: %s' % name)
+
+        # 排除掉对Model类的修改
         mappings = dict()
-        for k, v in attrs.iteritems():
+        for k, v in attrs.items():
             # 保存类属性和列的映射关系到mappings字典
             if isinstance(v, Field):
-              print('Found mapping: %s==>%s' % (k, v))
-             mappings[k] = v
-        for k in mapping.iterkeys():
-            # 将雷属性移除，是定义的类字段不污染User类属性，只在实例中可以访问这些key
+              print('Found mapping: %s==>%s' % (k, v)
+              mappings[k] = v
+        for k in mappings.keys():
+            # 将类属性移除，是定义的类字段不污染User类属性，只在实例中可以访问这些key
             attrs.pop(k)
         # 假设表名为类名的小写，创建类时添加一个__table__类属性
         attrs['__table__'] = name.lower()
         # 保存属性和列的映射关系，创建类时添加一个__mappings__类属性
         attrs['__mappings__'] = mappings
-        return super(ModelMetaClass, cls).__new__(cls, name, bases, attrs)
+        return type.__new__(cls, name, bases, attrs)
 
 # 编写Model基类
-class Model(dict):
-    __metaclass__ = ModelMetaClass
+class Model(dict, metaclass= ModelMetaClass):
+    """只是简单实现了INSERT功能"""
 
     def __init__(self, **kw):
         super(Model, self).__init__(**kw)
@@ -291,10 +294,10 @@ class Model(dict):
         fields = []
         params = []
         args = []
-        for k, v in self.__mappings__.iteritems():
-            fields.append(v,name)
+        for k, v in self.__mappings__.items():
+            fields.append(v.name)
             params.append('?')
-            args.append(getattr(self, k,None))
+            args.append(getattr(self, k, None))
         sql = 'insert into %s (%s) values (%s)' % (self.__table__, ','.join(fields), ','.join(params))
         print('SQL: %s' % sql)
         print('ARGS: %s' % str(args))
@@ -3346,18 +3349,145 @@ print(max(*args))
 
 ## 39. 元编程
 
+**[Python黑魔法：元类和元编程](https://zhuanlan.zhihu.com/p/114242597)**
+**[Python 元编程](https://blog.csdn.net/leongongye/article/details/48343089)**
+
 > 元编程（Meta Programming）又叫超编程，是指某类计算机程序的编写，这类计算机程序的编写或者超重其他程序（或者自身）作为他们的数据，或者在运行完成部分本应该在编译时完成的工作。多数情况下，与手工编译全部代码相比，程序员可以获得更高的工作效率，或者给与程序员更大的灵活度去处理新的情形而无需重新编译。
 
 > 编写元程序的语言称之为元语言。被操作的程序的语言称之为“目标语言”。一门编程语言可以同时也是自身的元语言的能力称之为“反射”或者“自反”。作为胶水语言的python，对各种语言的库的支持（ctypes、js2py等），就是元编程应用的很好实例。
 
 > 元编程是一种可以将程序当作数据来操作的技术，元编程能够读取，生成，分析或转换其他的程序代码，甚至可以在运行时修改自身。元编程存在的目的，就是多提供了一个抽象层次。
 
-> 在python中，元编程思想通常的手段有：
+> 在python中，元编程实现通常的手段有：
 
-- 魔法方法
+- 预定义方法
+
+```python
+class A(object):
+    def __init__(self, o):
+        self.__obj__ = o
+
+    def __getattr__(self, name):
+        if hasattr(self.__obj__, name):
+            return getattr(self.__obj__, name)
+        return self.__dict__[name]
+
+    def __iter__(self):
+        return self.__obj__.iter__()
+
+l = []
+a = A(l)
+
+for i in range(101):
+    a.append(i)
+print(sum(a))
+
+# 结果
+'''
+10
+10
+'''
+```
+
+> 这是一个简单的agent类，`__iter__`属于云定义函数，不会调用`__getattr__`来获得，需要额外定义。在`__getattr__`和`__setattr__`两个函数中，可以访问`__dict__`，而在函数`__getattribute__`中使用`self.__dict__`会引发递归，需要用`object.getattribute(self, name)`访问，`getattribute`只能用于新式类。
+
+- 函数赋值
+
+```python
+# socket.py中的例子
+_delegate_methods = ("recv", "recvfrom", "recv_into", "recvfrom_into", "send", "sendto")
+
+def __init__(self, family=AF_INET, type=SOCK_STREAM, proto=0, _sock=None):
+    if _sock is None:
+        _sock = _realsocket(family, type, proto)
+    self._sock = _sock
+    for method in _delegate_method:
+        setattr(self, method, getattr(_sock, method))
+
+# http代理装饰器
+def http_proxy(proxyaddr, username=None, password=None):
+    def reciver(func):
+        def creator(family=socket.AF_INET, type=socket.SOCK_STREAM, proto=0):
+            sock = func(family, type, proto)
+            sock.connect(proxyaddr)
+            def newconn(addr):
+                http_connect(sock, addr, username, password)
+            sock.connect, sock.connect_ex = nerconn, newconn
+            return sock
+        return creator
+    return reciver
+```
+
 - 描述器
+
+> 所谓描述器(descriptor)就是带有`__get__`和`__set__`函数的对象，当访问某个对象的某个属性，这个属性又是descriptor时，返回值是descriptor的`__get__`调用的返回，`__set__`也是类似的，带有`__set__`的称为data descriptor，而只有`__get__`的称为non data descriptor
+
+> Python访问某个对象的某个属性时，是按照以下次序的：
+
+- 类的数据描述器
+- instance属性，无论其是否是描述器，都不调用`__get__`
+- 类属性，包括non data descriptor
+
+```python
+class Meta(type):
+    def __new__(cls, name, bases, attrs):
+        for k, v in attrs.items():
+            if hasattr(v, '__meta_init__'):
+                v.__meta_init__(k)
+        return type.__new__(cls, name, bases, attrs)
+
+class AttrBase(object):
+    def __meta_init__(self, k):
+        self.name = k
+    def __get__(self, obj, cls):
+        return obj[self.name]
+    def __set__(self, obj, value):
+        obj[self.name] = value
+
+class Base(dict, metaclass = Meta):
+    pass
+
+class User(dict):
+    name = AttrBase()
+
+b = User()
+b.name = 'shell'
+print(b)
+print(b.name)
+
+# 结果
+'''
+{'name': 'shell'}
+shell
+'''
+```
+
+> 当访问`b.name`时，实际上是去访问了`b['name']`，这个过程不是通过User类重载`__getattr__`实现的，而是通过descriptor。
+
 - 元类
+
+> 具体可以参考之前[python中的元类metaclass](#3-python中的元类metaclass)
+
 - eval函数
+
+> eval()函数来执行一个字符串表达式，并返回表达式的值。
+eval()函数的语法：`eval(expression[, globals[, locals]])`，expression是表达式；globals是变量作用域，全局命名空间，如果被提供，这必须是一个字典对象；locals是变量作用域，局部变量命名空间，如果被提供，可以是任何映射对象。
+
+```python
+s1 ='2 * 6 / 2 + 2'
+s2 = 'pow(2, 3)'
+s3 = '2 ** 3'
+
+print(eval(s1))
+print(eval(s2))
+print(eval(s3))
+
+# 结果
+'''
+8.0
+8
+8
+```
 
 **经典案例：使用元类在python语言和数据库中间增加一个抽象ORM层**（可参考元类里面给出的[使用元类创建ORM实例](#3-python中的元类metaclass)）
 
@@ -3371,6 +3501,7 @@ print(max(*args))
 - 面向切面编程AOP
 
 ## 40. 捕获异常
+
 
 ## 41. python中如何进行异常处理，如何自定义一个异常类
 
