@@ -1,9 +1,7 @@
 ---
 layout: post
 title: Python语言知识点总结归纳
-date: 2020-05-08 23:05:08
-updated: 2020-05-14 01:36:55
-tags: 
+date: 2020-06-03 22:25:17
   - python
   - 后端
   - 知识回顾
@@ -59,9 +57,9 @@ categories: 编程语言-python
 - [38. 偏函数](#38-偏函数)
 - [39. 元编程](#39-元编程)
 - [40. 捕获异常](#40-捕获异常)
-- [41. 暂无](#41-暂无)
-- [42. python内置数据结构](#42-python内置数据结构)
-- [43. python中函数和方法有什么区别](#43-python中函数和方法有什么区别)
+- [41. python常见的内置数据结构](#41-python常见的内置数据结构)
+- [42. python 新增内置数据结构--bytes、bytearray](#42-python-新增内置数据结构--bytesbytearray)
+- [43. 空](#43-空)
 - [44. python中参数类型有哪些](#44-python中参数类型有哪些)
 - [45. python中函数传参过程](#45-python中函数传参过程)
 - [46. *args和**kwargs](#46-args和kwargs)
@@ -3841,11 +3839,316 @@ My exception occured 类型错误
 - format_exc()返回字符串，而print_exc()则直接给打印出来；
 - print_exc()还可以接受file参数直接写入到一个文件，如:`traceback.print_exc(file=open('error_log.txt','w+'))`
 
-## 41. 暂无
+## 41. python常见的内置数据结构
 
-## 42. python内置数据结构
+- 字符串(string)
 
-## 43. python中函数和方法有什么区别
+  - 由字符组成的有序的序列，是字符的集合
+  - 使用单引号''、双引号""、三引号''''''表示
+  - 有顺序、能索引、可迭代、元素能重复、不可变对象
+  - python3中，字符串就是Unicode类型
+  - 字符串连接：`"分隔符".join(iterable)`，如：`"".join(['1', '2', '3'])`。**注意：可迭代对象iterable必须是字符串**
+  - 字符串拼接：通过str + str 将两个字符串拼接得到一个新的字符串
+  - 字符串分割：
+    - `str.split(sep=None, maxsplit=-1)`，seq表示分割符，缺省默认为空格，maxsplit表示分割次数，-1表示遍历整个字符串；
+    - `str.rsplit(sep=None, maxsplit=-1)`表示从右至左分割；
+    - `str.splitlines([keepends])`按照换行符切分字符串，换行符（`'\r', '\r\n', '\n'`），keepends表示是否保留换行符，默认为False不保留，True则保留会输出换行符；
+    - `str.partition(seq) -> (head, seq ,tail)`从左到右，遇到分割符就把字符串分割成两部分，返回头、分隔符、尾三部分；若没找到分隔符，就返回头和两个空元素的三元组；
+    - `str.rpartition(seq) -> (head, seq ,tail)`从右至左分割；
+
+  - 字符串大小写：
+    - `str.upper()` 全大写
+    - `str.lower()` 全小写
+    - `str.swapcase()`交互大小写
+
+  - 字符串排版：
+    - `str.title()` 标题的每个单词都大写
+    - `str.capitalize()` 首字母大写
+    - `str.center(width[, fillchar])` 字符串居中，并使用填充符(fillchar)填充至长度(width)，填充符默认为空格
+    - `str.zfill(width)` 返回指定长度(width)的字符串，右对齐，左边前面填充0
+    - `str.ljust(width[, fillchar])` 字符串左对齐，并使用填充符(fillchar)填充至长度(width)，填充符默认为空格
+    - `str.rjust(width[, fillchar])` 字符串右对齐，并使用填充符(fillchar)填充至长度(width)，填充符默认为空格
+
+  - 字符串修改：
+    - `str.replace(old, new[,count])` 字符串匹配固定字符进行替换，count表示替换次数，默认全部替换
+    - `str.strip([chars])` 字符串两端去除指定的字符集(chars)，默认是空格
+    - `str.lstrip([chars])` 字符串去除左边指定的字符集(chars)，默认是空格
+    - `str.lstrip([chars])` 字符串去除右边指定的字符集(chars)，默认是空格
+
+  - 字符串查找：
+    - `str.find(sub[, start[, end]])` 在指定区间[start, end]内，从左至右查找子串，找到返回索引，未找到返回-1
+    - `str.rfind(sub[, start[, end]])` 在指定区间[start, end]内，从右至左查找子串，找到返回索引，未找到返回-1
+    - `str.index(sub[, start[, end]])` 在指定区间[start, end]内，从左至右查找子串，找到返回索引，未找到抛出异常ValueError
+    - `str.rindex(sub[, start[, end]])` 在指定区间[start, end]内，从右至左查找子串，找到返回索引，未找到抛出异常ValueError
+  
+  - 字符串统计：
+    - `str.count(sub[, start[, end]])` 在指定区间[start, end]内，从左至右统计子串sub出现的次数
+
+  - 字符串判断：
+    - `str.endswith(suffix[, start[, end]])` 在指定区间[start, end]内，字符串是否是suffix结尾
+    - `str.startswith(suffix[, start[, end]])` 在指定区间[start, end]内，字符串是否是suffix开头
+    - `str.isalnum()` 是否是字母和数字组成
+    - `str.isalpha()` 是否是字母
+    - `str.isdecimal()` 是否包含十进制数字
+    - `str.isdigit()` 是否全是全部数字（0-9）
+    - `str.isidentifier()` 是否是仅包含字母、数字和下划线
+    - `str.islower()` 是否都是小写
+    - `str.isupper()` 是否都是大写
+    - `str.isspace()` 是否只包含空白字符
+
+  - 字符串格式化：
+    - `"This is %s" % "python"`
+    - `"This is {}".format("python")`
+    - `"This {0[0]} {0[1]}".format(("is","python"))`
+
+  - 字符串翻倍：`str * n`，例如`'py' * 3` 结果是`'pypypy'`
+
+- 列表(list)
+
+  - 一个排列整齐的队列，由若干个元素组成
+  - 元素可以是任意对象，数字、字符串、字典、元组、列表、对象等
+  - 列表内的元素有顺序，可以使用索引，元素能重复，可修改
+  - 是线性数据结构，使用中括号[]表示
+  - 列表初始化：
+    - `s = list()`或`s = []` 生成一个空列表
+    - `s = list(iterable)` 可将可循环的结构转化为列表，如：`s = list(range(5))`、`s = [1, 2, 3]`
+
+  - 列表索引访问
+    - `list[index]` index即是list的索引，也叫下标，从左至右，丛0开始到列表长度减一(len(list)-1)；若从右至左，索引从-1开始；索引不可以越界，否则抛出异常indexError
+  
+  - 列表查询：
+    - `list.index(value, [start, [stop]])` 在指定区间[start, stop]查找列表内的元素是否与value匹配，匹配到第一个就返回索引，匹配不到，抛出异常ValueError
+
+  - 列表元素统计：
+    - `list.count(value)` 返回列表中匹配value的次数
+
+  - 列表元素修改：
+    - `list[index] = value`
+  
+  - 列表增加、插入元素
+    - `list.append(object)` 尾部追加元素
+    - `list.insert(index, object)` 在指定索引位置插入元素
+    - `list.extend(iterable)` 将可迭代对象的元素追加进来
+    - `list1 + list2`连个列表连接操作，本质上是add()方法
+
+  - 列表删除元素
+    - `list.remove(value)` 从左至右查找第一个value的值，移除该元素
+    - `list.pop([index])` 根据指定的索引index弹出该元素，当index为空时，默认弹出尾部第一个元素即index=-1;
+    - `list.clear()` 清空列表
+
+  - 列表元素排序
+    - `list.sort(key=None, reverse=False)`key是用来比较的元素，具体的函数的参数就是取自于可迭代对象中，指定可迭代对象的一个元素进行排序；reverse是排序规则，reverse=True降序，默认reverse=False升序
+    - `list.reverse()` 对列表的元素进行反向排序
+
+  - 列表元素打乱顺序
+    - `random.shuffle(list)` 就地打乱列表元素
+
+  - 列表随机取数
+    - `random.randint(a, b)` 返回范围[a, b)之间的整数
+    - `random.choice(seq)` 从非空序列的元素中随机选择一个元素
+    - `random.randrange([start,] stop[, step])` 从指定范围[start, stop]内，按指定步长递增的集合中获取一个随机数
+    - `random.sample(list, k)` 从样本空间或总体中随机取出k个不同的元素
+
+  - 列表切片 **[Python切片操作详细例子](https://www.jianshu.com/p/15715d6f4dad)**
+
+    - 切片基本表达式：`object[start_index : end_index : step]` step不写的时候默认为1，**注意索引方向必须与step的方向一致，否则返回空列表**
+    - s = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    - `s[:]` 或`s[::]` 从左往右，切取完整列表  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    - `s[::-1]` 从右往左，切取完整列表  # [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+    - `s[1:6]` 开始索引为1到索引为6，步长为1，从左往右取值  # [1, 2, 3, 4, 5]
+    - `s[6:1:-1]` 开始索引为6到索引为1，步长为-1，从右往左取值  # [6, 5, 4, 3, 2]
+    - `s[:6]` start_index省略时，这时默认从起点开始，索引为0到索引为6，步长为1，从左往右取值  # [0, 1, 2, 3, 4, 5]
+    - `s[:6:-1]` start_index省略时，这时默认从终点开始，索引为9到索引为6，步长为-1，从右往左取值  # [9, 8, 7]
+    - `s[6:]` end_index省略，这时默认为终点，索引为6到索引为9，步长为1，从左往右取值  # [6, 7, 8, 9]
+    - `s[6:：-1]` end_index省略，这时默认为起点，索引为6到索引为0，步长为-1，从右往左取值  # [6, 5, 4, 3, 2, 1, 0]
+    - `s[-1:-6:-1]` end_index省略，默认为终点，索引为-1到索引为-6，步长为-1，从右往左取值  # [9, 8, 7, 6, 5]
+    - `s[-6:-1]` step省略，索引为-6到索引为-1，步长为1，从左往右取值  # [9, 8, 7, 6, 5]
+    - `s[:-6]` step=1，从左往右取值，从索引0开始到索引-6  # [0, 1, 2, 3]
+    - `s[:-6:-1]` start_index省略，这时默认为终点，step=-1，从右往左取值，从索引-1到索引-6  # [9, 8, 7, 6, 5]
+    - `s[-6:]` end_index省略，这时为终点，step=1，从左往右取值，从索引-6开始到终点  # [4, 5, 6, 7, 8, 9]
+    - `s[-6::-1]` end_index省略，这时为起点，step=-1，从右往左取值，从索引-6到索引0  # [4, 3, 2, 1, 0]
+    - `s[1:-6]` step=1，从左往右取值，从索引1到索引为-6  # [1, 2, 3]
+    - `s[-1:6:-1]` step=-1，从右往左取值，从索引-1到索引6  # [9, 8, 7]
+
+  - 多层切片操作：
+    - `s[:8][2:5][-1:]` 相当于先`s[:8]=[0, 1, 2, 3, 4, 5, 6, 7]`，然后`[0, 1, 2, 3, 4, 5, 6, 7][2:5]=[2, 3, 4]`，最后`[2, 3, 4][-1:]=[4]`
+
+  - 带表达式的切片操作：
+    - `s[2+1:3*2:7%3]` 先计算各表达式可知，切片操作相当于`s[3:6:1]=[3, 4, 5]`
+
+  - 常用切片操作
+    - 取偶数位置：`s[::2]=[0, 2, 4, 6, 8]`
+    - 取奇数位置：`s[1::2]=[1, 3, 5, 7, 9]`
+    - for循环里的切片：`for i in range(1, 100)[2::3][-5:]:` 分解为三步，先生成[1, 2, 3, ..., 99]的整数对象，然后step=3，从左往右取值，从索引2（即3）到终点（即99），得到[3, 6, 9, ... , 99]，最后里面取最后五个数[99, 96, 93, 90, 87]
+
+- 元组(tuple)
+
+  - 一个有序的元素组成的集合
+  - 有顺序、能索引、元素能重复、不可变对象
+  - 小括号()表示，单个元素定义时：(1,) 必须带逗号
+  - tuple是只读，没有增删改，其他功能和列表差不多
+  - 元组初始化：`t = tuple()`空元组；`t = tuple(iterable)` 可迭代对象元组
+
+- 字典(dict)
+
+  - key-value键值对形式的数据集合
+  - 无顺序、key不可重复、可变可迭代
+  - 是非线性数据结构，使用大括号{}表示，里面都是键值对key:value的形式
+  - 字典的初始化
+    - `d = dict()` 或者 `d = {}` 新建一个空字典
+    - `d = {'x': 1, 'y': 2}`  # {'x': 1, 'y': 2}
+    - `d = dict(x=1, y=2)`  # {'x': 1, 'y': 2}
+    - `d = dict(zip('abc',[1, 2, 3]))`  # {'a': 1, 'b': 2, 'c': 3}
+    - `d = dict.fromkeys(range(2), 3)`  # {0: 3, 1: 3}
+    - `d = dict.fromkeys(('x', 'y'), 2)`  # {'x': 2, 'y': 2}
+    - `d = dict([('x', 1),('y', 2)])`  # {'x': 1, 'y': 2}
+
+  - 字典的访问
+    - `d[key]` 返回key对应的值value，key不存在时抛出异常KeyError
+    - `get(key[, default])` 返回key对应的值value，key不存在时返回缺省值默认为None
+    - `setdefault(key[, default])` 返回key对应的值value，key不存在时添加key，value为default，并返回default，默认为None
+
+  - 字典增加和修改：
+    - `d[key] = value` 将key对应的值改为value，若key不存在这添加新的kv对
+    - `update([other])` 使用另一个字典的kv对更新本字典，若key存在就覆盖该key对应的值，若key不存在，就添加。如`d.update(x=6)`或`d.update({'red': 3, 'x': 9})`或`d.update((('red', 666),('green', 333)))`
+
+  - 字典删除：
+    - `d.pop(key[, default])` 若key存在，移除它，并返回key对应的value；若key不存在，返回给定的default，default未设置，key不存在时抛出异常KeyError
+    - `d.popitem()` 移除并返回字典中最后一个键值对，若字典为空，抛出KeyError异常
+    - `d.clear()` 清空字典
+    - `del d['x']` 删除key为x的键值对，本质是删除对象引用
+
+  - 字典遍历：
+    - 遍历key：`for k in d: print(k)` 打印的是字典中的key
+    - 遍历key：`for k in d.keys(): print(k)` 打印的是字典中的key
+    - 遍历key：`for k in d.items(): print(k[0])` 打印的是字典中的key
+    - 遍历value：`for k in d: print(d[k])` 打印key对应的value
+    - 遍历value：`for k in d.keys(): print(d.get(k))` 打印key对应的value
+    - 遍历value：`for v in d.values(): print(v)` 打印字典中的value
+    - 遍历value：`for v in d.items(): print(v[1])` 打印字典中的value
+    - 遍历item：`for item in d.items(): print(item)` 打印键值对
+    - 遍历item：`for item in d.items(): print(item[0], item[1])` 打印键值对
+    - 遍历item：`for k, v in d.items(): print(k, v)` 打印键值对
+  
+  - 字典的遍历移除
+
+    ```python
+    d = dict(a=1, b=2, c=3, d=4, e='sss')
+    keys = []
+    for k, v in d.items():
+        if isinstance(v, str):
+            keys.append(k)
+    for k in keys:
+        d.pop(k)
+    print(d)
+
+    # 结果
+    '''
+    {'a': 1, 'b': 2, 'c': 3, 'd': 4}
+    '''
+    ```
+
+  - defaultdict类
+    - `collections.defaultdict([default_factory[, ...]])` 第一个参数是default_factory，缺省是None，它提供一个初始化函数，当key不存在时，会调用这个工厂函数的__missing__(key)的方法，返回一个根据default_factory参数的默认值给这个key的value
+
+    ```python
+    # 常规方法
+    import random
+    d1 = {}
+    for k in 'abcdef':
+        for i in range(random.randint(1, 5)):
+            if k not in d1.keys():
+                d1[k] = []
+            d1[k].append(i)
+    print(d1)
+
+    # 通过defaultdict类
+    from collections import defaultdict
+    import random
+
+    d2 = defaultdict(list)
+    for k in 'abcdef':
+        for i in range(random.randint(1, 5)):
+            d2[k].append(i)
+    print(d2)
+
+    # 结果
+    '''
+    {'a': [0, 1], 'b': [0], 'c': [0, 1, 2, 3], 'd': [0], 'e': [0, 1, 2, 3, 4], 'f': [0, 1]}
+    defaultdict(<class 'list'>, {'a': [0, 1, 2, 3], 'b': [0, 1], 'c': [0], 'd': [0], 'e': [0, 1], 'f': [0, 1, 2]})
+    '''
+    ```
+
+  - OrderedDict记录顺序：
+    - `collections.OrderedDict([items])` key并不是按照加入的顺序排列的，可以使用OrderedDict来记录顺序
+
+    ```python
+    from collections import OrderedDict
+    import random
+
+    d = {'banana':3, 'apple':4, 'pear':1, 'oranger':2}
+    print(d)
+    keys = list(d.keys())  # 获取key转化为list
+    random.shuffle(keys)  # 打乱顺序
+    print(keys)
+    od = OrderedDict()
+    for key in keys:
+        od[key] = d[key]
+    print(od)
+    print(od.keys())
+
+    # 结果
+    '''
+    {'banana': 3, 'apple': 4, 'pear': 1, 'oranger': 2}
+    ['oranger', 'pear', 'apple', 'banana']
+    OrderedDict([('oranger', 2), ('pear', 1), ('apple', 4), ('banana', 3)])
+    odict_keys(['oranger', 'pear', 'apple', 'banana'])
+    '''
+    ```
+
+- 集合(set)
+
+  - 一个无序的不重复的元素序列
+  - 是非线性数据结构，使用大括号{}表示
+  - 集合的基本应用：元素测试、list和tuple元素去重
+  - 集合支持一些数学操作：并集(union)、交集(intersection)、差集(difference)、对称差集(symmetric difference)
+  - 集合的创建：
+    - `set_name = {value1, value2, ...}` 类似于字典的创建
+    - `set_name = set()` 空集合必须用set()创建，而不能用{}，这样创建出来的是字典
+    - `set_name = set(list_name)` 把list转化为set类型
+  
+  - 利用集合去重
+    - 列表去重：`set_name = set(list_name)`
+    - 字符串去重：`set_name = set(string)`
+    - 元组去重：`set_name = set(tuple)`
+
+  - 集合的数学操作
+    - 并集：`A | B` 或 `A.union(B)`  # A和B的元素都有，且不会重复
+    - 交集：`A & B` 或 `A.intersection(B)`  # A和B的共同有的元素
+    - 差集：`A - B` 或 `A.difference(B)`  # A中有，但B中没有的元素
+    - 对称差集：`A ^ B` 或 `A.symmetric_difference(B)`  # A有或B有，但不是它们都有，除开公共有的元素
+
+  - 集合判断包含、子集：
+    - A包含B：`A.issuperset(B)` 或 `A >= B`
+    - B是A的子集：`B.issubset(A)` 或 `B <= A`
+
+  - 集合推导式： `s = {x for x in 'abcdef' if x not in 'abc'}`
+
+  - 集合新增元素
+    - 增加单个元素：`A.add(3)`
+    - 增加一组元素：`A.update(['a', 'b', 'c'])`
+
+  - 删除集合元素
+    - 直接删除指定元素：`A.remove(3)`  # 若元素不存在会报错，建议用discard()方法
+    - 如果集合存在指定元素，则删除该元素：`A.discard('a')`
+    - 随机删除元素：`A.pop()`  # set 集合的 pop 方法会对集合进行无序的排列，然后将这个无序排列集合的左面第一个元素进行删除
+    - 清空集合：`A.clear()`
+
+  - 判断两个集合包含的元素是否相同：`A.isdisjoint(B)`  # 若相同返回True, 否则返回False
+
+## 42. python 新增内置数据结构--bytes、bytearray
+
+## 43. 空
 
 ## 44. python中参数类型有哪些
 
