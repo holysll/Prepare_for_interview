@@ -58,36 +58,37 @@ categories: 编程语言-python
 - [39. 元编程](#39-元编程)
 - [40. 捕获异常](#40-捕获异常)
 - [41. python常见的内置数据结构](#41-python常见的内置数据结构)
-- [42. python 新增内置数据结构--bytes、bytearray](#42-python-新增内置数据结构--bytesbytearray)
-- [43. 空](#43-空)
-- [44. python中参数类型有哪些](#44-python中参数类型有哪些)
-- [45. python中函数传参过程](#45-python中函数传参过程)
-- [46. *args和**kwargs](#46-args和kwargs)
-- [47. 实参和形参的区别](#47-实参和形参的区别)
-- [48. python中可变对象和不可变对象](#48-python中可变对象和不可变对象)
-- [49. python中正则使用方式](#49-python中正则使用方式)
-- [50. Numpy与Scipy的区别](#50-numpy与scipy的区别)
-- [51. python中反射机制](#51-python中反射机制)
-- [52. python中如何管理依赖](#52-python中如何管理依赖)
-- [53. 如何分析python代码性能](#53-如何分析python代码性能)
-- [54. 列表的线性访问和随机访问](#54-列表的线性访问和随机访问)
-- [55. Python中单下划线和双下划线](#55-python中单下划线和双下划线)
-- [56. Python的作用域以及Python搜索变量的顺序](#56-python的作用域以及python搜索变量的顺序)
-- [57. 编码与解码](#57-编码与解码)
-- [58. 字符串格式化](#58-字符串格式化)
-- [59. 增量赋值](#59-增量赋值)
-- [60. 字典推导式](#60-字典推导式)
-- [61. exec对字符串执行和eval对字符串求值](#61-exec对字符串执行和eval对字符串求值)
-- [62. raise语句的作用](#62-raise语句的作用)
-- [63. yeild语句的作用](#63-yeild语句的作用)
-- [64. socket编程](#64-socket编程)
-- [65. urllib和urllib2](#65-urllib和urllib2)
-- [66. requests](#66-requests)
-- [67. Beautiful Soup](#67-beautiful-soup)
-- [68. select,poll和epoll](#68-selectpoll和epoll)
-- [69. python中实现IO多路复用](#69-python中实现io多路复用)
-- [68. python常用的并发网络库](#68-python常用的并发网络库)
-- [70. python decimal精确计算](#70-python-decimal精确计算)
+- [42. python bytes与bytearray](#42-python-bytes与bytearray)
+- [43. 字符串和字节串的区别](#43-字符串和字节串的区别)
+- [44. 字符集（字符编码）](#44-字符集字符编码)
+- [45. python中参数类型有哪些](#45-python中参数类型有哪些)
+- [46. python中函数传参过程](#46-python中函数传参过程)
+- [47. *args和**kwargs](#47-args和kwargs)
+- [48. 实参和形参的区别](#48-实参和形参的区别)
+- [49. python中可变对象和不可变对象](#49-python中可变对象和不可变对象)
+- [50. python中正则使用方式](#50-python中正则使用方式)
+- [51. Numpy与Scipy的区别](#51-numpy与scipy的区别)
+- [52. python中反射机制](#52-python中反射机制)
+- [53. python中如何管理依赖](#53-python中如何管理依赖)
+- [54. 如何分析python代码性能](#54-如何分析python代码性能)
+- [55. 列表的线性访问和随机访问](#55-列表的线性访问和随机访问)
+- [56. Python中单下划线和双下划线](#56-python中单下划线和双下划线)
+- [57. Python的作用域以及Python搜索变量的顺序](#57-python的作用域以及python搜索变量的顺序)
+- [58. 编码与解码](#58-编码与解码)
+- [59. 字符串格式化](#59-字符串格式化)
+- [60. 增量赋值](#60-增量赋值)
+- [61. 字典推导式](#61-字典推导式)
+- [62. exec对字符串执行和eval对字符串求值](#62-exec对字符串执行和eval对字符串求值)
+- [63. raise语句的作用](#63-raise语句的作用)
+- [64. yeild语句的作用](#64-yeild语句的作用)
+- [65. socket编程](#65-socket编程)
+- [66. urllib和urllib2](#66-urllib和urllib2)
+- [67. requests](#67-requests)
+- [68. Beautiful Soup](#68-beautiful-soup)
+- [69. select,poll和epoll](#69-selectpoll和epoll)
+- [70. python中实现IO多路复用](#70-python中实现io多路复用)
+- [71. python常用的并发网络库](#71-python常用的并发网络库)
+- [72. python decimal精确计算](#72-python-decimal精确计算)
 
 <!-- /TOC -->
 
@@ -101,19 +102,17 @@ categories: 编程语言-python
 
 ## 2. python语言相比其他语言的优点和缺点
 
-**优点**
+- **优点**
+  - 简单易懂，灵活简洁
+  - 强大的标准库和三方库
+  - 活跃的社区，许多开源项目
+  - 开发效率高，迭代便捷
+  - 应用领域广泛，Web开发、网络编程、自动化运维、Linux系统管理、数据分析、科学计算、人工智能、机器学习
 
-- 简单易懂，灵活简洁
-- 强大的标准库和三方库
-- 活跃的社区，许多开源项目
-- 开发效率高，迭代便捷
-- 应用领域广泛，Web开发、网络编程、自动化运维、Linux系统管理、数据分析、科学计算、人工智能、机器学习
-
-**缺点**
-
-- 执行效率较差,
-- 异步生态不完善，相关的库较少(tornado)
-- GIL的存在，无法充分利用多核的特性
+- **缺点**
+  - 执行效率较差,
+  - 异步生态不完善，相关的库较少(tornado)
+  - GIL的存在，无法充分利用多核的特性
 
 ## 3. python中的元类metaclass
 
@@ -151,7 +150,7 @@ class MyClass(object):
 > 实际上Myclass就是通过type()来创建出的MyClass类，它是type()类的一个实例。
 > 同时，MyClass本身也是累，也可以创建自己的实例my_class。
 
-* **__metaclass__**
+- **__metaclass__**
 
 > 可以再写一个类的时候为其添加__metaclass__属性，这样就定义了这个类的元类。__metaclass__实际上可以被任意调用，它并不需要是一个正式的类。
 
@@ -165,7 +164,7 @@ class Foo(metaclass=something):
     __metaclass__ = something
 ```
 
-* **自定义元类**
+- **自定义元类**
 
 > 元类的主要目的为了当创建类时能够自动改变类，通常，你会为API做这样的事情，你希望可以创建符合当前上下文的类。
 
@@ -206,7 +205,7 @@ class UpperAttrMetaClass(type):
     return tpye.__new__(upperattr_metaclass, future_classs_name, future_class_parents, uppercase_attr)
 ```
 
-* **真实业务场景下的元类**
+- **真实业务场景下的元类**
 
 ```python
 class UpperAttrMetaClass(type):
@@ -4146,35 +4145,400 @@ My exception occured 类型错误
 
   - 判断两个集合包含的元素是否相同：`A.isdisjoint(B)`  # 若相同返回True, 否则返回False
 
-## 42. python 新增内置数据结构--bytes、bytearray
+## 42. python bytes与bytearray
 
-## 43. 空
+> 常识普及：通常在常用的ASCII、utf-8 和unicode 编码中，像 a 这样一个英文字符，在内存中占一个字节。一个汉字在ASCII和unicode编码里占两个字节，在utf-8 编码中占三个字节。一个字节有八位，也就是八个数字，也叫8个bit 。计算机中的最小储存单位就是bit，bit是二进制的，所以计算机中的数据全都是0和1，没有其他的数字。
 
-## 44. python中参数类型有哪些
+- bytes
 
-## 45. python中函数传参过程
+  - bytes是字节组成的有序的不可变序列
+  - 字符串按照不同的字符集编码encode返回直接序列bytes
+    - `encode(encoding="utf-8", errors="strict") -> str`
+  - 字节序列bytes按照不同的字符集解码decode返回字符串
+    - `bytes.decode(encoding="utf-8", errors="strict") -> str`
+  
+  - bytes的语法：`class bytes([source[, encoding[, errors]]])`
+    - 若没有输入任何参数，默认就是初始化数组为0个元素：`b = bytes()`  # 空bytes
+    - 若source为整数，则返回一个长度为source的初始化数组：`b = bytes(3)`   # b'\x00\x00\x00' 创造三个空字节，每个字节为空
+    - 若source为字符串，这找找指定的encoding讲字符串转换为字节序列：`b = bytes('hello', encoding="utf-8")`  # b'hello'
+    - 若source为可迭代类型，这元素必须为[0,255]中的整数：`b = bytes([1, 2, 3, 4])`  # b'\x01\x02\x03\x04'
+    - 若source为与buffer接口一致的对象，从一个字节序列或者buffer复制出一个新的不可变的bytes对象：
 
-## 46. *args和**kwargs
+    ```python
+    # 复制bytes对象
+    b1 = bytes([0x61, 0x62])
+    b2 = b1
+    print(b1, b2)
+    print(id(b1), id(b2))
+    print(b1 is b2)
 
-## 47. 实参和形参的区别
+    # 结果
+    '''
+    b'ab' b'ab'
+    3162472152320 3162472152320
+    True
+    '''
+    ```
 
-## 48. python中可变对象和不可变对象
+  - 空bytes对象创建方式：
+    - 通过构造函数创建空bytes：`b = bytes()`
+    - 通过空字符串创建空bytes：`b = b''`
 
-## 49. python中正则使用方式
+  - bytes操作：与字符串操作基本一样(string)，都是不可变类型
+    - 替换：`b'Python'.replace(b'P', b'p')`  # 里面的参数也是bytes类型的
+    - 查找：`b'Python'.find(b'o')`  # 返回匹配到字节的索引号，未找到返回-1
+    - 十六进制数字组成的字符串转换为bytes
+
+    ```python
+    # 十六进制数字组成的字符串
+    s = '49 20 6c 69 6b 65 20 50 79 74 68 6f 6e'  # 空格是无效的，要空格需要用ASCII编码
+    b = bytes.fromhex(s)
+    print(b)
+
+    # 结果
+    '''
+    b'I like Python'
+    '''
+
+    # 字符串转化为十六进制表达
+    hex_str = 'I like Python'.encode().hex()
+    print(hex_str)
+    res = []
+    for i in range(len(hex_str)):
+        if i % 2 == 0:
+            if i == 0:
+                res.append(hex_str[i])
+            else:
+                w = ' ' + hex_str[i]
+                res.append(w)
+        else:
+            res.append(hex_str[i])
+
+    print("".join(res))
+
+    # 结果
+    '''
+    49206c696b6520507974686f6e
+    49 20 6c 69 6b 65 20 50 79 74 68 6f 6e
+    '''
+    ```
+
+    - 将一个字节数组bytes妆花为整数：`int.from_bytes(bytes, byteorder`
+
+    ```python
+    # 大端模式将bytes -> int
+    num = int.from_bytes(b'abcd', 'big')
+    print(num, hex(num))
+
+    # 大端模式将int -> bytes
+    print(num.to_bytes(4, 'big'))  # 第一个参数是给定字节数，不够会在前面补空字符的ASCII码
+
+    b = 97
+    print(b.to_bytes(1, 'big'))
+
+    # 结果
+    '''
+    1633837924 0x61626364
+    b'abcd'
+    b'a'
+    '''
+    ```
+  
+  - 字节序：
+    - 大端模式(big-endian)：尾巴放在大地址端
+      - Mac OS使用大端模式
+      - Java虚拟机是大端模式
+      - 网络传输更多使用大端模式
+    - 小端模式(little-endian)：尾巴放在低地址端
+      - Intel X86 CPU使用小端模式
+      - Windows、Linux使用小端模式
+
+- bytearray
+
+  - bytearray是字节组成的有序的可变数组
+  - 字节数组bytearray按照不同的字符集解码decode返回字符串
+    - `bytearray.decode(encoding="utf-8", errors="strict") -> str`
+  
+  - bytearray()方法语法：`class bytearray([source[, encodeing[, errors]]])`，返回一个元素可变的新字节数组，每个元素值必须是[0,256]内的整数，其他类型不行
+    - 若没有输入任何参数，默认就是初始化数组为0个元素：`b = bytearray()`  # b'' 空bytearray
+    - 若source为整数，则返回一个长度为 source 的初始化数组：`b = bytearray(3)`  # bytearray(b'\x00\x00\x00')
+    - 若source为字符串，则按照指定的 encoding 将字符串转换为字节序列：`b = bytearray('python', encoding="utf-8")`  # bytearray(b'python')
+    - 若source为可迭代类型，则元素必须为[0 ,255]中的整数：
+    `b = bytearray([1, 2, 3])`  # bytearray(b'\x01\x02\x03')
+    - 若source为与buffer接口一致的对象，从一个字节序列或者buffer复制出一个新的不可变的bytes对象：
+
+    ```python
+    # 复制bytes对象
+    b1 = bytearray([0x61, 0x62])
+    b2 = b1
+    print(b1, b2)
+    print(id(b1), id(b2))
+    print(b1 is b2)
+
+    # 结果
+    '''
+    bytearray(b'ab') bytearray(b'ab')
+    1992609708832 1992609708832
+    True
+    '''
+    ```
+
+    - bytearray操作：与bytes类型方法相同
+    - 替换：`bytearray(b'Python').replace(b'P', b'p')`  # 里面的参数也是bytes类型的
+    - 查找：`bytearray(b'Python').find(b'o')`  # 返回匹配到字节的索引号，未找到返回-1
+    - 十六进制数字组成的字符串转换为bytearray
+
+    ```python
+    # 十六进制数字组成的字符串
+    s = '49 20 6c 69 6b 65 20 50 79 74 68 6f 6e'  # 空格是无效的，要空格需要用ASCII编码
+    b = bytearray.fromhex(s)
+    print(b)
+
+    # 结果
+    '''
+    bytearray(b'I like Python')
+    '''
+
+    # 字符串转化为十六进制表达
+    hex_str = bytearray('I like Python'.encode()).hex()
+    print(hex_str)
+    res = []
+    for i in range(len(hex_str)):
+        if i % 2 == 0:
+            if i == 0:
+                res.append(hex_str[i])
+            else:
+                w = ' ' + hex_str[i]
+                res.append(w)
+        else:
+            res.append(hex_str[i])
+
+    print("".join(res))
+
+    # 结果
+    '''
+    49206c696b6520507974686f6e
+    49 20 6c 69 6b 65 20 50 79 74 68 6f 6e
+    '''
+    ```
+
+  - 索引
+
+  ```python
+  # 索引返回的是该字节对应的ASCII编码
+  b1 = bytearray(b'abcdef')
+  print(b1)
+  print(b1[0])  # 当取单个字符时，返回的字符所对应的ASCII编码
+  print(b1[:3])  # 当取字符序列的时候，返回的是对应的字符片段
+
+  # 结果
+  '''
+  bytearray(b'abcdef')
+  97
+  bytearray(b'abc')
+  '''
+  ```
+
+  - bytearray增加、插入元素
+    - 尾部追加元素：
+
+    ```python
+    b = bytearray(b'abcd')
+    b.append(101)  # 这里参数是[0,255]内的整数
+    print(b)
+
+    # 结果
+    '''
+    bytearray(b'abcde')
+    '''
+    ```
+
+    - 指定索引位置插入元素：
+
+    ```python
+    b = bytearray(b'abcd')
+    b.insert(0, 65)  # 这里第一个参数是索引位置，第二个参数是[0,255]内的整数
+    print(b)
+
+    # 结果
+    '''
+    bytearray(b'Aabcd')
+    '''
+    ```
+
+  - bytearray追加可迭代的整数集合，在[0,255]范围内
+
+    ```python
+    b = bytearray(b'abcd')
+    b.extend(range(101, 104))  # 101、102、103
+    print(b)
+
+    # 结果
+    '''
+    bytearray(b'abcdefg')
+    '''
+    ```
+
+  - bytearray移除元素
+    - 指定索引移除， 索引为空时，默认为-1，表示从移除尾部第一个：
+
+    ```python
+    b = bytearray(b'abcd')
+    b.pop()
+    print(b)
+    b.pop(0)
+    print(b)
+
+    # 结果
+    '''
+    bytearray(b'abc')
+    bytearray(b'bc')
+    '''
+    ```
+
+    - 找到第一个value移除，找不到则抛出ValueError异常：
+
+    ```python
+    b = bytearray(b'abcd')
+    b.remove(99)  # 移除c
+    print(b)
+
+    # 结果
+    '''
+    bytearray(b'abd')
+    '''
+    ```
+
+  - bytearray清空元素
+
+  ```python
+  b = bytearray(b'abcd')
+  b.clear()
+  print(b)
+
+  # 结果
+  '''
+  bytearray(b'')
+  '''
+  ```
+
+  - bytearray元素反转
+
+  ```python
+  b = bytearray(b'abcd')
+  b.reverse()
+  print(b)
+
+  # 结果
+  '''
+  bytearray(b'dcba')
+  '''
+  ```
+
+## 43. 字符串和字节串的区别
+
+- 字符串有若干个字符组成，以字符为单位进行操作；字节串由若干个字节组成，以字节为单位进行操作。
+- 字符串和直接传出了操作的数据单元不同之外，它们支持的所有方法基本相同。
+- 字符串和字节串都是不可变序列，不能随意增加和删除数据。
+- bytes只负责以字节序列的形式（二进制的形式）来存储数据，至于这些数据到底表示什么内容（字符串、数字、图片、音频等），完全由程序的解析方式决定。
+- bytes只是简单记录内存中的原始数据，不在意这些数据的使用。
+- 字符串和字节串可以通过不同字符集进行相互转换。
+- bytes类型的数据非常适合在互联网上传输，可用于网络通信编程。
+- bytes也可以用于存储图片、音频、视频等二进制格式的文件。
+- 字符串转换成bytes对象：
+  - 字符串内容都是ASCII字符，直接在字符串前面添加`b`前缀就可以将字符串转换为bytes
+
+  ```python
+  # 字符串的内容是英文字母，都是ASCII字符
+  s= 'abcdefg'
+  b1 = b'abcdefg'
+  print(b1)
+  print(b1[0])  # 当取单个字符时，返回的字符所对应的ASCII编码
+  print(b1[:3])  # 当取字符序列的时候，返回的是对应的字符片段
+
+  # 结果
+  '''
+  b'abcdefg'
+  97
+  b'abc'
+  '''
+  ```
+
+  - bytes是一个类，调用构造方法bytes()，可以将字符串按照指定的字符集转换为bytes，若未指定字符集，默认采用utf-8
+
+  ```python
+  # 调用构造方法bytes()，把字符串转换为bytes
+  s = "我喜欢python，今年25岁"
+  b2 = bytes(s, encoding="utf-8")
+  print(b2)
+
+  # 结果
+  '''
+  b'\xe6\x88\x91\xe5\x96\x9c\xe6\xac\xa2python\xef\xbc\x8c\xe4\xbb\x8a\xe5\xb9\xb425\xe5\xb2\x81'
+  '''
+  ```
+  
+  - 通过encode()方法见字符串按照指定的字符集转换成对应的字节串，若未指定字符集，默认采用utf-8
+
+  ```python
+  # 通过encode()的方法将字符串转换为bytes
+  s = "我喜欢python，今年25岁"
+  b3 = s.encode("utf-8")  # 如果未指定字符集，默认为utf-8，括号里可不填
+  print(b3)
+
+  # 结果
+  '''
+  b'\xe6\x88\x91\xe5\x96\x9c\xe6\xac\xa2python\xef\xbc\x8c\xe4\xbb\x8a\xe5\xb9\xb425\xe5\xb2\x81'
+  '''
+  ```
+
+  - 通过调用bytes类中的decode()方法，可以将btyes对象按照指定的字符集转换为字符串
+
+  ```python
+  # 通过decode()方法，将bytes转换成字符串
+  b4 = b'\xe6\x88\x91\xe5\x96\x9c\xe6\xac\xa2python\xef\xbc\x8c\xe4\xbb\x8a\xe5\xb9\xb425\xe5\xb2\x81'
+  s = b4.decode("utf-8")  # 如果未指定字符集，默认为utf-8，括号里可不填
+  print(s)
+
+  # 结果
+  '''
+  我喜欢python，今年25岁
+  '''
+  ```
+
+## 44. 字符集（字符编码）
+
+> ASCII编码，将符号、数字、英文等存储到计算机
+
+> GB2312编码和GBK编码，将中文存储到计算机
+
+> Unicode字符集，将全世界文字存储到计算机
+
+## 45. python中参数类型有哪些
+
+## 46. python中函数传参过程
+
+## 47. *args和**kwargs
+
+## 48. 实参和形参的区别
+
+## 49. python中可变对象和不可变对象
+
+## 50. python中正则使用方式
 
 > 手写正则邮箱地址
 
-## 50. Numpy与Scipy的区别
+## 51. Numpy与Scipy的区别
 
-## 51. python中反射机制
+## 52. python中反射机制
 
-## 52. python中如何管理依赖
+## 53. python中如何管理依赖
 
 > 每个项目创建独立的虚拟环境
 
-## 53. 如何分析python代码性能
+## 54. 如何分析python代码性能
 
-## 54. 列表的线性访问和随机访问
+## 55. 列表的线性访问和随机访问
 
 > random.random()用于生成一个0到1的随机符点数: 0 <= n < 1.0 。
 
@@ -4190,15 +4554,15 @@ My exception occured 类型错误
 
 > random.sample(sequence, k)，从指定序列中随机获取指定长度的片断。sample函数不会修改原有序列。
 
-## 55. Python中单下划线和双下划线
+## 56. Python中单下划线和双下划线
 
-## 56. Python的作用域以及Python搜索变量的顺序
+## 57. Python的作用域以及Python搜索变量的顺序
 
 > Python作用域简单说就是一个变量的命名空间。代码中变量被赋值的位置，就决定了哪些范围的对象可以访问这个变量，这个范围就是变量的作用域。
 在Python中，只有模块（module），类（class）以及函数（def、lambda）才会引入新的作用域。
 Python的变量名解析机制也称为 LEGB 法则：本地作用域（Local）→当前作用域被嵌入的本地作用域（Enclosing locals）→全局/模块作用域（Global）→内置作用域（Built-in）
 
-## 57. 编码与解码
+## 58. 编码与解码
 
 > 编码：gbk => unicode => utf16 => url解码
 
@@ -4210,9 +4574,9 @@ eg:
 urllib.quote(line.decode("gbk").encode("utf-16"))
 ```
 
-## 58. 字符串格式化
+## 59. 字符串格式化
 
-## 59. 增量赋值
+## 60. 增量赋值
 
 - x += 1
 
@@ -4220,33 +4584,33 @@ urllib.quote(line.decode("gbk").encode("utf-16"))
 
 - x = x + 1
 
-## 60. 字典推导式
+## 61. 字典推导式
 
-## 61. exec对字符串执行和eval对字符串求值
+## 62. exec对字符串执行和eval对字符串求值
 
-## 62. raise语句的作用
+## 63. raise语句的作用
 
-## 63. yeild语句的作用
+## 64. yeild语句的作用
 
-## 64. socket编程
+## 65. socket编程
 
-## 65. urllib和urllib2
+## 66. urllib和urllib2
 
-## 66. requests
+## 67. requests
 
-## 67. Beautiful Soup
+## 68. Beautiful Soup
 
-## 68. select,poll和epoll
+## 69. select,poll和epoll
 
-## 69. python中实现IO多路复用
+## 70. python中实现IO多路复用
 
-## 68. python常用的并发网络库
+## 71. python常用的并发网络库
 
 - tornado
 - gevent
 - asyncio
 
-## 70. python decimal精确计算
+## 72. python decimal精确计算
 
 **[python decimal精确计算](https://blog.csdn.net/weixin_37989267/article/details/79473706)**
 
