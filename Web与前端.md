@@ -24,6 +24,15 @@ categories: 前端知识
     - [2. 常见的状态码](#2-常见的状态码)
     - [3. 三次握手](#3-三次握手)
     - [4. 四次挥手](#4-四次挥手)
+    - [5.session和cookie的区别](#5session和cookie的区别)
+    - [6. https的建立连接的过程](#6-https的建立连接的过程)
+    - [7. https的传输数据是否是对称加密](#7-https的传输数据是否是对称加密)
+    - [8. TCP拥堵控制](#8-tcp拥堵控制)
+    - [9. 如何高效处理socket](#9-如何高效处理socket)
+    - [10. http的组成](#10-http的组成)
+    - [11. http的头部，keepalive的作用](#11-http的头部keepalive的作用)
+    - [12. tcp建立连接的方式](#12-tcp建立连接的方式)
+    - [13. 本机的socket需要经过协议栈解包么](#13-本机的socket需要经过协议栈解包么)
 - [Django](#django)
 - [Flask](#flask)
 - [Tornado](#tornado)
@@ -67,6 +76,24 @@ categories: 前端知识
 * 第三次握手：客户端收到服务器的SYN+ACK包，想服务器发送确认ACK包（ACK=y+1）,发送完毕，客户端和服务器进入ESTABLISHED状态，完成握手。
 
 ## 4. 四次挥手
+
+## 5.session和cookie的区别
+
+## 6. https的建立连接的过程
+
+## 7. https的传输数据是否是对称加密
+
+## 8. TCP拥堵控制
+
+## 9. 如何高效处理socket
+
+## 10. http的组成
+
+## 11. http的头部，keepalive的作用
+
+## 12. tcp建立连接的方式
+
+## 13. 本机的socket需要经过协议栈解包么
 
 # Django
 
