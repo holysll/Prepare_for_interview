@@ -4516,13 +4516,354 @@ My exception occured 类型错误
 
 ## 45. python中参数类型有哪些
 
+- 位置参数：也叫必备参数，指函数调用时，传入的实参数量和位置、类型必须与函数定义时保持一致，即形参和实参的位置数量必须一致
+
+```python
+# 在调用func函数时，必须按位置传入name和age，多了少了都不行，否则会抛出TypeError异常
+def func(name, age):
+    """
+    :param name: str
+    :param age: int
+    :return: tuple
+    """
+    print(name, age)
+
+func('lucy' ,18)
+func(*('lucy' ,18))  # 使用*解构
+
+# 结果
+'''
+lucy 18
+lucy 18
+'''
+```
+
+- 默认参数
+  - 函数定义时，为参数设置一个默认值，当函数调用时，没有传入这个参数值，直接使用这个默认值。指定有默认值的形参，必须是在没有默认值的参数的最后，否则会产生语法错误；而且默认参数必须指向不可变对象，如果指向可变对象，多次调用时，可能得到的不是意料之内的结果
+
+  ```python
+  def func(x, y=0):
+    """
+    :param x: int
+    :param x: int
+    :return:
+    """
+    return x + y
+
+  print(func(3))  # 传入参数x=3
+  print(func(3, 4))  # 传入参数x=3, y=4
+
+  # 结果
+  '''
+  3
+  7
+  '''
+  ```
+
+- 关键字参数：函数调用时，是指使用形式参数的名字来确定输入的参数值,（形参的名字=输入的参数值），通过此方式指定函数实参时，不再需要与形参的位置完全一致，只要将参数名写正确即可；使用位置参数和关键字参数混合传参的方式时，关键字参数必须位于所有的位置参数（即前面必须传位置参数，最后在传关键字参数，位置得对应）。
+
+```python
+def func(x, y):
+    """
+    :param x: int
+    :param x: int
+    :return:
+    """
+    return x + y
+
+print(func(3, 4))  # 位置参数
+print(func(x=3, y=4))  # 关键字参数
+print(func(y=4, x=3))  # 关键字参数，位置改变
+print(func(3, y=4))  # 位置参数与关键字混合
+
+# 结果
+'''
+7
+7
+7
+7
+'''
+```
+
+- 可变位置参数：定义参数时前面加一个*，表示这个参数是可变的，可以接受任意多个参数，这些参数构成一个元组，只能通过位置参数传递。
+
+```python
+# 可以接收不定参数，返回的类型是元组
+def func(*args):
+    """
+    :param args:
+    :return:
+    """
+    print(type(args))
+    sum = 0
+    for i in args:
+        sum += i
+    return sum
+
+print(func(1, 2, 3))
+print(func(*(1, 2, 3)))  # 使用*解构
+
+# 结果
+'''
+<class 'tuple'>
+6
+<class 'tuple'>
+6
+'''
+```
+
+- 可变关键字参数：定义参数时，在前面加**，`**kwargs`表示这个参数可变，可以接受零个或多个关键字参数，并以字典的形式传入函数体，关键字为字典的key，关键字绑定的值为value，如果可变关键字没有接收到任何参数，则传入函数体一个空字典{}。
+
+```python
+# 只接收可变关键字参数
+def func(**kwargs):
+    """
+    :param kwargs:
+    :return:
+    """
+    kwargs_type = (str(type(kwargs))).split("'")[1]
+    print("kwargs: 类型为{0}, 值为{1}".format(kwargs_type, kwargs))
+
+func()  # 未传任何参数，返回空字典
+func(x=1, y=2, z=3)  # 关键字对传参
+func(**{'x': 1, 'y': 2, 'z': 3})  # 使用**解包字典
+
+# 结果
+'''
+kwargs: 类型为dict, 值为{}
+kwargs: 类型为dict, 值为{'x': 1, 'y': 2, 'z': 3}
+kwargs: 类型为dict, 值为{'x': 1, 'y': 2, 'z': 3}
+'''
+
+# 可变位置参数与可变关键字参数一起使用，这是可变位置参数必须在前面
+def func(*args, **kwargs):
+    """
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    args_type = (str(type(args))).split("'")[1]
+    kwargs_type = (str(type(kwargs))).split("'")[1]
+    print("args: 类型为{0}, 值为{1}".format(args_type, args))
+    print("kwargs: 类型为{0}, 值为{1}".format(kwargs_type, kwargs))
+
+print("未传任何参数：")
+func()  # 未传任何参数，返回args为空元组，kwargs我空字典
+print("只传入可变位置参数：")
+func(1, 2, 3)
+print("只传入可变关键字参数：")
+func(x='a', y='b', z='c')
+print("传入可变位置参数和可变关键字参数：")
+func(1, 2, 3, x='a', y='b', z='c')
+func(1, 2, 3, **{'x': 1, 'y': 2, 'z': 3})  # 使用 **解包
+
+# 结果
+'''
+未传任何参数：
+args: 类型为tuple, 值为()
+kwargs: 类型为dict, 值为{}
+只传入可变位置参数：
+args: 类型为tuple, 值为(1, 2, 3)
+kwargs: 类型为dict, 值为{}
+只传入可变关键字参数：
+args: 类型为tuple, 值为()
+kwargs: 类型为dict, 值为{'x': 'a', 'y': 'b', 'z': 'c'}
+传入可变位置参数和可变关键字参数：
+args: 类型为tuple, 值为(1, 2, 3)
+kwargs: 类型为dict, 值为{'x': 'a', 'y': 'b', 'z': 'c'}
+args: 类型为tuple, 值为(1, 2, 3)
+kwargs: 类型为dict, 值为{'x': 1, 'y': 2, 'z': 3}
+'''
+
+# 位置参数，可变位置参数、默认参数、可变关键字参数结合
+# 参数定义顺序：位置参数->*args->默认参数->**kwargs
+def func(m, n, *args, flag=0, **kwargs):
+    """
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    print("m: %s" % m)
+    print("n: %s" % n)
+    print("flag: %s" % flag)
+    args_type = (str(type(args))).split("'")[1]
+    kwargs_type = (str(type(kwargs))).split("'")[1]
+    print("args: 类型为{0}, 值为{1}".format(args_type, args))
+    print("kwargs: 类型为{0}, 值为{1}".format(kwargs_type, kwargs))
+
+
+print("只传位置参数：")
+func(22, 33)  # 这时默认参数flag=0
+print("以关键字参数形式传入位置参数：")
+func(m=22, n=33)
+print("传入位置参数和可变位置参数：")
+func(22, 33, 1, 2, 3)
+print("位置参数、可变位置参数、默认参数：")
+func(22, 33, 1, 2, 3, flag=666)
+print("位置参数、可变位置参数、默认参数和可变关键字参数：")
+func(22, 33, 1, 2, 3, flag=666, x='a', y='b', z='c')
+print("以**解包形式传入位置参数：")
+func(22, 33, 1, 2, 3, flag=666, **{'x': 1, 'y': 2, 'z': 3})
+
+# 结果
+'''
+只传位置参数：
+m: 22
+n: 33
+flag: 0
+args: 类型为tuple, 值为()
+kwargs: 类型为dict, 值为{}
+以关键字参数形式传入位置参数：
+m: 22
+n: 33
+flag: 0
+args: 类型为tuple, 值为()
+kwargs: 类型为dict, 值为{}
+传入位置参数和可变位置参数：
+m: 22
+n: 33
+flag: 0
+args: 类型为tuple, 值为(1, 2, 3)
+kwargs: 类型为dict, 值为{}
+位置参数、可变位置参数、默认参数：
+m: 22
+n: 33
+flag: 666
+args: 类型为tuple, 值为(1, 2, 3)
+kwargs: 类型为dict, 值为{}
+位置参数、可变位置参数、默认参数和可变关键字参数：
+m: 22
+n: 33
+flag: 666
+args: 类型为tuple, 值为(1, 2, 3)
+kwargs: 类型为dict, 值为{'x': 'a', 'y': 'b', 'z': 'c'}
+以**解包形式传入位置参数：
+m: 22
+n: 33
+flag: 666
+args: 类型为tuple, 值为(1, 2, 3)
+kwargs: 类型为dict, 值为{'x': 1, 'y': 2, 'z': 3}
+'''
+```
+
+- 仅限关键字参数：在*号之后的参数只能通过关键字参数传递的叫keyword-only参数。其中，可变位置参数之后的参数也是keyword-only参数
+
+```python
+# *号的参数用关键字参数形式传参
+def func(*, x):
+    """
+    :param x:
+    :return:
+    """
+    print(x)
+
+func(x=3)
+
+# 结果
+'''
+3
+'''
+
+# 可变位置参数后的参数，也是仅限关键字参数
+def func(*args, x):
+    """
+    :param args:
+    :param x:
+    :return:
+    """
+    args_type = (str(type(args))).split("'")[1]
+    print("args: 类型为{0}, 值为{1}".format(args_type, args))
+    print("x: %s" % x)
+
+print("---- 只传关键字参数: ----")
+func(x=3)
+print("---- 传入可变位置参数和关键字参数：----")
+func(1,2,3, x=666)
+
+# 结果
+'''
+---- 只传关键字参数: ----
+args: 类型为tuple, 值为()
+x: 3
+---- 传入可变位置参数和关键字参数：----
+args: 类型为tuple, 值为(1, 2, 3)
+x: 666
+'''
+
+# 可变位置参数、普通参数、默认参数组成仅限关键字参数
+def func(*args, x, y=0):
+    """
+    :param args:
+    :param x:
+    :param y:
+    :return:
+    """
+    args_type = (str(type(args))).split("'")[1]
+    print("args: 类型为{0}, 值为{1}".format(args_type, args))
+    print("x: %s" % x)
+    print("y: %s" % y)
+
+print("---- 只传关键字参数: ----")
+func(x=3)
+print("---- 传入可变位置参数和关键字参数：----")
+func(1,2,3, x=666)
+print("---- 传入可变位置参数、关键字参数和默认参数：----")
+func(1,2,3, x=666, y=333)
+
+# 结果
+'''---- 只传关键字参数: ----
+args: 类型为tuple, 值为()
+x: 3
+y: 0
+---- 传入可变位置参数和关键字参数：----
+args: 类型为tuple, 值为(1, 2, 3)
+x: 666
+y: 0
+---- 传入可变位置参数、关键字参数和默认参数：----
+args: 类型为tuple, 值为(1, 2, 3)
+x: 666
+y: 333
+'''
+```
+
+- 参数解构：参数解构发生在函数调用时，可变参数发生在函数定义的时
+  - *解构：解构对象是可迭代对象，结构后的结果为位置参数
+  - **解构：解构对象是字典，解构后的结果为关键字参数，这里key必须是str类型，且和函数定义的形参名一致，否则抛出TypeError异常
+
+```python
+def add(x, y):
+    return x + y
+
+# 位置参数解构
+data1 = (1, 2)
+print(add(*data1))
+
+# 关键字参数解构
+data2 = {'x': 3, 'y': 4}
+print(add(**data2))
+
+# 结果
+'''
+3
+7
+'''
+```
+
 ## 46. python中函数传参过程
 
 ## 47. *args和**kwargs
 
 ## 48. 实参和形参的区别
 
+> 实参：调用函数时的参数
+
+> 形参：定义函数时的参数
+
 ## 49. python中可变对象和不可变对象
+
+> 可变对象：list、bytearray、array、collections.deque、dict、set
+
+> 不可变对象：tuple、str、bytes、bool、frozenset、数值类型
 
 ## 50. python中正则使用方式
 
