@@ -62,9 +62,9 @@ categories: 编程语言-python
 - [43. 字符串和字节串的区别](#43-字符串和字节串的区别)
 - [44. 字符集（字符编码）](#44-字符集字符编码)
 - [45. python中参数类型有哪些](#45-python中参数类型有哪些)
-- [46. python中函数传参过程](#46-python中函数传参过程)
-- [47. *args和**kwargs](#47-args和kwargs)
-- [48. 实参和形参的区别](#48-实参和形参的区别)
+- [46. *args和**kwargs的区别](#46-args和kwargs的区别)
+- [47. 实参和形参的区别](#47-实参和形参的区别)
+- [48. python中函数传参过程](#48-python中函数传参过程)
 - [49. python中可变对象和不可变对象](#49-python中可变对象和不可变对象)
 - [50. python中正则使用方式](#50-python中正则使用方式)
 - [51. Numpy与Scipy的区别](#51-numpy与scipy的区别)
@@ -502,6 +502,7 @@ print(foo1 is foo2)
     json：JSON 编码和解码器
 
     base64：Base16, Base32, Base64, Base85 数据编码
+    
     heapq：堆队列算法
 
     copy：复制
@@ -4849,25 +4850,419 @@ print(add(**data2))
 '''
 ```
 
-## 46. python中函数传参过程
+## 46. *args和**kwargs的区别
 
-## 47. *args和**kwargs
+> *args用来将参数打包成tuple给函数体调用，传递可变位置参数
 
-## 48. 实参和形参的区别
+> **kwargs打包关键字参数成dict给函数体调用，传递可变关键字参数
 
-> 实参：调用函数时的参数
+## 47. 实参和形参的区别
 
-> 形参：定义函数时的参数
+> 实参：调用函数时的参数，赋予的实际数值或者变量，实参和形参都是引用同一个对象
+
+> 形参：定义函数时的参数，是一个新的、本地的变量名，在函数的本地作用域内
+
+## 48. python中函数传参过程
+
+- 值传递
+
+> 值传递实际上就是把实际参数值的副本传入函数，不管函数对该值做了什么操作，而参数本身不会受到任何影响。
+
+```python
+def func(a, b):
+    a, b = b, a
+    print("func里交换处理完a的值为{}，b的值为{}".format(a, b))
+
+if __name__ == '__main__':
+    a, b = 3, 4
+    print("交换前a的值为{}，b的值为{}".format(a, b))
+    func(3, 4)
+    print("交换后a的值为{}，b的值为{}".format(a, b))
+
+# 结果
+'''
+交换前a的值为3，b的值为4
+func里交换处理完a的值为4，b的值为3
+交换后a的值为3，b的值为4
+'''
+```
+
+> 通过上面的例子，看出值传递的实质是当系统开始执行函数时，系统对形参执行初始化，就是把实参变量的值赋值给函数的形参变量，在函数中操作的并不是实际的实参变量，而是复制的副本。
+
+- 引用传递
+
+> 果果实际参数的数据类型是可变对象（列表，字典、元组、集合等），则函数传递方式将采用引用传递的方式。**而引用传递方式的低层实现，采用的依然还是值传递的方式。**
+
+```python
+# 把字典中的key为a和b所对应的值交换
+def func(d):
+    d['a'], d['b'] = d['b'], d['a']
+    print("func里交换处理a元素的值为{}，b元素的值为{}".format(d['a'], d['b']))
+
+if __name__ == '__main__':
+    d = {'a':3, 'b':4}
+    print("交换前a元素的值为{}，b元素的值为{}".format(d['a'], d['b']))
+    func(d)
+    print("交换后a元素的值为{}，b元素的值为{}".format(d['a'], d['b']))
+
+# 结果
+'''
+交换前a元素的值为3，b元素的值为4
+func里交换处理a元素的值为4，b元素的值为3
+交换后a元素的值为4，b元素的值为3
+'''
+```
+
+> 在上面例子中，a元素与b元素的值交换成功，func函数执行完，主程序中字典d的a元素和b元素的值也发生了交换，这很容易造成错觉。实际上，程序开始创建了一个字典对象，并定义了一个d的引用变量（其实就是一个“指针”）指向字典对象，现在内存中有对象本身和指向该对象的引用变量；然后，主程序调用func函数，d变量作为参数传入，把主程序中d变量的值赋给func函数的形参d（这里仍然是值传递），同时把指向这个字典对象的地址值也传进来，他们引用的是同一个字典对象；于是，在func函数中对d这个引用变量进行交换操作时，就等于对这个字典对象进行操作，所以主程序中d变量所引用对象的a元素和b元素的值也被交换。
+
+**总而言之：**
+
+- 不管什么类型的参数，在python函数中对参数直接使用"="等号赋值方式是诶用的，并不能改变参数的值。
+- 把这些数据包装成列表、字典等可变对象，然后传参到函数里进行修改，这样数据会发生改变。
 
 ## 49. python中可变对象和不可变对象
 
-> 可变对象：list、bytearray、array、collections.deque、dict、set
+> 可变对象：list、dict、set、bytearray、array、collections.deque
 
-> 不可变对象：tuple、str、bytes、bool、frozenset、数值类型
+> 不可变对象：tuple、str、bytes、bool、int、float
+
+**注意：元组是相对不可变的对象， 元组存储的是对象的引用， 当元组中的存在可变对象的引用时， 引用不可变， 但是引用的对象时可变的。**
 
 ## 50. python中正则使用方式
 
-> 手写正则邮箱地址
+> **正则表达式常用的匹配规则**
+
+|  模式   | 描述  |
+|  :------:  | :---- |
+|    | ***\*\*\*\*一般字符\*\*\*\**** |
+|  .  | 匹配除换行符"\n"和"\r"之外的任意字符，在re.S模式下则能匹配任意字符 |
+|  \  | 转义字符，使下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义符，如果原始字符串中含有`* . ? + $ ^ [ ] ( ) { } | \`，需要在前面加转义字符\才能正确表示，或者在字符串前面加个r房子转义 |
+|  [...]  | 字符集，用来表示一组字符，对应的位置可以是字符集中任意一个字符，字符集中的字符可以逐个列出，也可以给出范围如[abc]或[a-c]，所有的特殊字符在字符集中都失去本原有的含义，需要加\进行转义；常见的字符集[0-9]、[a-z]、[A-Z] |
+|  [^...]  | 在字符集内的开头加入非，表示匹配不在字符集内的其他任意字符，如[^abc]表示匹配除abc之外的任意字符 |
+|    | ***\*\*\*\*预定义字符集（可以写在字符集[...]中）\*\*\*\**** |
+|  \d  | 匹配任意数字，等价于[0-9] |
+|  \D  | 匹配任意非数字的字符，等价于[^\d] |
+|  \s  | 匹配空白字符，等价于[\t\n\r\f]，如\t(Tab)、\r(回车)、' '(空格)、\f(换页符)、\n(换行符)、\v(垂直制表符) |
+|  \S  | 匹配非空白字符，等价于[^\s] |
+|  \w  | 匹配字母数字及下划线，等价于[A-Za-z0-9_] |
+|  \W  | 匹配非字母数字及下划线的其他字符，等价于[^A-Za-z0-9_] |
+|    | ***\*\*\*\*数量词（用在字符或(...)之后）\*\*\*\**** |
+|  *  | 匹配前一个字符、子表达式0次或多次，例如`abc*`能匹配ab，也能匹配abc、abcc，\*等价于{0,} |
+|  +  | 匹配前一个字符、子表达式1次或多次，例如`abc+`，能匹配abc、abcc，但是不能匹配到ab，+号前的字符至少要匹配一次，+等价于{1,} |
+|  ?  | 匹配前一个字符、子表达式0次或1次，例如`do(es)?`可以匹配到do或does，?等价于{0,1} |
+|  {n}  | 精确匹配前一个字符、子表达式n次，例如`ab{2}c`可以匹配到abbc，n为非负整数 |
+|  {n,}  | 匹配前一个字符、子表达式至少n次(即[n,+∞])，例如`ab{2,}c`可以匹配到abbc或abbbbbbbc，n为非负整数 |
+|  {,n}  | 匹配前一个字符、子表达式至多n次(即[0,n])，例如`ab{,2}c`可以匹配到ac、abc或abbc，n为非负整数 |
+|  {n,m}  | 匹配前一个字符、子表达式最少匹配n次，最多m次(即[n,m])，例如`ab{1,2}c`可以匹配到abc或abbc，n, m为非负整数，且n<=m |
+|  `*?, +?, ??`  | 默认情况下*、+和?的匹配模式是贪婪模式，即会尽可能对的匹配符合规则的字符，*?、+?和??表示启用对应的非贪婪模式。如对于字符串"Pythonnn"，正则表达式Python+能匹配大整个字符串，而Python+?则匹配Python |
+|  `{n,m}?`  | 同上，启用非贪婪模式，即只匹配n次，n, m为非负整数，且n<=m |
+|    | ***\*\*\*\*边界匹配（不消耗待匹配字符串中的字符）\*\*\*\**** |
+|  ^  | 匹配字符串的开头，在多行模式下(re.M)匹配每一行的开头，如^abc可以匹配abc |
+|  $  | 匹配字符串的末尾，在多行模式下(re.M)匹配每一行的末尾，如abc$可以匹配abc |
+|  \A  | 仅匹配字符串开头，如\Aabc可以匹配abc |
+|  \Z  | 仅匹配字符串末尾，如果存在换行，只匹配到换行前的结束字符串，如abc\Z可以匹配abc |
+|  \z  | 仅匹配字符串末尾，如果存在换行，同时还会匹配到换行符 |
+|  \b  | 匹配单词边界，也就是指单词和空格间的位置，如`er\b`可以匹配到never中的er，但不能匹配到verb中的er |
+|  \B  | 匹配非单词边界，也就是指单词和空格间的位置，如`er\B`可以匹配到verb中的er，但不能匹配到never中的er，等价于[^\b] |
+|  \G  | 匹配最后匹配完成的位置 |
+|    | ***\*\*\*\*逻辑、分组\*\*\*\**** |
+|  `|`  | 左右表达式任意匹配一个，类似于"或"。总是先尝试匹配左边的表达式，一旦成功匹配就跳过匹配右边的表达式；如果`|`没有被包括在()中，则它的范围是整个表达式。如`123|456`能匹配到123、456 |
+|  (...)  | 匹配圆括号中的正则表达式，或者指定一个子组的开始和结束位置，被括起来的表达式将作为分组，从表达式的左边开始每遇到一个分组的左括号'('，编号+1；另外分组表达式作为一个整体，后面可以接数量词；表达式中的`|`也只能在该组中生效。如`(abc){2}`能匹配到`abcabc`，而`a(123|456)c`能匹配到`a123c、a456c` |
+|  `(?P<name>...)`  | 给分组命名，除了愿有你的编号外在指定一个额外的别名，通过分组名字name既可以访问到子组匹配的字串，例如`(?P<id>abc){2}`能够匹配到abcabc |
+|  `\<number>`  | 引用序号为`<number>`对应的子组所匹配到的字符串，子组的序号从1开始计算；如果序号以0开头，或者3个数字的长度，那么不会被引用对应的子组，而是用于匹配八进制数字所表示的ASCII码值所对应的字符。例如`(.+) \1`会匹配"python python" 或 "66 66"，但不会匹配holysll" |
+|  `(?P=name)`  | 引用别名为`<name>`的分组匹配到的字符串，如`(?P<id>\d)abc(?P=id)`能够匹配到1abc1、5abc5 |
+|    | ***\*\*\*\*特殊构造（不作为分组）\*\*\*\**** |
+|  `(?:...)`  | (...)的不分组版本，用于使用`|` 或后接数量词。如`(?:abc){2}`能匹配abcabc |
+|  `(?aiLmsux)`  | aiLmsux的每个字符代表一种匹配模式，`(?` 后可以紧跟着 'a'，'i'，'L'，'m'，'s'，'u'，'x' 中的一个或多个字符，只能在正则表达式的开头使用，如`(?i)abc`匹配模式是忽略大小写，能够匹配abc、Abc、aBc、abC、ABc、AbC、aBC、ABC |
+|  `(?#...)`  | #后的内容将作为主食被忽略，如`abc(?#comment)123`能够匹配abc123 |
+|  `(?=...)`  | 之后的字符串内容需要匹配表达式才能匹配成功，不消耗字符创的内容。如`a(?=\d)`能匹配后面全是数字的a |
+|  `(?!...)`  | 之后的字符串内容需要不匹配表达式才能匹配成功，不消耗字符创的内容。如`a(?!\d)`能匹配后面不是数字的a |
+|  `(?<=...)`  | 之前的字符串内容需要匹配表达式才能匹配成功，不消耗字符创的内容。如`a(?<=\d)`能匹配前面是数字的a |
+|  `(?<!...)`  | 之前的字符串内容需要不匹配表达式才能匹配成功，不消耗字符创的内容。如`a(?<!\d)`能匹配后面不是数字的a |
+|  `(?(id/name)yes-pattern|no-pattern)`  | 如果序号为id/别名为name的组匹配到字符，则需要尝试yes-patteren匹配规则，否则需要尝试no-pattern匹配规则，no-pattern是可选可省略。如`(<)?(\w+@\w+(?:\.\w+)+)(?(1)>|$)` 是一个邮件格式的正则表达式，可以匹配`<lucy@outlook.com>`和`lucy@outlook.com`，但不会匹配`<lucy@outlook.com`或`lucy@outlook.com>` |
+
+> **正则表达式的匹配模式：**
+
+|  flags   | 描述  |
+|  :----:  | :----  |
+| re.I(IGNORECASE)  | 忽略大小写，使匹配对大小写不敏感 |
+| re.L(LOCALE)  | 做本地化识别（locale-aware）匹配 |
+| re.M(MULTILINE)  | 多行匹配模式，影响^ 和 $ |
+| re.S(DOTALL)  | 使 . 匹配包括换行在内的所有任意字符 |
+| re.U  | 根据Unicode字符集解析字符，这个标志影响\w、\W、\b、\B、\d、\D、\s、\S |
+| re.X(VERBOSE)  | 该标志通过给予更灵活的格式以便将正则表达式更易于理解，详细表达式 |
+| re.A  | 只匹配ASCII字符 |
+
+> **re分组匹配对象的方法：**
+
+|  方法   | 描述  |
+|  :----:  | :----  |
+| group([group1, ...])  | 用于获得一个或者多个分组匹配的字符串，当要获得整个匹配的子串时，使用group()或group(0)；groups()等价于(group(1), group(2), ...) |
+| start([group])  | 用于获取分组匹配的子串在整个字符串的起始位置（子串第一个字符的索引），参数值默认为0 |
+| end([group])  | 用于获取分组匹配的子串在整个字符串的结束位置（子串最后一个字符的索引+1），参数值默认为0 |
+| span([group])  | 返回(start(group), end(group))；span(0) 返回匹配成功的整个子串的索引；span(1) 返回第一个分组匹配成功的子串的索引 |
+
+> **re模块中一些重要的函数：**
+
+- search：扫描整个字符串并返回第一个成功的匹配，匹配成功返回一个匹配的对象，否则返回None。
+
+> search()函数语法：`re.search(pattern, string[, flags])` 其中，参数pattern是匹配的正则表达式；参数string是需要匹配的字符串；参数flags是标志位，用于控制正则表达式的匹配模式。
+
+```python
+import re
+
+res = re.search(r'www\.(.*)\.(.{3})', 'www.baidu.com', re.I)  # 忽略大小写
+
+if res:
+    print(res.groups())  # 从分组1算起
+
+    print("分组0：")
+    print(res.group())
+    print(res.group(0))
+
+    print("分组1：")
+    print(res.group(1))
+    print(res.start(1))
+    print(res.end(1))
+    print(res.span(1))
+
+    print("分组2：")
+    print(res.group(2))
+    print(res.start(2))
+    print(res.end(2))
+    print(res.span(2))
+
+# 结果
+'''
+('baidu', 'com')
+分组0：
+www.baidu.com
+www.baidu.com
+分组1：
+baidu
+4
+9
+(4, 9)
+分组2：
+com
+10
+13
+(10, 13)
+'''
+```
+
+- match：尝试从字符串的起始位置匹配一个模式，如果不是起始位置匹配成功的话，match()就返回none。
+
+> match()函数语法：`re.match(pattern, string[, flags])`其中，参数pattern是匹配的正则表达式；参数string是需要匹配的字符串；参数flags是标志位，用于控制正则表达式的匹配模式。
+
+```python
+import re
+
+res = re.search(r'baidu', 'www.baidu.com', re.I)
+if res:
+    print("search匹配成功")
+    print(res.group())
+else:
+    print("search匹配失败")
+
+rem = re.match(r'baidu', 'www.baidu.com', re.I)
+if rem:
+    print("match匹配成功")
+    print(rem.group())
+else:
+    print("match匹配失败")
+
+# 结果
+'''
+search匹配成功
+baidu
+match匹配失败
+'''
+```
+
+- compile：用于编译正则表达式，生成一个正则表达式(pattern)对象，供match()和search()这两个函数使用。
+
+> compile()函数语法：`re.compile(pattern[, flags])`其中，参数pattern是匹配的正则表达式；可选参数flags是匹配模式，用于控制正则表达式的匹配模式。
+
+```python
+import re
+
+pattern = re.compile(r'\w+', re.I)
+res = pattern.search('www.baidu.com')
+if res:
+    print("compile search匹配成功")
+    print(res.group(0))
+    print(res.start(0))
+    print(res.end(0))
+    print(res.span(0))
+else:
+    print("compile search匹配失败")
+
+rem = pattern.match('www.baidu.com', 4, 8)
+if rem:
+    print("compile match匹配成功")
+    print(rem.group(0))
+    print(rem.start(0))
+    print(rem.end(0))
+    print(rem.span(0))
+else:
+    print("compile match匹配失败")
+
+# 结果
+'''
+compile search匹配成功
+www
+0
+3
+(0, 3)
+compile match匹配成功
+baidu
+4
+9
+(4, 9)
+'''
+```
+
+- findall：在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果没有找到匹配的，则返回空列表。match 和 search 是匹配一次 findall 匹配所有。
+
+> findall()函数语法：`re.findall(pattern, string[, flags])`其中，参数pattern是匹配的正则表达式；参数string是需要匹配的字符串；参数flags是标志位，用于控制正则表达式的匹配模式。
+
+```python
+import re
+
+res = re.findall(r'\w+', 'Hello World!', re.I)
+print(res)  # 返回的是一个列表
+
+# 结果
+'''
+['Hello', 'World']
+'''
+
+# 通过compile编译正则表达式
+pattern = re.compile(r'\w+', re.I)
+rec = re.findall(pattern, 'Hello World!')
+print(rec)
+
+# 结果
+'''
+['Hello', 'World']
+'''
+```
+
+- sub：将字符串中与模式pattern匹配的子串都替换为repl。
+
+> sub()函数语法：`re.sub(pattern, repl, string[, count=0, flags])`其中，参数pattern是匹配的正则表达式；参数repl是替换的字符串，也可以是一个函数；参数string是需要匹配的字符串；可选参数count是模式匹配后替换的最大次数，默认0表示替换所有的匹配项；可选参数flags是标志位，用于控制正则表达式的匹配模式。
+
+```python
+import re
+
+res0 = re.sub(r'\D', '', 'abc123#￥@', 0, re.I)  # 把非数字部分删除
+res1 = re.sub(r'\D', '', 'abc123#￥@', 1, re.I)
+res2 = re.sub(r'\D', '', 'abc123#￥@', 3, re.I)
+print(res0)
+print(res1)
+print(res2)
+
+# 结果
+'''
+123
+bc123#￥@
+123#￥@
+'''
+
+# 通过compile编译正则表达式
+pattern = re.compile(r'\D', re.I)
+res = re.sub(pattern, '', 'abc123#￥@', 0)  # 这时，不能传入flags匹配模式，而要在compile里传入
+print(res)
+# 结果
+'''
+123
+'''
+
+# repl是一个函数时，将匹配到的数字乘以2
+def double(num):
+    print(num.group('value'))
+    value = int(num.group('value'))
+    return str(value * 2)
+
+result = re.sub(r'(?P<value>\d+)', double, 'a1B23C456d7890')
+print(result)
+
+# 结果
+'''
+1
+23
+456
+7890
+a2B46C912d15780
+'''
+```
+
+- split：按照能够匹配的子串将字符串分割后返回列表。
+
+> split()函数语法：`re.split(pattern, string[, maxsplit=0, flags=0])`其中，参数pattern是匹配的正则表达式；参数string是需要匹配的字符串；可选参数maxsplit是分割次数，默认为0表示不限制次数；可选参数flags是标志位，用于控制正则表达式的匹配模式。
+
+```python
+import re
+
+res1 = re.split('\W+', 'www.baidu.com')
+res2 = re.split('(\W+)', 'www.baidu.com')
+res3 = re.split('\W+', 'www.baidu.com', 1)  # 分割一次
+res4 = re.split('p*', 'www.baidu.com')  # 匹配不到的正则表达式
+print(res1)
+print(res2)
+print(res3)
+print(res4)
+
+# 结果
+'''
+['www', 'baidu', 'com']
+['www', '.', 'baidu', '.', 'com']
+['www', 'baidu.com']
+['', 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '']
+'''
+```
+
+- escape：将字符串中所有的特殊字正则表达式字符转义，当大量主要加反斜杠\进行转义时，这个函数很有用，避免一些不必要的错误，实际上功能有点类似正则表达式前面加r。
+
+> escape()函数语法：`re.escape(pattern)`
+
+```python
+import re
+
+res = re.escape('www.python.org')
+print(res)
+
+result = re.findall(re.escape('.py'), "python www.python.org proxy.py")
+print(result)
+
+# 结果
+'''
+www\.python\.org
+['.py', '.py']
+'''
+```
+
+
+> 手写正则邮箱地址：
+
+```python
+import re
+
+email_addr = 'Please reply this email to <abc23@sample.com.cn>'
+# tool.chinaz.com给出的是：\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}
+pattern = re.compile(r'([\w\.-]+)@([\w\.-]+)(\.[\w\.]+)')
+res = re.search(pattern, email_addr)
+if res:
+    print(res.group)
+else:
+    print("匹配失败")
+
+# 结果
+'''
+abc23@sample.com.cn
+'''
+```
 
 ## 51. Numpy与Scipy的区别
 
