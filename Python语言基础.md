@@ -67,7 +67,7 @@ categories: 编程语言-python
 - [48. python中函数传参过程](#48-python中函数传参过程)
 - [49. python中可变对象和不可变对象](#49-python中可变对象和不可变对象)
 - [50. python中正则使用方式](#50-python中正则使用方式)
-- [51. Numpy与Scipy的区别](#51-numpy与scipy的区别)
+- [51. Numpy、Scipy、Panadas的区别](#51-numpyscipypanadas的区别)
 - [52. python中反射机制](#52-python中反射机制)
 - [53. python中如何管理依赖](#53-python中如何管理依赖)
 - [54. 如何分析python代码性能](#54-如何分析python代码性能)
@@ -4937,8 +4937,8 @@ func里交换处理a元素的值为4，b元素的值为3
 |    | ***\*\*\*\*一般字符\*\*\*\**** |
 |  .  | 匹配除换行符"\n"和"\r"之外的任意字符，在re.S模式下则能匹配任意字符 |
 |  \  | 转义字符，使下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义符，如果原始字符串中含有`* . ? + $ ^ [ ] ( ) { } | \`，需要在前面加转义字符\才能正确表示，或者在字符串前面加个r房子转义 |
-|  [...]  | 字符集，用来表示一组字符，对应的位置可以是字符集中任意一个字符，字符集中的字符可以逐个列出，也可以给出范围如[abc]或[a-c]，所有的特殊字符在字符集中都失去本原有的含义，需要加\进行转义；常见的字符集[0-9]、[a-z]、[A-Z] |
-|  [^...]  | 在字符集内的开头加入非，表示匹配不在字符集内的其他任意字符，如[^abc]表示匹配除abc之外的任意字符 |
+|  [...]  | 字符集，用来表示一组字符，对应的位置可以是字符集中任意一个字符，字符集中的字符可以逐个列出，也可以给出范围如[abc]或[a-c]，所有的特殊字符在字符集中都失去本原有的含义，需要加\进行转义；常见的字符集[0-9]、[a-z]、[A-Z]、`^[\u4e00-\u9fa5]*$` |
+|  [^...]  | 在字符集内的开头加入非，表示匹配不在字符集内的其他任意字符，如[^abc]表示匹配除abc之外的任意字符 |s
 |    | ***\*\*\*\*预定义字符集（可以写在字符集[...]中）\*\*\*\**** |
 |  \d  | 匹配任意数字，等价于[0-9] |
 |  \D  | 匹配任意非数字的字符，等价于[^\d] |
@@ -5243,7 +5243,6 @@ www\.python\.org
 '''
 ```
 
-
 > 手写正则邮箱地址：
 
 ```python
@@ -5264,15 +5263,410 @@ abc23@sample.com.cn
 '''
 ```
 
-## 51. Numpy与Scipy的区别
+**[常用正则表达式](http://tool.chinaz.com/regex)**
+
+|   目标  | 表达式  |
+|  :----:  |  :----  |
+|   中文字符  | `[\u4e00-\u9fa5]`  |
+|   双字节字符(包括汉字在内)  | `[^\x00-\xff]`  |
+|   空白行  | `\n\s*\r`  |
+|   Email地址  | `\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}`  |
+|   网址URL  | `[a-zA-z]+://[^\s]*` 或 `^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+` |
+|   国内电话号码  | `[0-9-()（）]{7,18}`  |
+|   国内手机号码  | `0?(13|14|15|17|18|19)[0-9]{9}`  |
+|   QQ号码  | `[1-9]([0-9]{5,11})`  |
+|   邮政编码  | `\d{6}`  |
+|   身份证号  | `^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$`  |
+|   日期格式  | `\d{4}(\-|\/|.)\d{1,2}\1\d{1,2}`  |
+|   IP地址  | `(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)`  |
+|   整数  | `-?[1-9]\d*`  |
+|   正整数  | `[1-9]\d*`  |
+|   负整数  | `-[1-9]\d*`  |
+|   正浮点数  | `[1-9]\d*.\d*|0.\d*[1-9]\d*`  |
+|   负浮点数  | `-([1-9]\d*.\d*|0.\d*[1-9]\d*)`  |
+|   用户名(字母、数字、下划线、-、以及中文)  | `[A-Za-z0-9_\-\u4e00-\u9fa5]+`  |
+
+## 51. Numpy、Scipy、Panadas的区别
+
+> Numpy是数值计算的扩展包，能够高效处理N为数组、复杂函数、线性代数。Numpy专门针对ndarray的操作和运算进行了设计，所以数据的存储效率和输入输出性能远优于Python中的嵌套列表，当数组越大时，Numpy的优势越明显，因此用来存储和处理大型矩阵比嵌套列表结构高效的多，可以说是一种免费而强大的Matlab系统。
+
+**[Numpy库里有哪些函数](https://blog.csdn.net/holysll/article/details/89350260)**
+
+> Scipy是专门用于科学计算的一个常用库，可以插值运算、优化算法、图像处理、常微分方程数值解的求解、信号处理、稀疏矩阵和数学统计等等。Scipy是基于Numpy，并且封装了一些高阶抽象和物理模型，是Numpy和Scipy协同工作，高效解决问题。
+
+**[Python机器学习及分析工具：Scipy篇](https://www.jianshu.com/p/6c742912047f)**
+
+> Pandas是基于Numpy的一种工具，提供了一套名为DataFrame的数据结构，适合统计分析中的表结构，在上层做数据分析，所以也称为表格容器。Pandas 所包含的数据结构和数据处理工具的设计，使得数据清洗和分析非常快捷，并经常和其他Numpy、Scipy数值计算工具、数据可视化工具Matplotlib结合起来使用，其中大量库和一些标准的数据模型、函数和方法，支持着大型数据集的高效处理。
+
+**[Pandas库中的函数](https://blog.csdn.net/holysll/article/details/89396976)**
 
 ## 52. python中反射机制
 
+**[Python的反射机制](https://www.jianshu.com/p/8e62449c936c)**
+
+> 反射的核心本质其实就是通过字符串的形式导入模块，通过字符串的形式，去模块中找指定函数，并执行。利用字符串的形式去对象（模块）中操作（增删改查）成员，是一种基于字符串的事件驱动。实现思路：规定用户输入格式 模块名/函数名 通过__import__的形式导入模块，并通过 hasattr和getattr 检查并获取函数返回值。
+
+|  方法  |  描述  |
+|  :----:  |  :----  |
+|  getattr  |  根据字符串形式去某个模块中寻找东西  |
+|  hasattr  |  根据字符串形式去某个模块中判断东西是否存在  |
+|  setattr  |  根据字符串形式去某个模块中设置东西  |
+|  delattr  |  根据字符串形式去某个模块中删除东西  |
+
+- 实例1：
+
+```python
+def f1():
+    print("f1是这个函数的名字！")
+
+s = "f1"
+print("%s是个字符串" % s)
+```
+
+> 在上面代码中，f1是函数f1()的函数名，"f1"是字符串，两者有本质的区别。可以通过f1()的方式调用函数f1，但是不能"f1"()方式去调用函数f1()，实际上就是不能通过字符串来调用名字看起来相同的函数。
+
+> 利用python反射机制简单实现"f1"调用函数f1()：
+
+```python
+# test.py
+def f1():
+    print("f1是这个函数的名字！")
+```
+
+```python
+# 通过用户输入形式，以字符串形式导入模块
+module_name = input("请输入需要导入的模块名：")
+# __import__用于以字符串形式导入模块
+module = __import__(module_name)
+# 在模块寻找的函数名
+func = input("请输入需要自行的函数：")
+# 判断函数该模块中是否有这个函数
+if hasattr(module, func):
+    target_func = getattr(module, func)
+    target_func()
+else:
+    print("{}模块中没有{}函数.".format(module_name, func))
+
+# 结果
+'''
+请输入需要导入的模块名：test
+请输入需要自行的函数：f1
+f1是这个函数的名字！
+'''
+# 这样就实现了通过输入字符串f1，调用test.py的里的f1()
+```
+
+- 实例2：基于反射模拟Web框架路由系统
+
+```python
+# views.py 视图模块
+def login():
+    print("这是一个登陆页面！")
+
+def logout():
+    print("这是一个退出页面！")
+
+def home():
+    print("这是网站主页面！")
+```
+
+```python
+# 根据输入网址url访问相应的页面
+
+def run():
+    url = input("请输入想要访问页面的url：").strip()
+    module_name, func_name = url.split("/")
+    module = __import__("lib." + module_name, fromlist=True)  # 如果和模块不在同一级目录下面，则需要在前面加目录
+    if hasattr(module, func_name):
+        func = getattr(module, func_name)
+        func()
+    else:
+        print("404")
+
+if __name__ == "__main__":
+    run()
+
+# 输入views/login
+'''
+请输入想要访问页面的url：views/login
+这是一个登陆页面！
+'''
+# 输入views/logout
+'''
+请输入想要访问页面的url：views/logout
+这是一个退出页面！
+'''
+# 输入views/home
+'''
+请输入想要访问页面的url：views/home
+这是网站主页面！
+'''
+# 输入views/find
+'''
+请输入想要访问页面的url：views/find
+404
+'''
+```
+
 ## 53. python中如何管理依赖
 
-> 每个项目创建独立的虚拟环境
+> Anaconda是包管理和环境管理器，可以帮助用户很方便的管理大量的第三方架包，但是不一定适合所有项目，在加上很多项目部署在linux服务器上，所以就需要对项目依赖进行独立管理。
+
+- 配置pip镜像源
+
+```bash
+# window系统，在C:\Users\用户名\pip\pip.ini（没有pip文件夹就新建）
+[global]
+index-url = https://mirrors.aliyun.com/pypi/simple/
+
+# linux系统，vi ~/.pip/pip.conf
+[global]
+index-url = https://mirrors.aliyun.com/pypi/simple/
+```
+
+- 每个项目创建独立的虚拟环境
+
+```bash
+# 第一种：安装virtualenv
+pip install virtualenv
+# 检查virtualenv是否安装成功
+virtualenv --version
+# 如果提示-bash: virtualenv: command not found则
+find / -name virtualenv  # 全局查找virtualenv
+ln -s /usr/local/python3/bin/virtualenv /usr/bin/virtualenv  # 添加软链接
+# 创建独立干净的项目虚拟环境
+virtualenv --no-site-packages project1
+# 启动虚拟环境
+source project1/bin/activate
+workon project1  # 这种方式也能启动虚拟环境
+# 退出虚拟环境
+deactivate
+# 删除虚拟环境
+rmvirtualenv project1
+
+
+# 第二种：安装virtualenvwrapper
+pip install virtualenvwrapper
+
+# 配置环境变量
+vi ~/.bashrc 或者 vi ~/.bash_profile
+# 添加配置信息
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/workspace  # 添加项目路径，这样切换到虚拟环境时就会自动切换到项目根目录下
+source /usr/local/bin/virtualenvwrapper.sh
+
+# 保存退出后，刷新修改的配置
+source ~/.bashrc
+
+# 创建虚拟环境
+mkvirtualenv -p python3 project1  # 表示Python的项目
+# 查看所有虚拟环境
+workon Tab Tab
+# 切换、进入虚拟环境
+workon project1
+# 退出虚环境
+deactivate
+# 删除虚拟环境
+rmvirtualenv project1
+```
+
+- 导出项目依赖，锁定版本，迁移
+
+```bash
+# 导出项目依赖
+pip freeze > requirements.txt
+# 安装依赖
+pip install -r requirements.txt
+```
 
 ## 54. 如何分析python代码性能
+
+**[python程序代码性能分析和计时统计](https://blog.csdn.net/lhh08hasee/article/details/80032193)**
+
+> 以下方法分别针对代码块、代码程序文件、 函数进行性能计时统计:
+
+- time.time()或者datetime.datetime.now()
+
+```python
+# 结束时间-开始时间
+import time
+import datetime
+start = time.time()  # 或者datetime.datetime.now()
+func()  # 需要统计运行时长的函数
+end = time.time()
+print(end - start)
+```
+
+- time.clock()
+
+```python
+"""
+clock() 函数以浮点数计算的秒数返回当前的CPU时间，用来衡量不用程序的耗时，比time.time更有用。在win系统下，这个函数返回的是真实时间(wall time)，而在Unix/Linux下返回的是CPU 时间。
+"""
+
+# test.py
+import time
+
+start = time.clock()
+func()  # 需要统计运行时长的函数
+end = time.time()
+print(end - start)
+```
+
+- time
+
+```bash
+# 在linux下对整个程序做计时统计
+
+/usr/bin/time -p python test.py
+
+# 输入内容
+# real 0m2.057s  记录了整体的耗时
+# user 0m0.033s  记录了CPU花在任务上的时间，但不保罗内核函数花费的时间
+# sys 0m0.011s  记录了内核函数花费的时间
+# user + sys  即是cpu总共花费的时间
+# real - (user + sys)  得到可能是花费在等待IO的时间
+
+# 打开–verbose开关来获得更多输出信息
+/usr/bin/time --verbose python test.py
+```
+
+- cProfile：分析分析cpu使用情况
+
+> cProfile：基于lsprof的用C语言实现的扩展应用，运行开销比较合理，适合分析运行时间较长的程序，推荐使用这个模块。
+
+```python
+# 命令生成统计文件
+python -m cProfile test.py  # 直接输出统计结果
+
+# 上面这条命令等价于
+import cProfile
+import re
+cProfile.run('re.compile("test")')
+```
+
+```python
+# 命令生成统计文件(二进制数据文件)
+python -m cProfile -o stats test.py
+
+# 上面这条命令等价于
+import cProfile
+import re
+cProfile.run('re.compile("test")', 'stats', 'cumtime')
+
+# 然后，通过python分析生成的统计文件
+import pstats
+
+p = pstats.Stats("stats")
+p.print_stats()
+
+# 结果
+'''
+Hello World
+         5 function calls in 2.001 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    2.001    2.001 test.py:10(<module>)
+        1    0.000    0.000    2.001    2.001 {built-in method builtins.exec}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.print}
+        1    2.001    2.001    2.001    2.001 {built-in method time.sleep}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+'''
+```
+
+> 统计表中各参数含义：
+
+|  参数  |  描述  |
+|  :----:  |  :----  |
+|  ncalls  |  表示函数调用的次数  |
+|  tottime  |  表示指定函数的总的运行时间，除掉函数中调用子函数的运行时间  |
+|  percall  |  第一个percall）等于 tottime/ncalls  |
+|  cumtime  |  表示该函数及其所有子函数的调用运行的时间，即函数开始调用到返回的时间  |
+|  percall  |  （第二个percall）即函数运行一次的平均时间，等于 cumtime/ncalls  |
+|  filename:lineno(function)  |  表示每个函数调用的具体信息  |
+
+**[cProfile更多用法参考](https://blog.csdn.net/weixin_40304570/article/details/79459811)**
+
+- timeit
+
+```python
+# 计算小段代码的执行时间的模块
+from timeit import timeit
+
+print(timeit('math.sqrt(2)', 'import math', number=100000))  # 执行10万次2的开方
+
+# 结果
+'''
+0.023690600000000006
+'''
+```
+
+- 装饰器
+
+```python
+# 将给需要计时的函数加上装饰器@time_count
+from functools import wraps
+import time
+
+def time_count(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()  # 使用time.perf_counter() 能够提供给定平台上精度最高的计时器
+        res = func(*args, **kwargs)
+        end = time.perf_counter()
+        print('{}.{} : {}'.format(func.__module__, func.__name__, end - start))
+        return res
+    return wrapper
+
+@time_count
+def time_sleep():
+    time.sleep(2)
+    print("休眠两秒")
+
+
+if __name__ == '__main__':
+    time_sleep()
+
+# 结果
+'''
+休眠两秒
+__main__.time_sleep : 1.9995934
+'''
+```
+
+- line_profile
+
+> 用cProfile找到需要分析的函数，然后用line_profiler对函数逐行进行性能分析。
+
+```bash
+# 安装 line_profile
+pip install line_profiler
+
+# 运行kernprof 逐行分析被修饰函数的CPU开销
+kernprof.py -l -v test.py  # -v 显示输出；-l 代表逐行分析而不是逐函数分析
+
+# 结果中各参数的含义
+'''
+Total Time：测试代码的总运行时间
+Hits：表示每行代码运行的次数
+Time：每行代码运行的总时间
+Per Hits：每行代码运行一次的时间
+% Time：每行代码运行时间的百分比
+'''
+```
+
+- memory_profiler：分析内存使用情况
+
+```bash
+# 安装memory_profiler和依赖
+pip install psutil
+pip install memory_profiler
+
+# 命令分析内存使用情况
+python -m memory_profiler test.py
+```
 
 ## 55. 列表的线性访问和随机访问
 
