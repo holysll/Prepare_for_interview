@@ -71,13 +71,13 @@ categories: 编程语言-python
 - [52. python中反射机制](#52-python中反射机制)
 - [53. python中如何管理依赖](#53-python中如何管理依赖)
 - [54. 如何分析python代码性能](#54-如何分析python代码性能)
-- [55. 列表的线性访问和随机访问](#55-列表的线性访问和随机访问)
-- [56. Python中单下划线和双下划线](#56-python中单下划线和双下划线)
-- [57. Python的作用域以及Python搜索变量的顺序](#57-python的作用域以及python搜索变量的顺序)
-- [58. 编码与解码](#58-编码与解码)
-- [59. 字符串格式化](#59-字符串格式化)
-- [60. 增量赋值](#60-增量赋值)
-- [61. 字典推导式](#61-字典推导式)
+- [55. 列表的顺序访问和随机访问](#55-列表的顺序访问和随机访问)
+- [56. 随机函数](#56-随机函数)
+- [57. Python中单下划线和双下划线](#57-python中单下划线和双下划线)
+- [58. Python的作用域以及Python搜索变量的顺序](#58-python的作用域以及python搜索变量的顺序)
+- [59. 编码与解码](#59-编码与解码)
+- [60. 字符串格式化](#60-字符串格式化)
+- [61. 增量赋值](#61-增量赋值)
 - [62. exec对字符串执行和eval对字符串求值](#62-exec对字符串执行和eval对字符串求值)
 - [63. raise语句的作用](#63-raise语句的作用)
 - [64. yeild语句的作用](#64-yeild语句的作用)
@@ -89,6 +89,7 @@ categories: 编程语言-python
 - [70. python中实现IO多路复用](#70-python中实现io多路复用)
 - [71. python常用的并发网络库](#71-python常用的并发网络库)
 - [72. python decimal精确计算](#72-python-decimal精确计算)
+- [73. 模块和代码块](#73-模块和代码块)
 
 <!-- /TOC -->
 
@@ -2767,8 +2768,8 @@ def function_list(obj):
 
 if __name__ == '__main__':
     function(1)
-    function('hello') 
-    function(range(3)) 
+    function('hello')
+    function(range(3))
     function(object)
 
 # 结果
@@ -5668,53 +5669,356 @@ pip install memory_profiler
 python -m memory_profiler test.py
 ```
 
-## 55. 列表的线性访问和随机访问
+## 55. 列表的顺序访问和随机访问
 
-> random.random()用于生成一个0到1的随机符点数: 0 <= n < 1.0 。
+> **顺序访问：**链表在内存中不是按顺序存储的，而是通过指针连在一起，为了访问某一元素，必须从链头还是顺着指针才能找到某一个元素。
 
-> random.uniform(a, b)，用于生成一个指定范围内的随机符点数，两个参数其中一个是上限，一个是下限。如果a > b，则生成的随机数n: a <= n <= b。如果 a < b， 则 b <= n <= a 。
+> **随机访问：**数组在内存中是按顺序存储的，访问数组中的任意元素可以直接通过下标计算得到元素存放的位置，访问耗时与元素在数组中所处的位置无关。
 
-> random.randint(a, b)，用于生成一个指定范围内的整数。其中参数a是下限，参数b是上限，生成的随机数n: a <= n <= b。
+## 56. 随机函数
 
-> random.randrange([start], stop[, step])，从指定范围内，按指定基数递增的集合中 获取一个随机数。
+> `random.random()`用于生成一个0到1的随机浮点数: 0 <= n < 1.0 。
 
-> random.choice(sequence)从序列中获取一个随机元素，参数sequence表示一个有序类型。
+> `random.uniform(a, b)`，用于生成一个指定范围内的随机浮点数，两个参数其中一个是上限，一个是下限。如果a > b，则生成的随机数n: a <= n <= b。如果 a < b， 则 b <= n <= a 。
 
-> random.shuffle(x[, random])，用于将一个列表中的元素打乱。
+> `random.randint(a, b)`，用于生成一个指定范围内的整数。其中参数a是下限，参数b是上限，生成的随机数n: a <= n <= b。
 
-> random.sample(sequence, k)，从指定序列中随机获取指定长度的片断。sample函数不会修改原有序列。
+> `random.randrange([start], stop[, step])`，从指定范围内，按指定基数递增的集合中获取一个随机数。如`random.randrange(10, 10, 2)`，结果相当于从`[10, 12, 14, 16, ..., 96, 98]`序列中获取一个随机数。
 
-## 56. Python中单下划线和双下划线
+> `random.choice(sequence)`从序列中获取一个随机元素，参数sequence表示一个有序类型，list、tuple、字符串等。如`random.choice(["Python", "C++", "java"])`，随机在列表中选取一个元素。
 
-## 57. Python的作用域以及Python搜索变量的顺序
+> `random.shuffle(x[, random])`，用于将一个列表中的元素打乱。如`random.shuffle(["Python", "C++", "java"])`，每次结果是随机排序的。
+
+> `random.sample(sequence, k)`，从指定序列中随机获取指定长度的片断，sample函数不会修改原有序列。如`random.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 2)`，结果是从列表10个数字中随机选两个元素。
+
+## 57. Python中单下划线和双下划线
+
+- 单下划线开头
+
+> 一种约定，一般来说，_object被看作“私有的”，在模块或类外不可以使用，不能用from module import *导入，当变量是私有的时候，用_object来表示变量是很好的习惯。
+
+- 双下划线开头
+
+> 双下划线开头，__object表示私有成员，只有类对象自己能访问，连子类对象也不能访问到这个数据。
+
+**python中的私有不是真正意义上的private，可以通过`对象._类名__object`机制访问private.**
+
+- 双下划线开头和结尾
+
+> "__object__"指的是python中的一些特殊方法，前后双下划线是专用标识，它们是python的魔法函数，编程是不要用这种方式命名自己的变量和函数。
+
+|  方法  |  描述  |
+|  :----:  |  :----  |
+|  `__str__`  |  将对象转换成字符串时会执行  |
+|  `__init__`  |  初始化方法，为对象变量赋值  |
+|  `__new__`  |  构造方法，创建一个对象  |
+|  `__call__`  |  在对象后面加括号会执行该方法  |
+|  `__getattr__`  |  当使用对象.属性时，若属性存在会调用该方法  |
+|  `__setattr__`  |  当使用对象.属性 = value时，会调用该方法  |
+|  `__iter__`  |  类内部定义了该方法，对象就变成了可迭代对象  |
+|  `__add__`  |  当两个对象使用+号时，会调用该方法  |
+|  `__enter__` 和 `__exit__`  |  上下文管理  |
+
+## 58. Python的作用域以及Python搜索变量的顺序
 
 > Python作用域简单说就是一个变量的命名空间。代码中变量被赋值的位置，就决定了哪些范围的对象可以访问这个变量，这个范围就是变量的作用域。
 在Python中，只有模块（module），类（class）以及函数（def、lambda）才会引入新的作用域。
 Python的变量名解析机制也称为 LEGB 法则：本地作用域（Local）→当前作用域被嵌入的本地作用域（Enclosing locals）→全局/模块作用域（Global）→内置作用域（Built-in）
 
-## 58. 编码与解码
+## 59. 编码与解码
 
-> 编码：gbk => unicode => utf16 => url解码
+- 基本概念：
+ 
+> 比特 / bit：计算机中最小的数据单位，是单个的二进制数值 0 或 1
 
-> 解码：url解码 => utf16 =>unicode => gbk
+> 字节 / byte：计算机存储数据的单元，1 个字节由 8 个比特组成
 
-eg:
+> 字符：人类能够识别的符号
+
+> 编码：将人类可识别的字符转换为机器可识别的字节码 / 字节序列
+
+> 解码：将机器可识别的字节码 / 字节序列转换为人类可识别的字符
+
+- 编码格式
+
+> Python2 的默认编码是ASCII，不能识别中文字符，需要显示指定字符编码。
+
+> Python3 的默认编码是Unicode，可以识别中文。
+
+> 计算机内存的数据，统一使用Unicode编码；数据传输或保存在硬盘上，是哟还能UTF-8编码。
+
+- 编码和解码
+  - 编码(encode)：将Unicode字符串转换为特定编码格式对应的字节码的过程。
+
+  ```python
+  s = "学习python"
+  print(s.encode())  # encode()函数里参数默认为utf-8
+  print(s.encode('gbk'))
+  
+  # 结果
+  '''
+  b'\xe5\xad\xa6\xe4\xb9\xa0python'
+  b'\xd1\xa7\xcf\xb0python'
+  '''
+  ```
+
+  - 解码(decode)：将特定编码格式的字节码转换为对应的Unicode字符串的过程。
+
+  ```python
+  # encode和decode的编码格式必须一致，如gbk编码，必须用gbk解码
+  s1 = b'\xe5\xad\xa6\xe4\xb9\xa0python'
+  s2 = b'\xd1\xa7\xcf\xb0python'
+  print(s1.decode())  # 用默认的utf-8解码
+  print(s2.decode('gbk'))  # 用gbk解码
+
+  # 结果
+  '''
+  学习python
+  学习python
+  '''
+  ```
+
+- 编码表和适用性
+
+|  编码  |  适用性  |  大小  |  特点  |
+|  :----:  |  :----  |  :----:  |  :----  |
+|  ASCII码  |  数字、英文字母、特殊字符  |  8bit = 1byte  |  特点编号从0到127，占用空间小  |
+|  GB2312码/GBK码  |  支持中文  |  16bit = 2byte  |  GBK码是GB2312码的升级，也支持日文、韩文等  |
+|  Unicode码  |  支持国际语言  |  32bit = 4byte  |  占用空间大，适用性强，在ASCII码前面补8个就成了Unicode码  |
+|  UTF-8  |  支持国际语言  |  英文：8bit = 1byte  中文：24bit =  3byte  欧洲文字：16bit = 2byte  |  是Unicode的升级，是可变长度的Unicode，两者可以非常容易地互相转换，占用空间小  |
+
+
+## 60. 字符串格式化
+
+- %格式化: C 语言风格的 sprintf 形式, 用%占位
 
 ```python
-urllib.quote(line.decode("gbk").encode("utf-16"))
+# %o 八进制输出
+print("八进制：%o" % 222)
+
+#  %d 十进制整数输出
+print("整数：%d, %d, %d" % (1, 22.33, 0.25))
+
+# %x 十六进制输出
+print("十六进制：%x" % 12)
+
+# 浮点数保留两位小数
+print("浮点数保留两位小数：%.2f" % 3.1415926)
+
+# 万能格式 %r，把任何类型(str、int、float、list、tuple、set、dict)数据转化为字符串类型
+print("%r, %r, %r, %r, %r, %r, %r" % ("abc", 25, 3.1415926, [1, 2, 3], (1, 2, 3), {1, 2, 3}, {'a': 1, 'b': 2, 'c': 3}))
+
+# %s 控制输出字符串的长度
+print("%.3s" % ("abcdefg"))
+print("%.*s" % (4, "abcdefg"))
+
+# 结果
+'''
+八进制：336
+整数：1, 22, 0
+十六进制：c
+浮点数保留两位小数：3.14
+'abc', 25, 3.1415926, [1, 2, 3], (1, 2, 3), {1, 2, 3}, {'a': 1, 'b': 2, 'c': 3}
+abc
+abcd
+'''
 ```
 
-## 59. 字符串格式化
+```python
+# 无法同时传递一个变量和元组
+'This is %s' % name
+# 当name=(1, 2, 3)时
+'This is %s' % (name,)  # 提供一个单元素的元组，而不是一个参数，逗号必须加
+```
 
-## 60. 增量赋值
+- str.format()格式化：函数把字符串单层一个模版，通过传入的参数进行格式化，用{}占位
+
+```python
+# 匹配位置{}
+print('This is {}{}'.format("Python", "!"))
+
+# 匹配位置带编号{i}，i从0按位置递增，位置可以多次使用
+print('This is {0}{1} {0} is esay{1}'.format("Python", "!"))
+
+# 关键字传参
+print('This is {name}{symbol}'.format(name="Python", symbol="!"))
+
+# 字典传参
+print('This is {name}{symbol}'.format(**{"name": "Python", "symbol": "!"}))
+
+# 整数格式化
+print("整数：{:d}".format(123))
+
+# 浮点数格式化
+print("浮点数保留两位小数：{:.2f}".format(3.1415926))
+
+# 字符串格式化
+print("字符串：{:s}".format("abcdefg"))
+
+# 八进制格式化
+print("八进制：{:o}".format(222))
+
+# 十六进制格式化
+print("十六进制：{:x}".format(12))
+
+# 结合编号的数值格式化
+print("编号组合数值格式化：{0:d}, {1:s}".format(123, "abcdefg"))
+
+# 关键字结合数值格式化
+print("关键字结合数值格式化：{num:d}, {string:s}".format(num = 123, string = "abcdefg"))
+
+# 百分数精度
+print("百分数：{:.2%}".format(3/7))
+
+# 金钱的千分隔符
+print("金钱分隔符：{:,}".format(123456789))
+
+# 输出大括号
+print("输出大括号：{}为{{1, 2, 3}}".format("集合"))
+
+# 结果
+'''
+This is Python!
+This is Python! Python is esay!
+This is Python!
+This is Python!
+整数：123
+浮点数保留两位小数：3.14
+字符串：abcdefg
+八进制：336
+十六进制：c
+编号组合数值格式化：123, abcdefg
+关键字结合数值格式化：123, abcdefg
+百分数：42.86%
+金钱分隔符：123,456,789
+输出大括号：集合为{1, 2, 3}
+'''
+```
+
+- f-string格式化：Python 3.6 新加入的方法，风格简洁、易读、速度快
+
+```python
+# 字符串格式化
+name, age = "lucy", 20
+print(f"she is {name}, {age} years old.")
+
+# 字典格式化
+info = {'name': "lucy", 'age': 20}
+print(f"she is {info['name']}, {info['age']} years old.")
+
+# 浮点数精度限制
+print(f"she is {name}, {age: .2f} years old.")
+
+# 指定宽度，为了多行输出时整齐（:< 8左对齐，:> 8右对齐）
+print(f"she is {name:<10}, {age:<3} years old.")
+name1, age1 = "Liming", 3
+print(f"she is {name1:<10}, {age1:<3} years old.")
+name2, age2 = "Lee", 101
+print(f"she is {name2:<10}, {age2:<3} years old.")
+
+# 整数格式化
+print(f"整数：{123:d}")
+
+# 浮点数格式化
+print(f"浮点数保留两位小数：{3.1415926:.2f}")
+
+# 字符串格式化
+print(f"字符串：{'abcdefg':s}")
+
+# 八进制格式化
+print(f"八进制：{222:o}")
+
+# 十六进制格式化
+print(f"十六进制：{12:x}")
+
+# 百分数精度
+print(f"百分数：{(3/7):.2%}")
+
+# 金钱的千分隔符
+print(f"金钱分隔符：{123456789:,}")
+
+# 结果
+'''
+she is lucy, 20 years old.
+she is lucy, 20 years old.
+she is lucy,  20.00 years old.
+she is lucy      , 20  years old.
+she is Liming    , 3   years old.
+she is Lee       , 101 years old.
+整数：123
+浮点数保留两位小数：3.14
+字符串：abcdefg
+八进制：336
+十六进制：c
+百分数：42.86%
+金钱分隔符：123,456,789
+'''
+```
+
+> 相对于%，format()的优点：
+
+- (1).在%方法中%s只能替代字符串类型，而.format()方法不用考虑数据类型问题；
+- (2).单个参数可以多次输出，参数顺序可以不相同；
+- (3).填充方式十分灵活，对齐方式十分强大；
+- (4).可以使用列表、元组格式化，可以使用字典格式化(传入用**解构)；
+
+```python
+# 几种格式化方法性能比较，性能最好的是f-string
+import timeit
+
+def add():
+    status = 200
+    body = 'hello world'
+    return 'Status: ' + str(status) + '\r\n' + body + '\r\n'
+
+# % 格式化
+def precent_style():
+    status = 200
+    body = 'hello world'
+    return 'Status: %s\r\n%s\r\n' % (status, body)
+
+# str.format()
+def format_style1():
+    status = 200
+    body = 'hello world'
+    return 'Status: {}\r\n{}\r\n'.format(status, body)
+
+# str.format(**dict)字典形式传参
+def format_style2():
+    status = 200
+    body = 'hello world'
+    return 'Status: {status}\r\n{body}\r\n'.format(status=status, body=body)
+
+# f-string格式
+def f_string():
+    status = 200
+    body = 'hello world'
+    return f'Status: {status}\r\n{body}\r\n'
+
+# 计算时间
+print('add: '+ str(min(timeit.repeat(lambda: add()))))
+print('precent_style: '+ str(min(timeit.repeat(lambda: precent_style()))))
+print('format_style1: '+ str(min(timeit.repeat(lambda: format_style1()))))
+print('format_style2: '+ str(min(timeit.repeat(lambda: format_style2()))))
+print('f_string: '+ str(min(timeit.repeat(lambda: f_string()))))
+
+# 结果
+'''
+add: 1.0201557999999995
+precent_style: 0.7589769999999998
+format_style1: 1.2661715999999998
+format_style2: 1.2782307000000017
+f_string: 0.5236783999999979
+'''
+```
+
+## 61. 增量赋值
 
 - x += 1
 
 - x *= 1
 
 - x = x + 1
-
-## 61. 字典推导式
 
 ## 62. exec对字符串执行和eval对字符串求值
 
@@ -5822,3 +6126,7 @@ str(Decimal('0.2335662').quantize(Decimal('0.00')))
 '0.23'
 '''
 ```
+
+## 73. 模块和代码块
+
+> 代码块就是可作为可执行单元的一段Python程序文本；模块、函数体和类定义都是代码块。不仅如此，每一个交互脚本命令也是一个代码块；一个脚本文件也是一个代码块；一个命令行脚本也是一个代码块。
