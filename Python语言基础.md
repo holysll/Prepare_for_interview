@@ -6028,7 +6028,147 @@ f_string: 0.5236783999999979
 
 ## 62. exec对字符串执行和eval对字符串求值
 
+- exec
+
+> exec函数主要用于动态地执行代码字符串，exec 返回值永远为 None。exec()不仅可以执行python代码，还可以共享上下文，但需要注意尽量不要在全局作用域下用exec()函数执行python代码，以免发生命名空间冲突。
+
+> 为了解决这个问题，可以在执行之前创建一个空字典`scope = {}`，作为exec()函数的第二个参数，这样通过exec执行python代码时创建的变量就会存储在字典scope中。
+
+> 如果exec()函数执行的python代码中含有参数，且要传参，则可以在exec()中 以字典形式进行传参，这时exec就有了第三个参数args。当说要执行的代码是多行时，可以用""" """引起来.
+
+```python
+args = {'x': 1, 'y': 2}
+scope = {}
+print(exec('print(x + y)', scope, args))
+print(scope.keys())
+
+# 结果
+'''
+3
+dict_keys(['__builtins__'])
+'''
+```
+
+- eval
+
+> eval()函数来执行一个字符串表达式，实现一个可以计算表达式的计算器，并返回表达式的值。
+
+> eval()函数的语法：`eval(expression[, globals[, locals]])`，expression是表达式；globals是变量作用域，全局命名空间，如果被提供，这必须是一个字典对象；locals是变量作用域，局部变量命名空间，如果被提供，可以是任何映射对象。
+
+> python中查找变量的顺序是：局部 --> 全局 --> 内置
+
+```python
+a = 1  # 当前变量
+b = 2  # 当前变量
+c = 3  # 当前变量
+globals = {'a': 10, 'b': 20}  # 全局变量
+locals = {'b': 200, 'c': 300}  # 局部变量
+
+print(eval('a + b + c'))  # 后两个参数省略，默认在当前作用域下，即a+b+c = 1+2+3 = 6
+print(eval('a + b + c', globals, locals))  # 指定globals、locals参数，优先局部，再全局，最后当前作用域，即a+b+c = 10+200+300 = 510
+
+# 结果
+'''
+6
+510
+'''
+```
+
 ## 63. raise语句的作用
+
+> 当程序出错时，python会自动触发异常，也可以通过raise语句触发异常；一旦执行了raise语句，之后的语句不再执行；但如果加入了`try...excepet...finally`语句，except里的语句会被执行，finally一样也会被执行。
+
+> raise语法格式：`raise [Exception [, args [, traceback]]]`，参数Exception 是异常的类型数标准异常中任一种（如NameError），args 是自已提供的异常参数；参数traceback可选，是跟踪异常对象。
+
+> raise 语句有如下三种常用的用法：
+
+- 单独`raise`，不加其他参数。在except语句中，引发当前上下文中捕获异常，或默认引发RuntimeError。通俗理解就是，捕捉到了异常，但是又想重新引发它，即传递异常不进行处理，可以调用不带参数的raise。
+
+```python
+# 在except语句中使用raise
+try:
+    s = 'a'
+    if not s.isdigit():
+        raise ValueError("s must be a number！")
+
+except ValueError as e:
+    print("引发异常：", e)
+    raise
+
+# 结果
+'''
+Traceback (most recent call last):
+  File "C:/../../../test.py", line 13, in <module>
+    raise ValueError("s must be a number！")
+ValueError: s must be a number！
+'''
+```
+
+```python
+# 在没有引发过异常的程序使用raise，引发的是默认的RuntimeError
+try:
+    s = 'a'
+    if not s.isdigit():
+        raise
+
+except RuntimeError as e:
+    print("引发异常：", e)
+
+# 结果
+'''
+引发异常： No active exception to reraise
+'''
+```
+
+- `raise 异常类名称`：raise后面带一个异常类名称，表示引发执行类型的异常。
+
+```python
+try:
+    s = None
+    if s is None:
+        print('s是空对象')
+        raise ValueError
+    print(len(s))
+
+except Exception:
+    print('空对象没有长度')
+
+# 结果
+'''
+s是空对象
+空对象没有长度
+'''
+```
+
+- `raise 异常类名称("描述信息")`：在引发指定类型的异常，同时附带异常的描述信息。
+
+
+```python
+# 定义函数
+def func(number):
+    print(number)
+    if number < 1:
+        raise Exception("Invalid number!")
+        # 触发异常后，后面的代码不会执行
+    print(number + 1)
+
+if __name__ == '__main__':
+    try:
+        func(0)
+    except Exception as e:
+        print("触发了异常！", e)
+    else:
+        print("未触发异常！")
+    finally:
+        print("程序执行完毕！")
+
+# 结果
+'''
+0
+触发了异常！ Invalid number!
+程序执行完毕！
+'''
+```
 
 ## 64. yeild语句的作用
 
