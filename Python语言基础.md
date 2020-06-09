@@ -80,16 +80,10 @@ categories: 编程语言-python
 - [61. 增量赋值](#61-增量赋值)
 - [62. exec对字符串执行和eval对字符串求值](#62-exec对字符串执行和eval对字符串求值)
 - [63. raise语句的作用](#63-raise语句的作用)
-- [64. yeild语句的作用](#64-yeild语句的作用)
-- [65. socket编程](#65-socket编程)
-- [66. urllib和urllib2](#66-urllib和urllib2)
-- [67. requests](#67-requests)
-- [68. Beautiful Soup](#68-beautiful-soup)
-- [69. select,poll和epoll](#69-selectpoll和epoll)
-- [70. python中实现IO多路复用](#70-python中实现io多路复用)
-- [71. python常用的并发网络库](#71-python常用的并发网络库)
-- [72. python decimal精确计算](#72-python-decimal精确计算)
-- [73. 模块和代码块](#73-模块和代码块)
+- [64. yield语句的作用](#64-yield语句的作用)
+- [65. 协程与生成器](#65-协程与生成器)
+- [66. python decimal精确计算](#66-python-decimal精确计算)
+- [67. 模块和代码块](#67-模块和代码块)
 
 <!-- /TOC -->
 
@@ -6170,27 +6164,149 @@ if __name__ == '__main__':
 '''
 ```
 
-## 64. yeild语句的作用
+## 64. yield语句的作用
 
-## 65. socket编程
+**[python之yield、yield from](https://blog.csdn.net/qiuqiuit/article/details/86762747)**
 
-## 66. urllib和urllib2
+> 该关键字用于函数中会把函数包装为生成器(generator)，调用生成器函数时，会返回一个生成器对象，生成器函数是生成器工厂。
 
-## 67. requests
+```python
+def func():
+    yield 1
+    yield 2
+    yield 3
 
-## 68. Beautiful Soup
+for i in func():
+    print(i)
 
-## 69. select,poll和epoll
+g = func()
+print(next(g))
+print(next(g))
+print(next(g))
 
-## 70. python中实现IO多路复用
+# 结果
+'''
+1
+2
+3
+1
+2
+3
+'''
+```
 
-## 71. python常用的并发网络库
+> 简单理解，yield的功效为暂停和继续。
 
-- tornado
-- gevent
-- asyncio
+> 在一个函数中，程序执行到yield语句的时候，程序暂停，返回yield后面表达式的值；在下一次调用的时候，yield语句暂停的地方继续执行，如此循环，直到函数执行完。
 
-## 72. python decimal精确计算
+> next函数和send函数很相似，都能获得生成器的下一个yield后面表达式的值，不同的是send函数包含next()方法，不仅可以向生成器传参，然后执行next()，如果下个元素不存在，迭代越界，生成器对象会抛出StopIteration异常。
+
+```python
+def foo():
+    print("starting...")
+    while True:
+        res = yield 4
+        print("res:", res)
+
+f = foo()
+print(next(f))
+print("*"*20)
+print(f.send(7))  # 这里调用send()函数给生成器给res赋值7，然后继续调用next(f)，返回4
+
+# 结果
+'''
+starting...
+4
+********************
+res: 7
+4
+'''
+```
+
+> yield from x 表达式替代for循环，对x对象所做的第一件事是调用iter(x)，从中获取迭代器，因此x可以是任何可迭代对象。任何可迭代对象都应该有一个`__iter__`方法（特殊情况时，只实现了`__getitem__`，未实现`__iter__`，对象也可以迭代），`__iter__`会返回一个迭代器。
+
+```python
+def generate_color():
+    print("执行generate_color():")
+    yield "红色"
+    yield "橙色"
+    yield "紫色"
+    yield "黄色"
+
+class Colors:
+    def __init__(self):
+        print("执行__init__():")
+        self.gen_colors = generate_color()
+
+    def __iter__(self):
+        yield from self.gen_colors
+
+colors = Colors()
+
+for color in colors:
+    print(color)
+
+# 结果
+'''
+执行__init__():
+执行generate_color():
+红色
+橙色
+紫色
+黄色
+'''
+```
+
+## 65. 协程与生成器
+
+**具体一些例子和详细原理可以参考《流畅的Python》 第16章 协程**
+
+> 从句法上看，协程与生成器类似，都是定义体中包含 yield 关键字的函数。可是，在协 程中，yield 通常出现在表达式的右边（例如，datum = yield），可以产出值，也可 以不产出——如果 yield 关键字后面没有表达式，那么生成器产出 None。协程可能会从 调用方接收数据，不过调用方把数据提供给协程使用的是 .send(datum) 方法，而不是 next(...) 函数。通常，调用方会把值推送给协程，通过.send()双向交换数据的生成器就是协程。
+
+> yield 关键字甚至还可以不接收或传出数据。不管数据如何流动，yield 都是一种流程控 制工具，使用它可以实现协作式多任务：协程可以把控制器让步给中心调度程序，从而激活其他的协程。
+
+```python
+# 产生两个值的协程
+>>> from inspect import getgeneratorstate
+>>> def simple_coro2(a):
+...     print('-> Started: a =', a)
+...     b = yield a
+...     print('-> Received: b =', b)
+...     c = yield a + b
+...     print('-> Received: c =', c)
+>>> my_coro2 = simple_coro2(14)
+>>> getgeneratorstate(my_coro2)  # (1)
+'GEN_CREATED'
+>>> next(my_coro2)  # (2)
+-> Started: a = 14
+14
+>>> getgeneratorstate(my_coro2)  # (3)
+'GEN_SUSPENDED'
+>>> my_coro2.send(28)  # (4)
+-> Received: b = 28
+42
+>>> my_coro2.send(99)  # (5)
+-> Received: c = 99
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>> getgeneratorstate(my_coro2)  # (6)
+'GEN_CLOSED'
+```
+
+> (1) inspect.getgeneratorstate函数指明，处于GEN_CREATED 状态（即协程未启动）。
+
+> (2) 向前执行协程到以第一个yield表达式，打印 -> Started: a = 14 消息，然后产出a的值，并且暂停，等待为b赋值。
+
+> (3) getgeneratorstate 函数指明，处于 GEN_SUSPENDED 状态（即协程在yield表达式处暂停）。
+
+> (4) 把数字28发给暂停的协程；就算yield表达式，得到28，然后把那个数按定给b。打印 -> Received: b = 28 消息，产出 a + b 的值（42），然后协程暂停，等待为 c 赋值。
+
+> (5) 把数字 99 发给暂停的协程；计算 yield 表达式，得到 99，然后把那个数绑定给 c。打印 -> Received: c = 99 消息，然后协程终止，导致生成器对象抛出StopIteration异常。
+
+> (6) getgeneratorstate 函数指明，处于 GEN_CLOSED 状态（即协程执行结束）。
+
+## 66. python decimal精确计算
 
 **[python decimal精确计算](https://blog.csdn.net/weixin_37989267/article/details/79473706)**
 
@@ -6273,6 +6389,8 @@ str(Decimal('0.2335662').quantize(Decimal('0.00')))
 '''
 ```
 
-## 73. 模块和代码块
+## 67. 模块和代码块
+
+> Python 提供了一个办法，把这些定义的方法和变量存放在文件中，为一些脚本或者交互式的解释器实例使用，这个文件被称为模块。模块是一个包含所有你定义的函数和变量的文件，其后缀名是.py，可以被别的程序引入，以使用该模块中的函数等功能。
 
 > 代码块就是可作为可执行单元的一段Python程序文本；模块、函数体和类定义都是代码块。不仅如此，每一个交互脚本命令也是一个代码块；一个脚本文件也是一个代码块；一个命令行脚本也是一个代码块。
