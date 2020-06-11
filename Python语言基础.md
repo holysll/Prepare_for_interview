@@ -39,6 +39,28 @@ categories: 编程语言-python
 - [20. 装饰器](#20-装饰器)
 - [21. 浅拷贝与深拷贝](#21-浅拷贝与深拷贝)
 - [22. 设计模式](#22-设计模式)
+    - [1. 工厂模式](#1-工厂模式)
+    - [2. 构造模式](#2-构造模式)
+    - [4. 原型模式](#4-原型模式)
+    - [5. 单例模式](#5-单例模式-1)
+    - [6. 装饰模式](#6-装饰模式)
+    - [7. 代理模式](#7-代理模式)
+    - [8. 适配器模式](#8-适配器模式)
+    - [9. 外观模式](#9-外观模式)
+    - [10. 享元模式](#10-享元模式)
+    - [11. 桥接模式](#11-桥接模式)
+    - [12. 组合模式](#12-组合模式)
+    - [13. 命令模式](#13-命令模式)
+    - [14. 访问者模式](#14-访问者模式)
+    - [15. 责任链模式](#15-责任链模式)
+    - [16. 备忘录模式](#16-备忘录模式)
+    - [17. 中介者模式](#17-中介者模式)
+    - [18. 状态模式](#18-状态模式)
+    - [19. 模板方法模式](#19-模板方法模式)
+    - [20. 解释器模式](#20-解释器模式)
+    - [21. 迭代器模式](#21-迭代器模式)
+    - [22. 观察者模式](#22-观察者模式)
+    - [23. 策略模式](#23-策略模式)
 - [23. GIL全局解释器锁](#23-gil全局解释器锁)
 - [24. 函数是一等公民？](#24-函数是一等公民)
 - [25. 函数与方法的区别](#25-函数与方法的区别)
@@ -372,7 +394,7 @@ class MyClass(Singleton):
 
 - **共享属性**
 
-> 创建实例时把所有实例的`__dict__`指向同一个字典,这样它们具有相同的属性和方法.
+> 创建实例时把所有实例的`__dict__`指向同一个字典，这样它们具有相同的属性和方法.
 
 ```python
 class Borg(object):
@@ -2077,21 +2099,1042 @@ b = [1, 2, 3, ['a', 'b']]
 ## 22. 设计模式
 
 **[Python 实现23种设计模式](https://github.com/weilanhanf/python-design-patterns)**
+**[Python 23种设计模式全](https://www.cnblogs.com/baxianhua/p/11770434.html)**
+**[Python 常用设计模式](https://refactoringguru.cn/design-patterns/python)**
+**[python 设计模式](https://www.cnblogs.com/onepiece-andy/tag/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/)**
 
-- 工厂模式
-- 构造模式
-- 原型模式
-- 单例模式
-- 装饰器模式
-- 代理模式
-- 适配器模式
-- 外观模式
-- 享元模式
-- MVC模式
-- 惰性计算模式
-- 迭代器模式
-- 观察者模式
-- 策略模式
+### 1. 工厂模式
+
+- 简单工厂模式的不足
+
+> 在简单工厂模式中，只提供了一个工厂类，该工厂类处于对产品类进行实例化的中心位置，它知道每个产品对象的创建细节，并决定何时实例化哪一个产品类。简单工厂模式最大的缺点是当有新产品要加入时，必须修改工厂类，加入必要的处理逻辑，这违背了“开闭原则”。在简单工厂模式中，所有的产品都是由同一个工厂创建的，工厂类的职责较重，业务逻辑较为复杂，具体产品与工厂类之间的耦合度高，严重影响了系统的灵活性和扩展性，而工厂方法模式则可以很好地解决这一个问题。
+
+- 工厂方法模式
+
+> 定义一个用于创建对象的接口，但是让子类决定将哪一个类实例化。工厂方法模式让一个类的实例化延迟到其子类。
+
+> 工厂方法模式就是简单工厂模式的进一步抽象。由于面向对象的多态性，工厂方法模式保持了简单工厂的优点，同时克服了它的缺点。工厂方法模式中，核心的工厂被提升为一个抽象类，将具体创建工作交给它的子类完成。这个抽象的工厂类仅规定具体工厂实现的接口，而不明确指出如何实例化一个产品类，这使得工厂方法模式允许系统在不修改原有产品结构的情况下轻重的引进新产品。
+
+```python
+# 代码出处：https://www.cnblogs.com/onepiece-andy/p/python_factory_method_pattern.html
+
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+场景:雷锋工厂,不关心执行者,只关心执行结果
+创建一个抽象工厂类CreateLeiFeng和一个抽象对象类LeiFeng，当创建具体leifeng对象-Undergradiate去dosomething时，使用继承抽象工厂的UndergraduateFactory工厂类，该类返回一个Undergradiate实例，如果还要去做另一个dosomething时，再创建一个VolunteerFactory工厂方法创建创建一个Volunteer实例就可以了
+"""
+
+class LeiFeng(object):
+
+def Sweep(self):
+    print("扫地")
+
+def Wash(self):
+    print("洗衣")
+
+def BuyRice(self):
+    print("买米")
+
+
+class IFactory(LeiFeng):
+
+    def CreateLeiFeng(self):
+        pass
+
+
+# 大学生
+class Undergraduate(LeiFeng):
+    pass
+
+
+# 新增社区服务者
+class Volunteer(LeiFeng):
+    pass
+
+
+# 学习雷锋的大学生工厂
+class UndergraduateFactory(IFactory):
+
+    def CreateLeiFeng(self):
+        return Undergraduate()
+
+
+# 新增一个社区服务者的工厂e
+class VolunteerFactory(IFactory):
+
+    def CreateLeiFeng(self):
+        return Volunteer()
+
+
+if __name__ == "__main__":
+    student = UndergraduateFactory()
+    volunteer = VolunteerFactory()
+    student.BuyRice()
+    student.Sweep()
+    volunteer.Wash()
+
+# 结果
+'''
+买米
+扫地
+洗衣
+'''
+```
+
+- 抽象工厂模式
+
+> 提供一个创建一系列相关或相互依赖对象的接口，而无须指定他们具体的类。
+
+> 抽象工厂模式是所有形式的工厂模式中最为抽象和最具一般性的一种形式。当系统说提供的工厂生产的具体产品并不是一个简单的对象，而是多个位于不同产品等级结构、属于不同类型的具体产品时，就可以使用抽象工厂模式，抽象工厂模式中的具体工厂不只是创建一种产品，它负责创建一族产品，当一个工程等级结构可以创建出分属于不同产品等级结构的一个产品族中的所有对象时，抽象工厂模式比工厂模式更为简单、更有效率。
+
+```python
+# 代码出处：https://www.cnblogs.com/onepiece-andy/p/python-abstract-factory-pattern.html
+
+# !/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+设计模式——抽象工厂模式
+抽象工厂模式(Abstract Factory Pattern):提供一个创建一系列相关或相互依赖对象的接口，而无需指定它们的类。
+"""
+import sys
+import os
+
+# 抽象用户表类
+class User(object):
+
+    def get_user(self):
+        pass
+
+    def insert_user(self):
+        pass
+
+
+# 抽象部门表类
+class Department(object):
+
+    def get_department(self):
+        pass
+
+    def insert_department(self):
+        pass
+
+
+# 操作具体User数据库类-Mysql
+class MysqlUser(User):
+
+    def get_user(self):
+        print('MysqlUser get User')
+
+    def insert_user(self):
+        print('MysqlUser insert User')
+
+
+# 操作具体Department数据库类-Mysql
+class MysqlDepartment(Department):
+
+    def get_department(self):
+        print('MysqlDepartment get department')
+
+    def insert_department(self):
+        print('MysqlDepartment insert department')
+
+
+# 操作具体User数据库-Orcal
+class OrcaleUser(User):
+
+    def get_user(self):
+        print('OrcalUser get User')
+
+    def insert_user(self):
+        print('OrcalUser insert User')
+
+
+# 操作具体Department数据库类-Orcal
+class OrcaleDepartment(Department):
+
+    def get_department(self):
+        print('OrcalDepartment get department')
+
+    def insert_department(self):
+        print('OrcalDepartment insert department')
+
+
+# 抽象工厂类
+class AbstractFactory(object):
+
+    def create_user(self):
+        pass
+
+    def create_department(self):
+        pass
+
+
+class MysqlFactory(AbstractFactory):
+
+    def create_user(self):
+        return MysqlUser()
+
+    def create_department(self):
+        return MysqlDepartment()
+
+
+class OrcaleFactory(AbstractFactory):
+
+    def create_user(self):
+        return OrcaleUser()
+
+    def create_department(self):
+        return OrcaleDepartment()
+
+
+if __name__ == "__main__":
+    s = ['Mysql', 'Orcale']
+    for db in s:
+        myfactory = ''
+        if db == 'Mysql':
+            myfactory = MysqlFactory()
+        elif db == 'Orcale':
+            myfactory = OrcaleFactory()
+        else:
+            print("不支持的数据库类型")
+            exit(0)
+        user = myfactory.create_user()
+        department = myfactory.create_department()
+        user.insert_user()
+        user.get_user()
+        department.insert_department()
+        department.get_department()
+
+# 结果
+'''
+MysqlUser insert User
+MysqlUser get User
+MysqlDepartment insert department
+MysqlDepartment get department
+OrcalUser insert User
+OrcalUser get User
+OrcalDepartment insert department
+OrcalDepartment get department
+'''
+```
+
+> 优点：具体工厂类如MysqlFactory在一个应用中只需要初始化一次，这样改动一个具体工厂变得很容易，只需要改变具体工厂就可以改变整个产品的配置。具体的创建实例过程与客户端分离，客户端通过他们的抽象接口操纵实例，产品的具体类名也被具体工厂的实现分离，不会出现在客户端代码中。
+
+> 缺点：在新增一个具体工厂就需要增加多个类才能实现。
+
+- 工厂方法模式与抽象工厂模式对比
+
+  - 工厂模式的优点：
+
+  > 工厂方法用来创建客户所需要的产品，同时还向客户隐藏了哪种具体产品类将被实例化这一细节 能够让工厂自主确定创建何种产品对象，而如何创建这个对象的细节则完全封装在具体工厂内部，在系统中加入新产品时，完全符合开闭原则。
+
+  - 工厂模式的缺点：
+
+  > 系统中类的个数将成对增加，在一定程度上增加了系统的复杂度，会给系统带来一些额外的开销 增加了系统的抽象性和理解难度。
+
+  - 工厂模式的适用环境：
+
+  > 客户端不知道它所需要的对象的类（客户端不需要知道具体产品类的类名，只需要知道所对应的工厂即可，具体产品对象由具体工厂类创建） 抽象工厂类通过其子类来指定创建哪个对象。
+
+  - 抽象模式的优点：
+
+  > 隔离了具体类的生成，使得客户端并不需要知道什么被创建，当一个产品族中的多个对象被设计成一起工作时，它能够保证客户端始终只使用同一个产品族中的对象，增加新的产品族很方便，无须修改已有系统，符合开闭原则。
+
+  - 抽象模式的缺点：
+
+  > 增加新的产品等级结构麻烦，需要对原有系统进行较大的修改，甚至需要修改抽象层代码，这显然会带来较大的不便，违背了开闭原则。
+
+  - 抽象模式的适用环境：
+
+  > 一个系统不应当依赖于产品类实例如何被创建、组合和表达的细节，系统中有多于一个的产品族，但每次只使用其中某一产品族，属于同一个产品族的产品将在一起使用，这一约束必须在系统的设计中体现出来 产品等级结构稳定，设计完成之后，不会向系统中增加新的产品等级结构或者删除已有的产品等级结构。
+
+### 2. 构造模式
+
+### 4. 原型模式
+
+> 原型模式关注的是大量相同对象或者相似对象的创建问题，意图在于通过复制一个已经存在的实例来获得一个新的实例，以避免重复创建此类实例带来的开销。被复制的实例就是这个“原型”，这个原型是可定制的。
+
+- 原型模式的实现
+
+```python
+# 代码来源：https://www.cnblogs.com/onepiece-andy/p/python_prototype_pattern.html
+
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+原型模式(Prototype Pattern):用原型实例指定创建对象的种类,并且通过拷贝这些原型创建新的对象
+原型模式是用场景:需要大量的基于某个基础原型进行微量修改而得到新原型时使用
+"""
+from copy import copy, deepcopy
+
+# 原型抽象类
+class Prototype(object):
+    def clone(self):
+        pass
+
+    def deep_clone(self):
+        pass
+
+# 工作经历类
+class WorkExperience(object):
+    def __init__(self):
+        self.timearea = ''
+        self.company = ''
+
+    def set_workexperience(self, timearea, company):
+        self.timearea = timearea
+        self.company = company
+
+# 简历类
+class Resume(Prototype):
+    def __init__(self, name):
+        self.name = name
+        self.workexperience = WorkExperience()
+
+    def set_personinfo(self, sex, age):
+        self.sex = sex
+        self.age = age
+        pass
+
+    def set_workexperience(self, timearea, company):
+        self.workexperience.set_workexperience(timearea, company)
+
+    def display(self):
+        print(self.name)
+        print(self.sex, self.age)
+        print("工作经历", self.workexperience.timearea, self.workexperience.company)
+
+    def clone(self):
+        return copy(self)
+
+    def deep_clone(self):
+        return deepcopy(self)
+
+if __name__  == '__main__':
+    obj1 = Resume('Liming')
+    obj2 = obj1.clone()  # 浅拷贝对象
+    obj3 = obj1.deep_clone()  # 深拷贝对象
+
+    obj1.set_personinfo('男', 22)
+    obj1.set_workexperience('2010-2018', 'aa')
+    obj2.set_personinfo('男', 23)
+    obj2.set_workexperience('2010-2019', 'bb')  # 修改浅拷贝的对象工作经历
+    obj3.set_personinfo('男', 24)
+    obj3.set_workexperience('2010-2020', 'cc')  # 修改深拷贝的对象的工作经历
+
+    obj1.display()
+    obj2.display()
+    obj3.display()
+
+# 结果
+'''
+Liming
+男 22
+工作经历 2010-2019 bb
+Liming
+男 23
+工作经历 2010-2019 bb
+Liming
+男 24
+工作经历 2010-2020 cc
+'''
+```
+
+- 原型模式的优点
+
+> 原型摸手机用于创建复杂的或者耗时的实例，复制一个已经存在的实例使程序运行高效，相对于工厂模式，原型模式减少了之类的构建。
+
+- 原型模式的缺点
+
+> 每个产品类都必须配置一个克隆方法，并且这个克隆方法需要对类的功能进行整体考虑。
+
+- 原型模式的应用
+  - 当一个系统应该独立于它的产品的创建、构成和表示时；
+  - 当实例化的类是在运行时刻指定时，例如通过动态装载；
+  - 为了避免创建一个与产品类层次平行的工厂类层次时；
+
+### 5. 单例模式
+
+> 单利模式是一种创建型的设计模式，保证某一个类仅有一个实例，而且提供一个访问该实例的全局访问点。比如，最常见的就是当一个office文档已经被打开时，通过另一个窗口再次访问时，系统就会提示此文档已经被占用，智能以只读的方式打开。
+
+- 单例模式的实现步骤
+
+  - (1). 私有化构造函数，防止其他类可以创建这个类的对象；
+  - (2). 在本类中创建唯一实例对象（因为构造函数私有化了，所以单例类的唯一实例对象只能在单例类里面创建），使用一个室友静态成员变量保存。
+  - (3). 对外提供一个公开的静态函数，用于获取这个唯一的实例对象
+  
+- 单例模式的实现方式
+
+**可以参考前面总结的，[5. 单例模式](#5-单例模式)**
+
+```python
+# 代码出处：https://www.cnblogs.com/onepiece-andy/p/python-singleton-pattern.html
+
+# !/usr/bin/env python
+# # -*- coding:utf-8 -*-
+
+"""
+python中模块化的操作,可以代替单例模式,生成一个类的实例作为全局变量,其他地方只引用这个实例就可以实现单例，也就是import 方式
+"""
+
+# 因为__new__在__init__前被执行，利用__new__实现单例
+class Singleton1(object):
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(cls, '__instance'):  # 创建过的单例带有属性__instance
+            cls.__instance = super(Singleton1, cls).__new__(cls, *args, **kwargs)
+            return cls.__instance
+
+# 共享属性
+# 创建实例时利用__dict__指向同一个字典，这样他们具有相同的属性和方法
+class Singleton2(object):
+    _state = {}
+    def __new__(cls, *args, **kwargs):
+        ob = super(Singleton2, cls).__new__(cls, *args, **kwargs)
+        ob.__dict__ = cls._state
+        return ob
+
+# 利用元类在创建方法时使用__metaclass__来创建
+class Singleton3(type):
+    def __new__(cls, name, bases, dct):
+        if not hasattr(cls, '__instance'):
+        cls.__instance = super(Singleton3, cls).__new__(cls, name, bases, dct)
+        return cls.__instance
+
+# 利用装饰器
+def singleton4(cls, *args, **kwargs):
+    instance = {}
+    def _single():
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    return _single
+
+class Myclass1(Singleton1):
+    a = 1
+class Myclass1(Singleton1):
+    a = 2
+class Myclass3(object):
+    __metaclass__ = Singleton3
+    a = 3
+
+@singleton4
+class Myclass4(object):
+    a = 4
+
+if __name__ == "__main__":
+    s1 = Myclass1()
+    s2 = Myclass1()
+    print(s1.a, id(s1.a), id(s2.a))
+
+    s3 = Myclass2()
+    s4 = Myclass2()
+    print(s3.a, id(s3.a), id(s4.a))
+
+    s5 = Myclass3()
+    s6 = Myclass3()
+    print(s5.a, id(s5.a), id(s6.a))
+
+    s7 = Myclass4()
+    s8 = Myclass4()
+    print(s7.a, id(s7.a), id(s8.a))
+
+# 结果
+'''
+1 140722211689280 140722211689280
+2 140722211689312 140722211689312
+3 140722211689344 140722211689344
+4 140722211689376 140722211689376
+'''
+```
+
+- 单例模式的优点
+
+  - (1). 由于单例模式要求在全局内只有一个实例，一次可以节省内存空间；
+  - (2). 全局只有一个访问点，可以更好地进行数据同步控制，避免多重占用；
+  - (3). 单例可以长驻内存，减少系统开销。
+
+- 单例模式的缺点
+
+  - (1). 单例模式的扩展是比较困难的；
+  - (2). 赋予了单例太多的职责，某种程度上违反了单一职责原则；
+  - (3). 单例模式是并发协作软件模块中需要最先完成的，因此不利于测试；
+  - (4). 单例模式在某种情况下会导致“资源瓶颈”。
+
+- 单例模式的应用举例
+
+  - (1). 生成全局唯一的序列号；
+  - (2). 访问全局复工的唯一资源，如磁盘、总线等；
+  - (3). 单个对象占用资源过多，如数据库等；
+  - (4). 系统全局统一管理，如windows系统的资源管理器；
+  - (5). 网站计数器。
+
+### 6. 装饰模式
+  
+> 有时为了给某个对象而不是给整个类添加一个功能，使用继承机制是添加功能的有效途径，但是不够灵活，用户不能控制对组件加边框的方式和时机，并且会导致之类膨胀。一种比较领过的方式是将组件嵌入另一个对象中，这个嵌入的对象叫做装饰。
+
+> 装饰模式：动态地给一个对象增加一些额外的职责。就扩展功能而言，装饰模式提供了一种比使用之类更加灵活的替代方案，以对客户同名的方式动态地给一个对象附加更多的责任，可以在不需要创建更多子类的情况下，让对象的功能得以扩展。
+
+- 装饰模式分析
+
+> 可以在不改变一个对象本身功能的基础上给对象增加额外的新行为，是一种用于替代继承的技术，它通过一种无须定义之类的方式给对象动态增加职责，使用对象间的关联关系取代类之间的继承关系，引入装饰类，在装饰类中既可以调用带装饰的原有类的方法，还可以增加新的方法，以扩展原有类的功能。
+  
+- 装饰模式的结构
+  - 抽象部件(Component)：声明封装器和被封装对象的公用接口。
+  - 具体部件(Concrete Component)：类是被封装对象所属的类，定义了基础行为，但装饰器可以改变这些行为。
+  - 抽象装饰类(Decorator)：类拥有一个指向被封装对象的引用成员变量，该变量的类型应当被声明为通用部件的接口，这样它就引用具体的部件和装饰，抽象装饰类会将所有操作委派给被封装的对象。
+  - 具体装饰类(ConcreteDecorator)：定义了可动态添加到部件的额外行为，具体装饰类会重写抽象装饰类的方法，并在调用父类方法之前或之后进行额外的行为。
+
+- 装饰模式的实现
+
+```python
+# 代码来源：https://www.cnblogs.com/onepiece-andy/p/python-decorator-pattern.html
+# !/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+装饰模式(Decorator Pattern):动态的给一个对象添加一些额外的职责,就增加功能来说,装饰模式比生成子类更为灵活。
+特点: 有效的把类的核心职责和装饰功能区分开,而且可以去除相关类中重复的装饰逻辑。
+"""
+
+# 定义对象接口
+class Person(object):
+    def __init__(self, name):
+        self.name = name
+
+    def show(self):
+        print("装扮的%s" % self.name)
+
+# 装饰类
+class Finery(Person):
+    def __init__(self):
+        pass
+
+    def Decorate(self, component):
+        self.component = component
+
+    def show(self):
+        if self.component != None:
+            self.component.show()
+
+# 装扮——T恤
+class TShirts(Finery):
+    def __init__(self):
+        pass
+
+    def show(self):
+        print("T恤")
+        self.component.show()
+
+# 装扮——大裤衩
+class BigTrouser(Finery):
+    def __init__(self):
+        pass
+
+    def show(self):
+        print("大裤衩")
+        self.component.show()
+
+# 装扮——人字拖
+class FlipFlops(Finery):
+    def __init__(self):
+        pass
+
+    def show(self):
+        print("人字拖")
+        self.component.show()
+
+if __name__ == '__main__':
+    p = Person('aaa')
+    ff = FlipFlops()
+    bt = BigTrouser()
+    ts = TShirts()
+    ff.Decorate(p)
+    bt.Decorate(ff)
+    ts.Decorate(bt)
+    ts.show()
+
+# 结果
+'''
+T恤
+大裤衩
+人字拖
+装扮的aaa
+'''
+```
+
+- 装饰模式的优点
+
+> 对于扩展一个对象的功能，装饰模式比继承模式更加灵活，不会导致类的个数急剧增加，可以通过一种动态的方式来扩展一个对象的功能，通过配置文件可以在运行时选择不同的具体装饰类，从而实现不同的行为，可以对一个对象进行多次装饰，具体部件类和具体装饰类可以独立变化，用户可以根据需要增加新的具体部件和具体装饰类，且原有的类库代码无需改变，符合开闭原则。
+
+- 装饰模式的缺点
+
+> 使用装饰模式进行系统设计时产生很多小对象，大量小对象的产生势必会占用更多的系统资源，在一定程度上影响程序的性能；比继承更加容易出错，拍错也更加困难，对于多次装饰的对象，调试的需找错误可能需要主机排查，较为繁琐。
+
+- 装饰适用环境
+
+> 在不影响其他对象的情况下，以动态、透明的方式传给单个对象添加职责，但不能采用继承的方式对系统进行扩展或者采用继承不利于系统扩展和维护时可以使用装饰模式。
+
+### 7. 代理模式
+
+### 8. 适配器模式
+  
+> 为了解决接口不兼容的问题，引进一种接口的兼容机制，就是适配器模式，其通过提供一种适配类将第三方提供的接口转换为客户希望的接口。例如：假如你正在开发一款股票市场监测程序， 它会从不同来源下载 XML 格式的股票数据， 然后向用户呈现出美观的图表。在开发过程中， 你决定在程序中整合一个第三方智能分析函数库，但是遇到了一个问题， 那就是分析函数库只兼容 JSON 格式的数据。可以修改程序库来支持 XML，这可能需要修改部分依赖该程序库的现有代码，甚至还有更糟糕的情况， 你可能根本没有程序库的源代码， 从而无法对其进行修改。这时就可以创建一个适配器，能够转换对象接口，使其能与其他对象交互。
+
+> 适配器模式：讲一个类的接口装换成客户希望的另一个接口，适配器模式让那些接口不兼容的类可以一起工作。适配器模式别名包装器(Wrapper)模式，定义中所提及的接口是指广义的接口，它可以表示一个方法的集合。
+
+- 适配器模式的实现
+
+```python
+# 代码来源：https://www.cnblogs.com/onepiece-andy/p/python-adapter-pattern.html
+
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+适配器模式(Adapter Pattern):将一个类的接口转换成为客户希望的另外一个接口.Adapter Pattern使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。
+应用场景:系统数据和行为都正确,但接口不符合时,目的是使控制范围之外的一个原有对象与某个接口匹配,适配器模式主要应用于希望复用一些现存的类,但接口又与复用环境不一致的情况。
+"""
+
+class Target(object):
+    def request(self):
+        print("普通请求")
+
+class Adaptee(object):
+    def specific_request(self):
+        print("特殊请求")
+
+class Adapter(Target):
+    def __init__(self):
+        self.adaptee = Adaptee()
+
+    def request(self):
+        self.adaptee.specific_request()
+
+if __name__ == "__main__":
+    target = Adapter()
+    target.request()
+
+# 结果
+'''
+特殊请求
+'''
+```
+  
+- 适配器模式的结构
+
+> 目标抽象类(Target)：是客户希望调用接口
+
+> 适配器类(Adapter)：通过内部包装的一个Adaptee对象把源接口转换成目标接口
+
+> 适配者类(Adaptee)：需要适配的类
+  
+- 适配器模式的优点
+
+> 将目标类和适配者类解耦，通过引入一个适配器类来重用现有的适配器类，无需修改原有的结构；
+  
+> 增加了类的透明性和复用性，提高了适配者的复用性，同一个适配者类可以在多个不同的系统中进行复用；
+  
+> 灵活性和扩展性非常好；其中类适配器模式置换一些适配者方法很方便，而对象适配者模式可以把多个不同适配者适配到同一个目标，还可以适配一个适配者的子类。
+
+- 适配器模式的缺点
+
+> 一次最多只能适配一个适配者类，不能同时适配多个适配者；
+
+> 适配者类不能为最终类；
+
+> 目标抽象类只能为接口，不能为类
+
+> 对象适配器模式在适配器中置换适配者类的某些方法比较麻烦。
+
+- 适配器模式的适用环境
+
+> 系统需要使用一些现有的类，而这些类的就扣不符合系统的需要，甚至没有这些类的源代码；创建一个可以重复使用的类，用于和一些彼此之间没有太大关联的类，包括一些可能在将来引进的类一起工作。
+
+- 适配器模式和装饰模式比较
+
+> 适配器模式和装饰模式有一定的相似性，都起包装的作用，但二者本质上又是不同的，装饰模式的结果，是给一个对象增加了一些额外的职责，而适配器模式，则是将另一个对象进行了“伪装”。适配器可以任务是对现在业务的补偿式应用，所以尽量不要在设计阶段就使用适配器模式，在两个系统需要兼容时可以考虑使用适配器模式。
+
+### 9. 外观模式
+
+### 10. 享元模式
+
+- 问题引出
+
+> 如果一个软件系统在运行时所创建的相同或相似对象数量太多，将导致运行代价过高，代开系统资源浪费、性能下降等问题。如何避免系统从出现大量相同或相似的对象，同时又不影响客户端程序通过面向对象的方式对这些对象进行操作呢。例如在文字编辑软件中，把每个字符单层对象处理，并分配相应的系统空间，但是随着字符串数量的增加将会逐渐耗尽系统资源，有大量细粒度的对象从此在系统中，导致系统运行效率低下。解决上述问题就可以使用享元模式，通过共享机制来解决系统资源消耗问题。
+
+- 享元模式的原理
+  - 内部状态(Intrinic State)：存储在享元对象内部并且不会随着环境改变而改变状态，内部状态可以共享。
+  - 外部状态(Extrinsic State)：随着环境改变而改变、不可以共享状态。享元对象的外部状态通常由客户端保存，并在享元对象被创建之后，需要使用的时候再传入到享元对象内部。一个外部状态与另一个外部状态之间是相互独立的。
+  
+  - (1). 将具有相同内部状态的对象存储在享元池中，享元池中的对象是可以实现共享的；
+  - (2). 需要的时候将对象从享元池中取出，即可以实现对象的复用；
+  - (3). 通过向取出的对象注入不同的外部状态，可以得到一些列相似的对象，而这些对象在内存中实际上只存储一份。
+
+- 享元模式的结构
+
+  - 抽象享元类(Flyweight)：包含原始对象中部分能在多个对象中共享的状态。
+  - 具体享元类(Concrete Flyweight)：定义一个借口绑定中介者。
+  - 非共享具体享元类(Unshared Concrete Flyweight)：不同共享的享元类子类。
+  - 享元工厂类(Flyweight Factory)：用于创建并管理享元对象，确保合理的共享享元对象，当用户请求一个享元对象时，享元工厂对象提供或创建一个。
+
+- 享元模式实例
+
+```python
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+# 假设又一个网上咖啡选购平台，客户可以在该平台上下订单订购咖啡，平台会根据用户的位置进行线下配送
+
+# 咖啡对象构造如下
+class Coffee:
+    name = ''
+    price = 0
+
+    def __init__(self, name):
+        self.name = name
+        self.price = len(name)
+        # 在实际业务中，咖啡价格应该是由配置表进行配置，或者调用接口获取等但是得到，此处为了说明享元模式，将咖啡价格定位名称长度，只是简化
+
+    def show(self):
+        print(f"咖啡{self.name}的价格是：{self.price: .2f} 元")
+
+"""
+# 对应客户顾客类
+class Customer:
+    name = ''
+
+    def __init__(self, name):
+        self.name = name
+
+    def order(self, coffee_name):
+        print(f"顾客{self.name}订购了一杯{coffee_name}咖啡")
+        return Coffee(coffee_name)
+"""
+
+"""
+按照一般的处理流程，客户在网上预订咖啡，其代表用户的Customer类中生成一个Coffee类，直到交易流程结束。整个流程是没有问题的。
+
+但是在高并发的情况下，也就是单位时间内购买咖啡的用户越来越多，生成的咖啡实例就回越来越多，系统资源消耗越来越大，避免重复实例的出现，引入咖啡工厂类能够节约系统资源。
+"""
+
+# 引入咖啡工厂类
+class CoffeeFactory():
+    coffee_dict = {}
+    def getCoffee(self, name):
+        if self.coffee_dict.__contains__(name) == False:
+            self.coffee_dict[name] = Coffee(name)
+        return self.coffee_dict[name]
+
+    def getCoffeeCount(self):
+        return len(self.coffee_dict)
+
+# 咖啡工厂中，getCoffeeCount直接返回当前实例个数，重写Customer
+class Customer:
+    coffee_factory = ''
+    name = ''
+
+    def __init__(self, name, coffee_factory):
+        self.name = name
+        self.coffee_factory = coffee_factory
+
+    def order(self, coffee_name):
+        print(f"顾客{self.name}订购了一杯{coffee_name}咖啡")
+        return self.coffee_factory.getCoffee(coffee_name)
+
+# 假设实际业务中，短时间很多人订了咖啡，则
+if __name__ == "__main__":
+    coffee_factory = CoffeeFactory()
+    customer_1 = Customer("李先生", coffee_factory)
+    customer_2 = Customer("刘小姐", coffee_factory)
+    customer_3 = Customer("王老板", coffee_factory)
+    c1 = customer_1.order("卡布奇诺")
+    c1.show()
+    c2 = customer_2.order("雀巢咖啡")
+    c2.show()
+    c3 = customer_3.order("美式咖啡")
+    c3.show()
+    print(f"创建了{coffee_factory.getCoffeeCount()}个实例")
+
+# 结果
+'''
+顾客李先生订购了一杯卡布奇诺咖啡
+咖啡卡布奇诺的价格是： 4.00 元
+顾客刘小姐订购了一杯雀巢咖啡咖啡
+咖啡雀巢咖啡的价格是： 4.00 元
+顾客王老板订购了一杯美式咖啡咖啡
+咖啡美式咖啡的价格是： 4.00 元
+创建了3个实例
+'''
+```
+
+- 享元模式的优点
+  - 可以减少内存中对象的数量，使得相同或者相似的对象在内存中只保存一份，从而可以节约系统资源，提高系统性能；
+  - 外部状态相对独立，而不会影响内部状态，从而使得享元对象可以在不同的环境中被共享。
+
+- 享元模式的缺点
+  - 使得系统变得复杂，需要分析出内部状态和外部状态，这使得程序的逻辑复杂化；
+  - 为了使对象可以共享，享元模式需要将享元对象的部分状态外部化，而读取外部状态使得运行时间变长。
+
+- 享元模式的适用环境
+  - 一个系统有大量相同或者相似的对象，造成内存的大量消费；对象的大部分状态可以外部化，可以将这些外部状态传入对象中；在使用享元模式是需要维护一个存储对象的享元池，而这需要耗费一定的系统资源，因此在需要多次重复使用享元对象时才值得使用享元模式。
+
+### 11. 桥接模式
+
+### 12. 组合模式
+
+### 13. 命令模式
+
+### 14. 访问者模式
+
+### 15. 责任链模式
+
+### 16. 备忘录模式
+
+### 17. 中介者模式
+
+### 18. 状态模式
+
+### 19. 模板方法模式
+
+- 模版方法模式的引入
+
+> 模板方法模式时行为模式中比较简单的设计模式之一。模版方法关注这样的一类行为：该行为在执行过程中拥有大致相同的动作次序，只是动作在实现的具体细节有所差异。如泡茶和泡咖啡，过程操作步骤都是相似的，可以把这一类行为抽象成一个算法，并将其中的动作序列按先后顺序也抽象出来作为该算法的步骤，至于这些步骤中你那个的实现细节，则由算法发的子类去实现。
+
+> 模版方法模式：定义一个操作中算法的框架，而将一些步骤延迟到子类中。模板方法模式使得子类不改变一个算法结构即可重定义该算法的某些特定步骤。
+
+> 模版方法模式是一种基于继承的代码复用技术，将一些复杂流程的实现步骤封装在一系列基本方法中，在抽象父类中提供一个称之为模版方法的方法来定义这些基本方法的执行次序，而通过其子类来覆盖某些步骤，从而使得相同的算法框架可以有不同的执行结果。
+
+- 模板方法模式的结构
+  - 抽象类(AbstractClass)：会声明作为算法步骤的方法，以及一次调用它们的实际模版方法。
+  - 具体子类(ConcreteClass)：可以重写所有步骤，但是不能重写模版方法自身。
+
+- 模板方法模式的实现
+  - (1). 分析目标算法，确定是否能够将其分解为多个步骤。从所有子类角度出发，考虑哪些步骤能够通用，哪些步骤各不相同。
+  - (2). 创建抽象基类并声明一个模板方法和代表算法步骤的一些列抽象方法。在模版方法中根据算法结构一次调用相应步骤，可以用final最终修饰模版方法以防止之类对其进行重写。
+  - (3). 虽然可将所有步骤全都设为抽象类型，但默认实现可能会给部分步骤带来好处，因为之类无需实现那些方法。
+  - (4). 可以考虑在算法的关键步骤之间添加“钩子”。
+  - (5). 为每个算法变体新建一个具体子类，它必须实现所有的抽象步骤，也可以重写部分可选步骤。
+
+```python
+# 代码来源：https://www.cnblogs.com/onepiece-andy/p/python-template-method-pattern.html
+
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+模板方法模式(Template Method Pattern):定义一个操作中的算法骨架，将一些步骤延迟至子类中。模板方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。
+
+使用场景:当不变和可变的行为在方法的子类实现中混合在一起时,不变的行为就会在子类中重复出现，用模板方法模式把这些不变的行为搬到单一的地方，帮助子类摆脱重复不变的行为纠缠。
+"""
+
+class NewPaper(object):
+    def question1(self):
+        print("题目1")
+        print(self.answer1())
+
+    def question2(self):
+        print("题目2")
+        print(self.answer2())
+
+    def answer1(self):
+        return ''
+
+    def answer2(self):
+        return ''
+
+class TestPaperA(NewPaper):
+    def answer1(self):
+        return "答案A1"
+
+    def answer2(self):
+        return "答案A2"
+
+class TestPaperB(NewPaper):
+    def answer1(self):
+        return "答案B1"
+
+    def answer2(self):
+        return "答案B2"
+
+if __name__ == "__main__":
+    test1 = TestPaperA()
+    test2 = TestPaperB()
+    print("试卷A")
+    test1.question1()
+    test1.question2()
+    print("试卷B")
+    test2.question1()
+    test2.question2()
+
+# 结果
+'''
+试卷A
+题目1
+答案A1
+题目2
+答案A2
+试卷B
+题目1
+答案B1
+题目2
+答案B2
+'''
+```
+
+- 模版方法模式的优点
+  - 在父类中形式化地定义一个算法，而由它的子类来实现细节的处理，在子类实现详细的处理算法时，并不会改变算法中步骤的执行顺序；
+  - 提取了类库中的公共行为，将公共行为放在父类中，而通过其子类来实现不同的行为；
+  - 可实现一种反向控制结构，通过子类覆盖父类的钩子方法来决定某一特定步骤是否需要执行；
+  - 更换和增加新的子类很方便，符合单一职责和开闭原则。
+
+- 模版方法模式的缺点
+  - 需要为每个基本方法的不同实现提供一个子类，如果父类中可变的基本方法太多，将导致类的个数增加，系统更加庞大，设计也会更加抽象；
+  - 模版方法中步骤越多，其维护工作就可能也困难。
+
+- 模版方法模式的适用环境
+  - 当你只希望客户端扩展某个特定算法步骤， 而不是整个算法或其结构时， 可使用模板方法模式；
+  - 当多个类的算法除一些细微不同之外几乎完全一样时， 你可使用该模式。 但其后果就是， 只要算法发生变化， 你就可能需要修改所有的类。
+
+### 20. 解释器模式
+
+### 21. 迭代器模式
+
+> 迭代器模式提供一种顺序访问一个聚合对象（聚合对象的两个职责：存储数据和遍历数据）中各个元素，且不用暴露该对象的内部表示。
+
+- 迭代器模式的实现
+
+```python
+# 代码来源：https://www.cnblogs.com/onepiece-andy/p/python-iterator-pattern.html
+
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+迭代器模式(Iterator Pattern):提供方法顺序访问一个聚合对象中各元素，而又不暴露该对象的内部表示
+"""
+
+# 迭代器抽象类
+class Iterator(object):
+    def First(self):
+        pass
+
+    def Next(self):
+        pass
+
+    def Isdone(self):
+        pass
+
+    def CurrItem(self):
+        pass
+
+# 聚集抽象类
+class Aggregate(object):
+    def CreateIterator(self):
+        pass
+
+# 具体迭代器类
+class ConcreteIterator(Iterator):
+    def __init__(self, aggregate):
+        self.aggregate = aggregate
+        self.curr = 0
+
+    def First(self):
+        return self.aggregate[0]
+
+    def Next(self):
+        ret = None
+        self.curr += 1
+        if self.curr < len(self.aggregate):
+            ret = self.aggregate[self.curr]
+        return ret
+
+    def Isdone(self):
+        return True if self.curr+1 >= len(self.aggregate) else False
+
+    def CurItem(self):
+        return self.aggregate[self.curr]
+
+# 具体聚集类
+class ConcreteAggregate(Aggregate):
+    def __init__(self):
+        self.ilist = []
+
+    def CreateIterator(self):
+        return ConcreteIterator(self)
+
+class ConcreteIteratorDesc(Iterator):
+    def __init__(self, aggregate):
+        self.aggregate = aggregate
+        self.curr = len(aggregate)-1
+
+    def First(self):
+        return self.aggretegate[-1]
+
+    def Next(self):
+        ret = None
+        self.curr -= 1
+        if self.curr >= 0:
+            ret = self.aggregate[self.curr]
+        return ret
+
+    def Isdone(self):
+        return True if self.curr-1< 0 else False
+
+    def CurrItem(self):
+        return self.aggregate[self.curr]
+
+if __name__ == "__main__":
+    ca = ConcreteAggregate()
+    ca.ilist.append("aa")
+    ca.ilist.append("bb")
+    ca.ilist.append("cc")
+    ca.ilist.append("dd")
+
+    itor = ConcreteIterator(ca.ilist)
+    print(itor.First())
+    while not itor.Isdone():
+        print(itor.Next())
+    print("---倒序---")
+
+    itordesc = ConcreteIteratorDesc(ca.ilist)
+    print(itordesc.First())
+    while not itordesc.Isdone():
+        print(itordesc.Next())
+
+# 结果
+'''
+aa
+bb
+cc
+dd
+---倒序---
+dd
+cc
+bb
+aa
+'''
+```
+
+- 迭代器模式的优点
+  - (1). 支持一下不同方式遍历一个聚合对象，在同一个聚合对象上可以定义多种遍历方式；
+  - (2). 简化了聚合类，由于引入了抽象层，增加新的聚合类和迭代器类都很方便，无须修改原有代码，符合开闭原则。
+
+- 迭代器模式的缺点
+  - (1). 在增加新的聚合类时需要对应地增加新的迭代器类，类的个数成对增加，这一定程度上增加了系统的复杂性；
+  - (2). 抽象迭代器的设计难度较大，需要充分考虑到系统的扩展；
+  - (3). 在自定义迭代器时，创建一个考虑全面的抽象迭代器并不是一件很容易的事情。
+
+- 迭代器模式的适用环境
+
+> 访问一个聚合对象的内容而无需暴露它的内部表示；需要为一个聚合对象提供多种遍历方式；为遍历不同的聚合结构提供一个统一的接口，在该就扣的实现类中为不同的聚合结构提供不同的遍方式，而客户端可以一致性地操作该接口。
+
+### 22. 观察者模式
+
+### 23. 策略模式
 
 ## 23. GIL全局解释器锁
 
