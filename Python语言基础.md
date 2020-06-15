@@ -106,6 +106,7 @@ categories: 编程语言-python
 - [65. 协程与生成器](#65-协程与生成器)
 - [66. python decimal精确计算](#66-python-decimal精确计算)
 - [67. 模块和代码块](#67-模块和代码块)
+- [68. 上下文管理器](#68-上下文管理器)
 
 <!-- /TOC -->
 
@@ -7437,3 +7438,63 @@ str(Decimal('0.2335662').quantize(Decimal('0.00')))
 > Python 提供了一个办法，把这些定义的方法和变量存放在文件中，为一些脚本或者交互式的解释器实例使用，这个文件被称为模块。模块是一个包含所有你定义的函数和变量的文件，其后缀名是.py，可以被别的程序引入，以使用该模块中的函数等功能。
 
 > 代码块就是可作为可执行单元的一段Python程序文本；模块、函数体和类定义都是代码块。不仅如此，每一个交互脚本命令也是一个代码块；一个脚本文件也是一个代码块；一个命令行脚本也是一个代码块。
+
+## 68. 上下文管理器
+
+> 使用上下文管理器最广泛的案例就是with语句，打开文件，对文件进行操作，然后关闭文件，如果在往文件里写数据的时候发生异常，它也会尝试去关闭文件。
+
+```python
+# with语句，确保文件会被关闭
+with open('aaa.txt', 'wb') as f
+    f.write("sddsa")
+
+# 等价于
+f = open('aaa.txt', 'wb')
+try:
+    f.write('sddsa')
+finally:
+    f.close()
+```
+
+> 利用`__enter__`和`__exit__`方法实现一个上下文管理类
+
+```python
+class File(object):
+    def __init__(self, file_name, method):
+        self.file_obj = open(file_name, method)
+
+    def __enter__(self):
+        return self.file_obj
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file_obj.close()
+
+with File('aaa.txt', 'wb') as f:
+    f.write("Hello")
+
+# 执行顺序
+'''
+(1) with语句先暂存了File类的__exit__方法
+(2) 然后吊桶File类的__enter__方法
+(3) __enter__方法返回打开文件对象
+(4) 打开文件的对象被传给f
+(5) 使用write来写文件
+(6) 调用之前暂存的__exit__
+(7) __exit__关闭了文件
+'''
+```
+
+> python有个contextlib模块，里面的contextmanager结合生成器可以实现上下文管理
+
+```python
+from contextlib import contextmanager
+
+@contextmanager
+def open_file(name):
+    f = open(name, 'w')
+    yield f
+    f.close()
+
+with open_file('aaa.txt') as ff:
+    ff.write("sssss")
+```
