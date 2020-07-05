@@ -2,6 +2,7 @@
 layout: post
 title: Python语言知识点总结归纳
 date: 2020-06-03 22:25:17
+updated: 2020-07-05 15:35:43
   - python
   - 后端
   - 知识回顾
@@ -62,7 +63,7 @@ categories: 编程语言-python
     - [22. 观察者模式](#22-观察者模式)
     - [23. 策略模式](#23-策略模式)
 - [23. GIL全局解释器锁](#23-gil全局解释器锁)
-- [24. 函数是一等公民？](#24-函数是一等公民)
+- [24. 函数是一等公民](#24-函数是一等公民)
 - [25. 函数与方法的区别](#25-函数与方法的区别)
 - [26. range与Xrange的区别](#26-range与xrange的区别)
 - [27. search与match的区别](#27-search与match的区别)
@@ -134,7 +135,7 @@ categories: 编程语言-python
 
 ## 3. python中的元类metaclass
 
-> 不会很常用，在ORM这种复杂结构中晦遇到，同时在看一些框架源代码的过程中可能会遇到很多元类的实例，看起来很晦涩。推荐[Stack overflow](https://stackoverflow.com/questions/100003/what-are-metaclasses-in-python) 一些专业解答，也可以参考下[这篇博客](https://www.cnblogs.com/tkqasn/p/6524879.html)的深刻理解，很详细。
+> 不会很常用，在ORM这种复杂结构中会遇到，同时在看一些框架源代码的过程中可能会遇到很多元类的实例，看起来很晦涩。推荐[Stack overflow](https://stackoverflow.com/questions/100003/what-are-metaclasses-in-python) 一些专业解答，也可以参考下[这篇博客](https://www.cnblogs.com/tkqasn/p/6524879.html)的深刻理解，很详细。
 
 - **str是用来创建字符串对象的类**
 - **int是用来创建整数对象的类**
@@ -333,7 +334,7 @@ user.save()
 
 ## 4. @staticmethod和@classmethod和实例方法
 
- > **[what-is-the-difference-between-staticmethod-and-classmethod-in-python](https://stackoverflow.com/questions/136097/difference-between-staticmethod-and-classmethod)**
+> **[what-is-the-difference-between-staticmethod-and-classmethod-in-python](https://stackoverflow.com/questions/136097/difference-between-staticmethod-and-classmethod)**
 
 > **[real python上详细知识](https://realpython.com/instance-class-and-static-methods-demystified/)**
 
@@ -369,7 +370,6 @@ class A(object):
       print("executing foo(%s)" % x)
 
 a = A()
-
 ```
 
 | 实例/类 | 实例方法 | 类方法 | 静态方法 |
@@ -3149,7 +3149,7 @@ aa
 
 > 如果线程运行过程中遇到耗时操作，超时时间超过一个固定值，则单线线程将会解开全局解释器锁，使其他线程运行。所以在多线程中是有先后顺序的，并不是同时运行的。多进程因每个进程都能被系统分配资源，相当于每个进程有了一个python解释器，所以多进程可以实现多个进程同时运行，缺点就是系统资源开销大。
 
-## 24. 函数是一等公民？
+## 24. 函数是一等公民
 
 > 在python中一切皆对象，num、list、dict、tuple、function、class和模块等都是对象，如公民一样地位平等，可以在运行时创建，并能被赋值给变量，作为集合对象的元素，还能够作为函数的参数和返回值。
 
@@ -3304,6 +3304,7 @@ None
 time
 '''
 ```
+
 ## 28. 面向对象编程OOP
 
 > 面向对象编程OOP（Object Oriented Programming）是一种程序设计思想，把对象作为程序的基本单元，一个对象包含了数据和操作数据的函数。面向对象的程序设计过程吧计算机程序视为一组对象的集合，而每个对象都可以接受其他对象发过来的消息，并处理这些消息，计算机程序的执行就是一系列消息在对象之间传递。
