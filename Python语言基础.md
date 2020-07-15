@@ -520,7 +520,7 @@ print(foo1 is foo2)
     json：JSON 编码和解码器
 
     base64：Base16, Base32, Base64, Base85 数据编码
-    
+
     heapq：堆队列算法
 
     copy：复制
@@ -720,13 +720,13 @@ eg:
 
 **[Python垃圾回收机制详解](https://blog.csdn.net/xiongchengluo1129/article/details/80462651)**
 
-> Python GC主要使用引用计数(reference counting)来跟踪和回收垃圾。在引用计数的基础上，通过标记清除机制(mark and sweep)解决容器对象可能产生的循环引用问题，通过分代回收(generation collection)策略，以以空间换时间的方法来提高垃圾回收的效率。
+> Python GC主要使用引用计数(reference counting)来跟踪和回收垃圾。在引用计数的基础上，通过标记清除机制(mark and sweep)解决容器对象可能产生的循环引用问题，通过分代回收(generation collection)策略，以空间换时间的方法来提高垃圾回收的效率。
 
 - 引用计数
 
 > 引用计数法的原理是每个对象维护一个ob_ref，用来记录当前对象被引用的次数，也就是来追踪到底有多少引用指向了这个对象，当发生（对象被创建、对象被引用、对象被作为参数传到函数中、对象作为一个元素，存储在容器中）四种情况的时候，该对象的引用计数+1；当发生（该对象的别名被显示销毁时、该对象的引别名被赋予新的对象、一个对象离开它的作用域、该元素从容器中删除时或容器被销毁时），该对象的引用计数器-1。
 
-**简而言之，PyObject是每个对象必有的内容，其中ob_refcnt就是做为引用计数。当有一个对象有心的引用时，它的ob_refcnt就会增加，当引用它的对象被删除，它的ob_refcnt就会减少。当引用计数为0时，该对象生命就结束了。**
+**简而言之，PyObject是每个对象必有的内容，其中ob_refcnt就是做为引用计数。当有一个对象有新的引用时，它的ob_refcnt就会增加，当引用它的对象被删除，它的ob_refcnt就会减少。当引用计数为0时，该对象生命就结束了。**
 
 **优点：**  
 ① 高效  
@@ -735,7 +735,7 @@ eg:
 ④ 易于实现
 
 **缺点：**  
-① 维护引用计数消耗资源，维护引用计数的次数和应用赋值成正比，而不像mark and sweep等基本与回收的内存数量有关。  
+① 维护引用计数消耗资源，维护引用计数的次数和引用赋值成正比，而不像mark and sweep等基本与回收的内存数量有关。  
 ② 无法解决循环引用的问题。
 
 - 标记清除机制(mark and sweep)
@@ -849,7 +849,7 @@ from __future__ import with_statement  # with声明
 
 > 编程语言中动态类型语言的一种设计风格，一个对象的特征不是由父类决定，而是通过对象的方法决定。类与类之间不用共同继承一个父类，只需要将它们做的像一件事物即可。
 
-> 注重对象的行为，而非对象的类型，一个对象能都昨晚函数、表达是的参数，取决于其行为而非类型归属。
+> 注重对象的行为，而非对象的类型，一个对象能都作为函数、表达是的参数，取决于其行为而非类型归属。
 
 ```python
 class Duck:
@@ -2129,14 +2129,14 @@ b = [1, 2, 3, ['a', 'b']]
 
 class LeiFeng(object):
 
-def Sweep(self):
-    print("扫地")
+    def Sweep(self):
+        print("扫地")
 
-def Wash(self):
-    print("洗衣")
+    def Wash(self):
+        print("洗衣")
 
-def BuyRice(self):
-    print("买米")
+    def BuyRice(self):
+        print("买米")
 
 
 class IFactory(LeiFeng):
