@@ -6826,7 +6826,6 @@ Python的变量名解析机制也称为 LEGB 法则：本地作用域（Local）
 |  Unicode码  |  支持国际语言  |  32bit = 4byte  |  占用空间大，适用性强，在ASCII码前面补8个就成了Unicode码  |
 |  UTF-8  |  支持国际语言  |  英文：8bit = 1byte  中文：24bit =  3byte  欧洲文字：16bit = 2byte  |  是Unicode的升级，是可变长度的Unicode，两者可以非常容易地互相转换，占用空间小  |
 
-
 ## 60. 字符串格式化
 
 - %格式化: C 语言风格的 sprintf 形式, 用%占位
